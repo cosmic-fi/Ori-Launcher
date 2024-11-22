@@ -28,7 +28,7 @@ Ori Launcher is a sleek, feature-rich, and super user-friendly "Custom" Minecraf
 
 ### Steps
 
-1. **Download**: Head to the [releases page](https://github.com/cosmic-fi/Ori-Launcher/releases) or official website at [https://orilauncher.xyz/download](https://orilauncher.xyz/download) to download the latest version.
+1. **Download**: Head to the [releases page](https://github.com/cosmic-fi/Ori-Launcher/releases) or official website at [https://orilauncher.xyz/windows](https://orilauncher.xyz/windows) to download the latest version.
 2. **Install**: Run the installer and follow the on-screen instructions.
 3. **Run**: Launch Ori Launcher and login in or create an account with your Minecraft credentials.
 
@@ -96,7 +96,7 @@ Ori Launcher is an independent project and is not affiliated, associated, author
   Unfortunately, Ori Launcher only supports vanilla Minecraft at the moment. Mod support, including Forge and Fabric, is being considered for future updates.
   
 - **Is Ori Launcher safe?**  
-  Yes. Ori Launcher is designed with security and user data privacy as a top priority. Make sure to download it only from the [official GitHub releases page](https://github.com/YourUsername/Ori-Launcher/releases).
+  Yes. Ori Launcher is designed with security and user data privacy as a top priority. Make sure to download it only from the [official GitHub releases page](https://github.com/cosmic-fi/Ori-Launcher/releases).
 
 <br>
 <br>
