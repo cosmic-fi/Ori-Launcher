@@ -1,4 +1,4 @@
-<img src="https://github.com/user-attachments/assets/db720951-23f2-44ca-86ef-aea36c0cf2d5" style="width: 100%" title="Ori Launcher" alt="Banner"/>
+<img src="https://orilauncher.xyz/assets/opengraphimages/home.png" style="width: 100%" title="Ori Launcher" alt="Banner"/>
 
 # Ori Launcher - Fast, Secure, and User-Friendly Minecraft Launcher
 
