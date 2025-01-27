@@ -6,118 +6,108 @@ Ori Launcher is a lightweight and user-friendly Minecraft launcher designed for 
 <br>
 <br>
 <br>
-<img src="https://github.com/user-attachments/assets/94a318d7-51cc-4f9a-89f7-852328e5e27f" style="width: 100%" title="Ori Launcher" alt="Banner"/>
-<br>
-- **Modern UI**: A clean, intuitive, and visually appealing user interface.
-- **Multi-Version Support**: Seamlessly switch between different Minecraft versions.
-- **Automatic Updates**: Stay up-to-date with the latest launcher updates.
-- **Custom Profiles**: Create and manage multiple profiles (Accounts) with ease.
-- **Offline Account Support**: Add and use offline accounts for those who prefer not to log in with a Mojang or Microsoft account.
-- **Optimized Performance**: Faster loading and lower resource consumption.
-- **Enhanced User Accounts Support**: Effortlessly add, manage, and switch between multiple accounts.
 
-<br>
-<br>
-<img src="https://github.com/user-attachments/assets/e4fe3152-4527-4a52-bc6e-ee72487956a7" style="width: 100%" title="Ori Launcher" alt="Banner"/>
-<br>
-<br>
+# Feature Table
+
+| Feature Name      | Description                                | Status       | Priority  |
+|-------------------|--------------------------------------------|--------------|-----------|
+| Modern UI | A clean, intuitive, and visually appealing user interface | ✔️  | High      |
+| Dark Mode         | Enables a dark theme for the application   | ✔️    | Medium    |
+| Light Mode         | Enables a light theme for the application   | Pending    | Medium    |
+| Custom Theme         | Enables users to create custom theme for the application   | Pending    | Medium    |
+| Seemless app update         | Automatically download and install updates   | In Progress    | High    |
+| Player Marketplace         | A place where users can create, sell and buy assets like theme, skins etc   | Pending    | Medium    |
+| Custom Skin         | Allows you to add a custom minecraft skin to your minecraft account with the application   | In Progress    | High    |
+| Mod Support         | Supports for Mods like Forge, Fabric etc   | Pending    | Medium    |
+| Cracked Account Support         | Allows users without premium Minecraft accounts to easily create and play Minecraft with free offline account   | ✔️    | High    |
+| Quick Play         | Allows users to quickly and easily join previous server    | Pending    | High    |
+| Multi-Version Support | Seamlessly switch between different Minecraft versions         | ✔️      | Low       |
+| Custom User Profiles | Create and manage multiple profiles (Accounts) with ease. | ✔️  | High      |
+| Enhanced User Accounts Support | Effortlessly add, manage, and switch between multiple accounts              | ✔️  | Medium    |
+
+<hr>
+
+# Installation
 
 ### Prerequisites
-- **Java**: Make sure Java 8 or above is installed on your system. [Download Java](https://www.java.com/en/download/).
-- **Ori Account**: Ori Launcher requires Ori account to log in. This can be easily created on the app login page.
+
+| Requirement         | Minimum                          | Recommended                        |
+|---------------------|-----------------------------------|------------------------------------|
+| **Operating System**| Windows 10 (64-bit)              | Windows 10 or 11 (64-bit)         |
+| **Processor**       | Intel Core i3-2100 / AMD FX-4100 | Intel Core i5-6600K / Ryzen 5 2600|
+| **Memory (RAM)**    | 4 GB                             | 8 GB                              |
+| **Graphics**        | Intel HD Graphics 4000 / Radeon R5 | NVIDIA GTX 1050 / Radeon RX 560   |
+| **DirectX**         | Version 11                       | Version 12                        |
+| **Storage**         | 2 GB available space             | 5 GB available space              |
+| **Internet**        | Required for launcher updates    | Stable broadband connection       |
+
+### Notes:
+- Ensure Java is up to date if you plan to launch Minecraft.
+- Ori Launcher currently **does not support mods**, though future updates may add this feature.
+- Some functionality may require administrative privileges.
 
 ### Steps
 
-1. **Download**: Head to the [releases page](https://github.com/cosmic-fi/Ori-Launcher/releases) or official website at [https://orilauncher.xyz/windows](https://orilauncher.xyz/windows) to download the latest version.
+1. **Download**: Head to the [Github Release Page](https://github.com/cosmic-fi/Ori-Launcher/releases) or official website @ [[https://orilauncher.xyz](https://orilauncher.xyz/)] to download the latest version.
 2. **Install**: Run the installer and follow the on-screen instructions.
-3. **Run**: Launch Ori Launcher and login in or create an account with your Minecraft credentials.
+3. **Run**: Launch Ori Launcher and login in or create Ori Account with your email and password.
 
-<br>
-<br>
-<br>
-<img src="https://github.com/user-attachments/assets/eb16e4a5-de79-49b6-aa60-6e709f42e422" style="width: 100%" title="Ori Launcher" alt="Banner"/>
-<br>
-<br>
 
-1. **Open Ori Launcher**.
-2. **Sign In**: Use your existing Ori Account or create a new one to log in securely.
-3. **Set Up Profiles**: Navigate to the Add Account area to add accounts.
-4. **Launch Game**: Select your profile, select game version and click **Play**. Ori Launcher will handle the rest!
+<hr>
+<img src="https://orilauncher.xyz/assets/images/Ori%20Launcher.png" title="Ori Launcher Home Page" alt="Ori Launcher Home Page" style="border-radius: 10px" />
+<hr>
 
-<br>
-<br>
-<br>
-<img src="https://github.com/user-attachments/assets/62664145-6133-4e02-b9f2-b3e8bde9d121" style="width: 100%" title="Ori Launcher" alt="Banner"/>
-<br>
-<br>
+# FAQs for Ori Launcher
 
-- **Profile Management**: Create and customize profiles with different settings for various gameplay experiences. [More of this features will be available in the coming updates].
-- **Settings**: Customize Launcher settings, Minecraft settings, and Java arguments for optimized performance.
-- **Updates**: Ori Launcher will notify you when an update is available and can download updates automatically on launching.
+| **Question**                               | **Answer**                                                                 |
+|--------------------------------------------|----------------------------------------------------------------------------|
+| **What is Ori Launcher?**                  | Ori Launcher is a lightweight Minecraft launcher designed for ease of use. |
+| **Does Ori Launcher support mods?**        | Currently, mods are not supported, but we plan to introduce this in future updates. |
+| **Does Ori Launcher support mods?**        | Currently, mods are not supported, but we plan to introduce this in future updates. |
+| **Is Ori Launcher free to use?**           | Yes, Ori Launcher is completely free to use.                              |
+| **Which platforms are supported?**         | Ori Launcher is currently available for Windows only.                     |
+| **Does Ori Launcher require Java?**        | Yes, ensure you have the latest version of Java installed to run Minecraft. |
+| **How do I update Ori Launcher?**          | Upon launching the app, Ori Launcher checks for any new updates and notifies user. Although it automatic update feature is yet to be implemented, Ori Launcher let's choose to either download and install the update whenever you're ready.  |
+| **Is an internet connection required?**    | Yes, an internet connection is needed for updates and online features.    |
+| **Can I play any version of Minecraft?**       | Yes, Ori Launcher supports all official Minecraft versions.                |
+| **Does Ori Launcher support snapshots?**       | Unfortunately this feature is to be implemented in the future updates, this will allow you to choose whether you want snapshots versions to be displayed on the version selection area of the app.                |
+| **Can I use shaders or resource packs?**       | Unfortunately, for shaders this will require modded versions of Minecraft like OptiFine whereas Ori Launcher currenly only launches Vanilla versions of Minecraft but you can easily add resource packs within the Minecraf. |
+| **How do I install custom skins?**             | Custom skins are not yet supported, but this feature is currently being worked on for future updates. |
+| **Does Ori Launcher require a Mojang or Microsoft account?** | Yes, you can choose to link your existing valid Microsoft account or easily create an offline account to play.              |
+| **Does Ori Launcher offer parental controls?** | Not yet, but we plan to add basic parental controls in the future. However, the recommended age is 13+ to be able to use the software.         |
+| **How much storage space does Ori Launcher need?** | The launcher itself is lightweight, but Minecraft versions require additional space. |
+| **What should I do if Minecraft crashes?**     | Ensure your Java version is up to date, and check your graphics card drivers.|
 
-<br>
-<br>
-<br>
-<img src="https://github.com/user-attachments/assets/8ee9f6e8-8450-43e6-9b28-ece9eb630d58" style="width: 100%" title="Ori Launcher" alt="Banner"/>
-<br>
-<br>
-Ori Launcher configuration files can be found in the `App Settings`. Customize launch options, Java arguments, mod folders, and more.
+---
 
-<br>
-<br>
-<br>
-<img src="https://github.com/user-attachments/assets/c5e57ac4-a81d-41fd-a016-c081d69dceb1" style="width: 100%" title="Ori Launcher" alt="Banner"/>
-<br>
-<br>
+# Technologies Used to Develop Ori Launcher
 
-![login](https://github.com/user-attachments/assets/4f722bef-e263-445c-99e3-986ecacad288)
-![Launcher Home Screen](https://github.com/user-attachments/assets/068c8f36-0bca-414c-bcbb-40a78499a023)
-![Launcher Login Screen](https://github.com/user-attachments/assets/6419ebe5-1a90-4e49-91e4-c2db975d438f)
-![home-sel](https://github.com/user-attachments/assets/6fe59a6a-ea9e-4e41-a26a-cd99f91726e4)
-![settings](https://github.com/user-attachments/assets/4725ed29-9003-4785-bf40-1772e5836143)
+- **Programming Language**:  
+  Ori Launcher is primarily developed in **JavaScript** using **Electron.js** for cross-platform desktop application development.
 
-<br>
-<br>
-<img src="https://github.com/user-attachments/assets/08c1a5bb-3dc6-440c-8cc9-bec68980c179" style="width: 100%" title="Ori Launcher" alt="Banner"/>
-<br>
+- **Frontend Framework**:  
+  The user interface is built using **Javascript.js, HTML & SASS**, offering a smooth and modern design.
 
-Ori Launcher is an independent project and is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Mojang AB, Microsoft Corporation, or any of their subsidiaries or affiliates. Minecraft is a trademark of Mojang AB.
+- **Backend**:  
+  - **Node.js** is used for managing server-side operations.  
+  - **Express.js** handles the REST APIs required for user authentication and updates.  
 
-<br>
-<br>
-<img src="https://github.com/user-attachments/assets/c703759b-d07a-40cb-9483-a4a30831d1a6" style="width: 100%" title="Ori Launcher" alt="Banner"/>
-<br>
-<br>
+- **Database**:  
+  - **SQLite** for lightweight local data storage.  
+  - **Firebase** for user authentication and storing cloud-based settings.
 
-- **Can I use this launcher on macOS and Linux?**  
-  No! Currently, Ori Launcher is only available for Windows, but we’re planning to expand support to macOS and Linux in the future.
+- **Additional Tools**:  
+  - **Webpack**: For bundling and optimizing assets.  
 
-- **Does Ori Launcher support Forge/Fabric mods?**  
-  Unfortunately, Ori Launcher only supports vanilla Minecraft at the moment. Mod support, including Forge and Fabric, is being considered for future updates.
-  
-- **Is Ori Launcher safe?**  
-  Yes. Ori Launcher is designed with security and user data privacy as a top priority. Make sure to download it only from the [official GitHub releases page](https://github.com/cosmic-fi/Ori-Launcher/releases).
+This combination of technologies ensures Ori Launcher is fast, lightweight, and scalable for future enhancements.
 
-<br>
-<br>
-<img src="https://github.com/user-attachments/assets/6d78b294-0820-4eb1-8d34-86aca98bc599" style="width: 100%" title="Ori Launcher" alt="Banner"/>
-<br>
-<br>
 
-We welcome contributions! Feel free to open an issue or a pull request.
+# License
 
-<br>
-<br>
-<img src="https://github.com/user-attachments/assets/f43d9900-f3a6-4b3f-9546-eb808e8b5155" style="width: 100%" title="Ori Launcher" alt="Banner"/>
-<br>
-<br>
+This project is licensed under the Ori Launcher Usage License. See the [LICENSE](https://orilauncher.xyz/license) for more details.
 
-A special thanks to my wonderful wife Olly and our cute Cat Po for their love, support, and encouragement throughout the development of Ori Launcher. ❤️
+<hr>
 
-<br>
-<br>
-<img src="https://github.com/user-attachments/assets/0981f03d-bee4-46f5-bc81-81905e344bbb" style="width: 100%" title="Ori Launcher" alt="Banner"/>
-<br>
-<br>
+A special thanks to my wonderful Fiance Olly and our cute Cat Po for their love, support, and encouragement throughout the development of Ori Launcher. ❤️
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+<img src="https://orilauncher.xyz/assets/opengraphimages/home_bottom.png" style="width: 100%" title="Ori Launcher" alt="Footer banner"/>
