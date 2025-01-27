@@ -1,8 +1,8 @@
 <img src="https://github.com/user-attachments/assets/db720951-23f2-44ca-86ef-aea36c0cf2d5" style="width: 100%" title="Ori Launcher" alt="Banner"/>
 
-# Ori Launcher - The Ultimate Next-Generation Minecraft Launcher
+# Ori Launcher - Fast, Secure, and User-Friendly Minecraft Launcher
 
-Ori Launcher is a sleek, feature-rich, and super user-friendly "Custom" Minecraft launcher built to provide players with a seamless, modern gaming experience. Built for performance, stability, and ease of use, Ori Launcher redefines Minecraft launching for the next generation.
+Ori Launcher is a lightweight and user-friendly Minecraft launcher designed for smooth gameplay. Enjoy fast loading times, secure login, and an intuitive interface tailored for all Minecraft enthusiasts.
 <br>
 <br>
 <br>
