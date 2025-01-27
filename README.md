@@ -111,5 +111,5 @@ This project is licensed under the Ori Launcher Usage License. See the [LICENSE]
 A special thanks to my wonderful Fiance Olly and our cute Cat Po for their love, support, and encouragement throughout the development of Ori Launcher. ❤️
 
 <a href="https://discord.gg/2sPdCcuwm5" target="_blank">
-  <img src="https://orilauncher.xyz/assets/opengraphimages/home_bottom.png" style="width: 100%" title="Ori Launcher" alt="Footer banner"/>
+  <img src="https://orilauncher.xyz/assets/opengraphimages/home_bottom.png" style="width: 100%" title="Join Discord Community" alt="Footer banner"/>
 </a>
