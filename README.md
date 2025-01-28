@@ -16,8 +16,8 @@ Ori Launcher is a lightweight and user-friendly Minecraft launcher designed for 
 | Cracked Account Support         | Allows users without premium Minecraft accounts to easily create and play Minecraft with free offline account   | ✔️    | High    |
 | Multi-Version Support | Seamlessly switch between different Minecraft versions         | ✔️      | Low       |
 | Custom User Profiles | Create and manage multiple profiles (Accounts) with ease. | ✔️  | High      |
-| Custom Skin         | Allows you to add a custom minecraft skin to your minecraft account with the application   | In Progress    | High    |
 | Enhanced User Accounts Support | Effortlessly add, manage, and switch between multiple accounts              | ✔️  | Medium    |
+| Custom Skin         | Allows you to add a custom minecraft skin to your minecraft account with the application   | In Progress    | High    |
 | Multi-Language         | Support for multiple langauges   | Pending    | In Progress    |
 | Seemless app update         | Automatically download and install updates   | In Progress    | High    |
 | Light Mode         | Enables a light theme for the application   | Pending    | Medium    |
