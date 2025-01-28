@@ -13,18 +13,18 @@ Ori Launcher is a lightweight and user-friendly Minecraft launcher designed for 
 |-------------------|--------------------------------------------|--------------|-----------|
 | Modern UI | A clean, intuitive, and visually appealing user interface | ✔️  | High      |
 | Dark Mode         | Enables a dark theme for the application   | ✔️    | Medium    |
-| Light Mode         | Enables a light theme for the application   | Pending    | Medium    |
-| Custom Theme         | Enables users to create custom theme for the application   | Pending    | Medium    |
-| Multi-Language         | Support for multiple langauges   | Pending    | In Progress    |
-| Seemless app update         | Automatically download and install updates   | In Progress    | High    |
-| Player Marketplace         | A place where users can create, sell and buy assets like theme, skins etc   | Pending    | Medium    |
-| Custom Skin         | Allows you to add a custom minecraft skin to your minecraft account with the application   | In Progress    | High    |
-| Mod Support         | Supports for Mods like Forge, Fabric etc   | Pending    | Medium    |
 | Cracked Account Support         | Allows users without premium Minecraft accounts to easily create and play Minecraft with free offline account   | ✔️    | High    |
-| Quick Play         | Allows users to quickly and easily join previous server    | Pending    | High    |
 | Multi-Version Support | Seamlessly switch between different Minecraft versions         | ✔️      | Low       |
 | Custom User Profiles | Create and manage multiple profiles (Accounts) with ease. | ✔️  | High      |
+| Custom Skin         | Allows you to add a custom minecraft skin to your minecraft account with the application   | In Progress    | High    |
 | Enhanced User Accounts Support | Effortlessly add, manage, and switch between multiple accounts              | ✔️  | Medium    |
+| Multi-Language         | Support for multiple langauges   | Pending    | In Progress    |
+| Seemless app update         | Automatically download and install updates   | In Progress    | High    |
+| Light Mode         | Enables a light theme for the application   | Pending    | Medium    |
+| Custom Theme         | Enables users to create custom theme for the application   | Pending    | Medium    |
+| Player Marketplace         | A place where users can create, sell and buy assets like theme, skins etc   | Pending    | Medium    |
+| Mod Support         | Supports for Mods like Forge, Fabric etc   | Pending    | Medium    |
+| Quick Play         | Allows users to quickly and easily join previous server    | Pending    | High    |
 
 <hr>
 
