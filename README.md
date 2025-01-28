@@ -15,6 +15,7 @@ Ori Launcher is a lightweight and user-friendly Minecraft launcher designed for 
 | Dark Mode         | Enables a dark theme for the application   | ✔️    | Medium    |
 | Light Mode         | Enables a light theme for the application   | Pending    | Medium    |
 | Custom Theme         | Enables users to create custom theme for the application   | Pending    | Medium    |
+| Multi-Language         | Support for multiple langauges   | Pending    | In Progress    |
 | Seemless app update         | Automatically download and install updates   | In Progress    | High    |
 | Player Marketplace         | A place where users can create, sell and buy assets like theme, skins etc   | Pending    | Medium    |
 | Custom Skin         | Allows you to add a custom minecraft skin to your minecraft account with the application   | In Progress    | High    |
