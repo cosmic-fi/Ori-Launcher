@@ -1,0 +1,263 @@
+{
+  "settings": {
+    "title": "Ajustes",
+    "tabs": {
+      "general": "General",
+      "game": "Juego",
+      "launcher": "Lanzador",
+      "storage": "Almacenamiento",
+      "developer": "Desarrollador",
+      "about": "Acerca de"
+    },
+    "appearance": {
+      "label": "Apariencia",
+      "theme": {
+        "label": "Tema",
+        "description": "Elige el tema del lanzador.",
+        "themes": {
+          "light": "Claro",
+          "dark": "Oscuro",
+          "minimal": "Minimal",
+          "after-glow": "After Glow",
+          "retro-80s": "Retro años 80",
+          "oceanic": "Océano",
+          "pastel": "Pastel"
+        }
+      },
+      "language": {
+        "label": "Idioma",
+        "description": "Selecciona el idioma para el lanzador."
+      }
+    },
+    "startup": {
+      "label": "Inicio",
+      "autoStart": "Inicio Automático",
+      "autoStartDescription": "Iniciar la aplicación automáticamente cuando el sistema se enciende.",
+      "minimizeToTray": "Minimizar al área de notificación al cerrar",
+      "minimizeToTrayDescription": "Iniciar la aplicación minimizada en la bandeja del sistema."
+    },
+    "game": {
+      "versions": "Versiones",
+      "showSnapshots": "Mostrar versiones Snapshot de Minecraft",
+      "showSnapshotsDescription": "Mostrar versiones snapshot (beta/experimental) de Minecraft en el lanzador."
+    },
+    "performance": {
+      "label": "Rendimiento",
+      "ramAllocation": "Asignación de RAM",
+      "ramAllocationDescription": "Configura la cantidad de RAM asignada al juego. Se recomienda al menos 2 GB para equipos lentos."
+    },
+    "runtime": {
+      "label": "Tiempo de ejecución",
+      "javaPath": "Ruta de Java",
+      "javaPathDescription": "Especifica la ruta al ejecutable de Java.",
+      "customRunCommand": "Comando personalizado",
+      "customRunCommandDescription": "Especifica un comando personalizado para iniciar el juego (solo para usuarios avanzados).",
+      "jvmArguments": "Argumentos JVM",
+      "jvmArgumentsDescription": "Configura argumentos JVM adicionales para ajuste de rendimiento avanzado.",
+      "environmentVariables": "Variables de entorno",
+      "environmentVariablesDescription": "Configura variables de entorno para el proceso en tiempo de ejecución.",
+      "runAsAdmin": "Ejecutar como administrador",
+      "runAsAdminDescription": "Iniciar el juego con privilegios de administrador."
+    },
+    "launcher": {
+      "updates": "Actualizaciones",
+      "checkForUpdates": "Buscar actualizaciones",
+      "checkForUpdatesDescription": "Buscar actualizaciones del lanzador al iniciar."
+    },
+    "integration": {
+      "label": "Integración",
+      "discordRPC": "Discord Rich Presence",
+      "discordRPCDescription": "Activar o desactivar la integración con Discord Rich Presence."
+    },
+    "notification": {
+      "label": "Notificación",
+      "showUpdateNotification": "Mostrar notificación de actualizaciones",
+      "showUpdateNotificationDescription": "Mostrar notificaciones cuando haya actualizaciones.",
+      "playSound": "Reproducir sonido",
+      "playSoundDescription": "Reproducir un sonido cuando haya una actualización disponible."
+    },
+    "storage": {
+      "folders": "Carpetas",
+      "launcherFolder": "Carpeta del lanzador",
+      "launcherFolderDescription": "Establece el directorio de instalación del lanzador.",
+      "minecraftFolder": "Carpeta de Minecraft",
+      "minecraftFolderDescription": "Establece el directorio de instalación de Minecraft."
+    },
+    "backup": {
+      "backupSaves": "Respaldar partidas",
+      "backupSavesDescription": "Activar o desactivar el respaldo automático de partidas guardadas.",
+      "backupFolder": "Carpeta de respaldo",
+      "backupFolderDescription": "Establece el directorio para los respaldos de juego."
+    },
+    "developer": {
+      "debug": "Depuración",
+      "enableDevTools": "Activar DevTools",
+      "enableDevToolsDescription": "Activar herramientas de desarrollador para depuración.",
+      "experimental": "Experimental",
+      "allowBetaFeatures": "Permitir funciones beta",
+      "allowBetaFeaturesDescription": "Activar funciones experimentales del lanzador."
+    },
+    "about": {
+      "version": "Versión",
+      "checkForUpdates": "Buscar actualizaciones",
+      "credits": "Créditos",
+      "developedBy": "Desarrollado y creado con 💖 por",
+      "specialThanks": "Muchas gracias a todos los contribuyentes y probadores.",
+      "openSourceLibraries": "Bibliotecas de código abierto",
+      "extraOpenSourceLibrariesDescription": "Otras bibliotecas de código abierto usadas en este proyecto.",
+      "apisUsed": "APIs utilizadas",
+      "sourceCode": "Código fuente",
+      "donate": "¡Donar!",
+      "donateDescription": "¡Si te gusta este proyecto, considera donar para apoyar el desarrollo!",
+      "contributors": "Colaboradores",
+      "disclaimer": "Descargo de responsabilidad",
+      "disclaimerDescription": "Este lanzador es un proyecto independiente y no está afiliado con Mojang, Microsoft ni ninguna entidad oficial de Minecraft. Todas las marcas y derechos de autor pertenecen a sus respectivos propietarios."
+    },
+    "buttons": {
+      "resetToDefault": "Restablecer a valores predeterminados",
+      "close": "Cerrar"
+    }
+  },
+  "invoker": {
+    "loading": "CARGANDO",
+    "description": "Por favor espera mientras se completa el proceso.",
+    "closeNote": "Puedes cerrar la ventana activa para detener este proceso"
+  },
+  "mainContent": {
+    "social": {
+      "github": "Github",
+      "discord": "Discord",
+      "twitter": "Twitter"
+    },
+    "playersOnline": "Jugadores en línea ahora",
+    "supportProject": "Apoya el proyecto",
+    "console": "Consola",
+    "minimize": "Minimizar",
+    "closeApp": "Cerrar aplicación",
+    "manageAccounts": "Administrar cuentas",
+    "addAccount": "Agregar cuenta",
+    "adCredit": "respaldado por Beam‑i"
+  },
+  "sidebar": {
+    "buttons": {
+      "play": "Jugar",
+      "mods": "Mods (Próximamente)",
+      "quickServers": "Servidores rápidos (Próximamente)"
+    },
+    "settings": "Ajustes"
+  },
+  "accountAdder": {
+    "selectAccountType": "Seleccionar tipo de cuenta",
+    "close": "Cerrar",
+    "addMinecraftAccount": "Cuenta de Microsoft",
+    "addMinecraftAccountDescription": "Agrega tu cuenta oficial de Minecraft para jugar en línea. (Requiere una cuenta Mojang o Microsoft válida.)",
+    "addOfflineAccount": "Cuenta sin conexión",
+    "addOfflineAccountDescription": "Juega en servidores no oficiales o pirateados sin una cuenta de Minecraft. (El progreso y los aspectos no se sincronizarán entre dispositivos.)",
+    "offlineAccountForm": {
+      "enterUsername": "Ingresa un nombre de usuario para crear una cuenta sin conexión. Esta cuenta solo funcionará en servidores no oficiales.",
+      "usernamePlaceholder": "Ingresa el nombre de usuario",
+      "usernameRequired": "Se requiere nombre de usuario",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "saving": "Guardando..."
+    },
+    "accountAdded": "¡Cuenta agregada!",
+    "failedToAddAccount": "Error al agregar la cuenta. Por favor inténtalo de nuevo."
+  },
+  "dialog": {
+    "defaultTitle": "Título del diálogo",
+    "defaultMessage": "El mensaje del diálogo aparece aquí.",
+    "ok": "Aceptar",
+    "cancel": "Cancelar",
+    "continue": "Continuar",
+    "confirm": "Confirmar",
+    "retry": "Reintentar",
+    "titles": {
+      "deleteAccount": "¿Eliminar cuenta?",
+      "apiError": "Error de API",
+      "apiUnreachable": "API inaccesible"
+    },
+    "messages": {
+      "deleteAccount": "¿Estás seguro de que deseas eliminar esta cuenta?",
+      "apiError": "Ocurrió un error al conectar con la API. Por favor intenta más tarde.",
+      "apiUnreachable": "El servidor API no es accesible. Por favor verifica tu conexión a Internet e inténtalo de nuevo."
+    }
+  },
+  "toast": {
+    "defaultMessage": "¡Algo acaba de pasar!"
+  },
+  "accountManager": {
+    "title": "Gestor de cuentas",
+    "description": "Administra tus cuentas de Minecraft aquí. Cambia entre perfiles, elimina cuentas o cambia tu skin y capa para personalizar tu experiencia.",
+    "deleteAccountTitle": "¿Eliminar cuenta?",
+    "deleteAccountMessage": "¿Estás seguro de que deseas eliminar esta cuenta?",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "removeAccountAriaLabel": "Eliminar cuenta",
+    "minecraft": "Minecraft",
+    "cracked": "Pirata",
+    "playtime": "Tiempo de juego"
+  },
+  "versionSelector": {
+    "minecraftVersion": "Minecraft {version}",
+    "versionSummary": "Selecciona tu versión y variante preferida de Minecraft.",
+    "closeButtonAriaLabel": "Botón cerrar"
+  },
+  "console": {
+    "clearLogs": "Limpiar",
+    "levels": {
+      "debug": "Debug (Todo)",
+      "info": "Información",
+      "warning": "Aviso",
+      "error": "Error"
+    },
+    "loggerTestMessage": "Mensaje de prueba de logger",
+    "levelChanged": "Nivel cambiado a {level}",
+    "somethingWentWrong": "Algo salió mal"
+  },
+  "customOptions": {
+    "selectPlaceholder": "Seleccionar",
+    "levels": {
+      "debug": "Debug (Todo)",
+      "info": "Información",
+      "warning": "Aviso",
+      "error": "Error"
+    },
+    "clear": "Limpiar"
+  },
+  "launch": {
+    "launch": "Iniciar",
+    "launchStatus": {
+      "downloading": "Descargando",
+      "launching": "Iniciando",
+      "patching": "Parchando",
+      "waiting": "Esperando",
+      "retrying": "Reintentando",
+      "ready": "Juego listo",
+      "launchFailed": "Error al iniciar"
+    },
+    "changeVersion": "Cambiar versión"
+  },
+  "folderPicker": {
+    "browse": "Examinar",
+    "noFolderSelected": "Ninguna carpeta seleccionada"
+  },
+  "skinViewer": {
+    "defaultUsername": "MHF_Steve"
+  },
+  "logs": {
+    "languageSet": "Idioma establecido a: {language}",
+    "discordRPCEnabled": "Discord RPC activado.",
+    "notificationSoundsEnabled": "Sonidos de notificación activados.",
+    "loadingSettings": "Cargando ajustes...",
+    "buildingVersions": "Construyendo versiones...",
+    "checkingForUpdates": "Buscando actualizaciones...",
+    "initializingServices": "Iniciando servicios...",
+    "validatingAccounts": "Validando cuentas...",
+    "fetchingServerList": "Obteniendo lista de servidores...",
+    "preparingLauncher": "Preparando lanzador...",
+    "checkingAPIStatus": "Verificando estado de la API...",
+    "apiUnreachable": "API inaccesible. Algunas funciones podrían no funcionar.",
+    "ready": "¡Listo!"
+  }
+}

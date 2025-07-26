@@ -1,0 +1,267 @@
+{
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "general": "General",
+      "game": "Game",
+      "launcher": "Launcher",
+      "storage": "Storage",
+      "developer": "Developer",
+      "about": "About"
+    },
+    "appearance": {
+      "label": "Appearance",
+      "theme": {
+        "label": "Theme",
+        "description": "Choose the theme of the launcher.",
+        "themes": {
+          "light": "Light",
+          "dark": "Dark",
+          "minimal": "Minimal",
+          "after-glow": "After Glow",
+          "retro-80s": "Retro 80s",
+          "oceanic": "Oceanic",
+          "pastel": "Pastel"
+        }
+      },
+      "language": {
+        "label": "Language",
+        "description": "Select the language for the launcher."
+      }
+    },
+    "startup": {
+      "label": "Startup",
+      "autoStart": "Auto Start",
+      "autoStartDescription": "Automatically launch the app when the system starts.",
+      "minimizeToTray": "Minimize to Tray on Close",
+      "minimizeToTrayDescription": "Start the app minimized to the system tray."
+    },
+    "game": {
+      "versions": "Versions",
+      "showSnapshots": "Show Snapshots versions of Minecraft",
+      "showSnapshotsDescription": "Show snapshot (beta/experimental) versions of Minecraft in the launcher."
+    },
+    "performance": {
+      "label": "Performance",
+      "ramAllocation": "Ram allocation",
+      "ramAllocationDescription": "Set the amount of RAM allocated to the game. Minimum recommended Ram is at least 2GB for slow machines."
+    },
+    "runtime": {
+      "label": "Runtime",
+      "javaPath": "Java path",
+      "javaPathDescription": "Specify the path to the Java executable.",
+      "customRunCommand": "Custom Run Command",
+      "customRunCommandDescription": "Specify a custom command to launch the game (advanced users only).",
+      "jvmArguments": "JVM Arguments",
+      "jvmArgumentsDescription": "Set additional JVM arguments for advanced performance tuning.",
+      "environmentVariables": "Environment Variables",
+      "environmentVariablesDescription": "Set environment variables for the runtime process.",
+      "runAsAdmin": "Run as Administrator",
+      "runAsAdminDescription": "Launch the game with administrator privileges."
+    },
+    "launcher": {
+      "updates": "Updates",
+      "checkForUpdates": "Check for updates",
+      "checkForUpdatesDescription": "Check for new launcher updates on startup."
+    },
+    "integration": {
+      "label": "Integration",
+      "discordRPC": "Discord Rich Presence",
+      "discordRPCDescription": "Enable or disable Discord Rich Presence integration."
+    },
+    "notification": {
+      "label": "Notification",
+      "showUpdateNotification": "Show Notification for Updates",
+      "showUpdateNotificationDescription": "Show update notifications.",
+      "playSound": "Play sound",
+      "playSoundDescription": "Play a sound when an update is available."
+    },
+    "storage": {
+      "folders": "Folders",
+      "launcherFolder": "Launcher folder",
+      "launcherFolderDescription": "Set the directory where launcher is installed.",
+      "minecraftFolder": "Minecraft folder",
+      "minecraftFolderDescription": "Set the directory where Minecraft is installed."
+    },
+    "backup": {
+      "backupSaves": "Backup saves",
+      "backupSavesDescription": "Enable or disable automatic backup of game saves.",
+      "backupFolder": "Backup folder",
+      "backupFolderDescription": "Set the directory for game backups."
+    },
+    "developer": {
+      "debug": "Debug",
+      "enableDevTools": "Enable DevTools",
+      "enableDevToolsDescription": "Enable developer tools for debugging.",
+      "experimental": "Experimental",
+      "allowBetaFeatures": "Allow Beta features",
+      "allowBetaFeaturesDescription": "Enable experimental launcher features."
+    },
+    "about": {
+      "version": "Version",
+      "checkForUpdates": "Check for Updates",
+      "credits": "Credits",
+      "developedBy": "Developed and crafted with 💖 by",
+      "specialThanks": "Special thanks to all contributors and testers.",
+      "openSourceLibraries": "Open Source Libraries",
+      "extraOpenSourceLibrariesDescription": "Other open source libraries used in this project.",
+      "apisUsed": "APIs Used",
+      "sourceCode": "Source Code",
+      "donate": "Donate!",
+      "donateDescription": "If you like this project, consider donating to support development!",
+      "contributors": "Contributors",
+      "disclaimer": "Disclaimer",
+      "disclaimerDescription": "This launcher is an independent project and is not affiliated with Mojang, Microsoft, or any official Minecraft entity. All trademarks and copyrights belong to their respective owners."
+    },
+    "buttons": {
+      "resetToDefault": "Reset to default",
+      "close": "Close"
+    }
+  },
+  "invoker": {
+    "loading": "LOADING",
+    "description": "Please wait while the process completes.",
+    "closeNote": "You can close the active window to stop this process"
+  },
+  "mainContent": {
+    "social": {
+      "github": "Github",
+      "discord": "Discord",
+      "twitter": "Twitter"
+    },
+    "playersOnline": "Players online now",
+    "supportProject": "Support Project",
+    "console": "Console",
+    "minimize": "Minimize",
+    "closeApp": "Close App",
+    "manageAccounts": "Manage Accounts",
+    "addAccount": "Add Account",
+    "adCredit": "ssPowered by Beam-i"
+  },
+  "sidebar": {
+    "buttons": {
+      "play": "Play",
+      "mods": "Mods (Coming soon)",
+      "quickServers": "Quick Servers (Coming soon)"
+    },
+    "settings": "Settings"
+  },
+  "accountAdder": {
+    "selectAccountType": "Select Account Type",
+    "close": "Close",
+    "addMinecraftAccount": "Microsoft Account",
+    "addMinecraftAccountDescription": "Add your official Minecraft account to play online. (Requires a valid Mojang or Microsoft account.)",
+    "addOfflineAccount": "Offline Account",
+    "addOfflineAccountDescription": "Play on unofficial or cracked servers without a Minecraft account. (Progress and skins will not sync across devices.)",
+    "offlineAccountForm": {
+      "enterUsername": "Enter a username to create an offline Minecraft account. This account will only work on unofficial servers.",
+      "usernamePlaceholder": "Enter username",
+      "usernameRequired": "Username is required",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving..."
+    },
+    "accountAdded": "Account added!",
+    "failedToAddAccount": "Failed to add account. Please try again."
+  },
+  "dialog": {
+    "defaultTitle": "Dialog Title",
+    "defaultMessage": "Dialog message goes here.",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "confirm": "Confirm",
+    "retry": "Retry",
+    "titles": {
+      "deleteAccount": "Remove Account?",
+      "apiError": "API Error",
+      "apiUnreachable": "API Unreachable"
+    },
+    "messages": {
+      "deleteAccount": "Are you sure you want to remove this account?",
+      "apiError": "An error occurred while connecting to the API. Please try again later.",
+      "apiUnreachable": "The API server is unreachable. Please check your internet connection and try again."
+    }
+  },
+  "toast": {
+    "defaultMessage": "Something just happened!"
+  },
+  "accountManager": {
+    "title": "Account Manager",
+    "description": "Manage your Minecraft accounts here. Switch between profiles, remove accounts, or change your skin and capes to personalize your play experience.",
+    "deleteAccountTitle": "Remove Account?",
+    "deleteAccountMessage": "Are you sure you want to remove this account?",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "removeAccountAriaLabel": "Remove account",
+    "minecraft": "Minecraft",
+    "cracked": "Cracked",
+    "playtime": "Playtime"
+  },
+  "versionSelector": {
+    "minecraftVersion": "Minecraft {version}",
+    "versionSummary": "Select your preferred Minecraft version and variant.",
+    "closeButtonAriaLabel": "Close Button"
+  },
+  "console": {
+    "clearLogs": "Clear",
+    "levels": {
+      "debug": "Debug (All)",
+      "info": "Info",
+      "warning": "Warning",
+      "error": "Error"
+    },
+    "loggerTestMessage": "Logger test message",
+    "levelChanged": "Level changed to {level}",
+    "somethingWentWrong": "Something went wrong"
+  },
+  "customOptions": {
+    "selectPlaceholder": "Select",
+    "levels": {
+      "debug": "Debug (All)",
+      "info": "Info",
+      "warning": "Warning",
+      "error": "Error"
+    },
+    "clear": "Clear"
+  },
+  "launch": {
+    "launch": "Launch",
+    "launchStatus": {
+      "downloading": "Downloading",
+      "launching": "Launching",
+      "patching": "Patching",
+      "waiting": "Waiting",
+      "retrying": "Retrying",
+      "ready": "Game ready",
+      "launchFailed": "Launch failed"
+    },
+    "changeVersion": "Change Version"
+  } ,
+  "folderPicker": {
+    "browse": "Browse",
+    "noFolderSelected": "No folder selected"
+  },
+  "skinViewer": {
+    "defaultUsername": "MHF_Steve"
+  },
+  "logs": {
+    "languageSet": "Language set to: {language}",
+    "discordRPCEnabled": "Discord RPC enabled.",
+    "notificationSoundsEnabled": "Notification sounds enabled.",
+    "loadingSettings": "Loading settings...",
+    "buildingVersions": "Building versions...",
+    "checkingForUpdates": "Checking for updates...",
+    "initializingServices": "Initializing services...",
+    "validatingAccounts": "Validating accounts...",
+    "fetchingServerList": "Fetching server list...",
+    "preparingLauncher": "Preparing launcher...",
+    "checkingAPIStatus": "Checking API status...",
+    "apiUnreachable": "API unreachable. Some features might not work properly.",
+    "ready": "Ready!"
+  },
+  "connection": {
+    "connectionLost": "Connetion lost!",
+    "connectionRestored": "Connection restored"
+  }
+}

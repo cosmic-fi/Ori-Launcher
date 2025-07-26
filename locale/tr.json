@@ -1,0 +1,263 @@
+{
+  "settings": {
+    "title": "Ayarlar",
+    "tabs": {
+      "general": "Genel",
+      "game": "Oyun",
+      "launcher": "Başlatıcı",
+      "storage": "Depolama",
+      "developer": "Geliştirici",
+      "about": "Hakkında"
+    },
+    "appearance": {
+      "label": "Görünüm",
+      "theme": {
+        "label": "Tema",
+        "description": "Başlatıcının temasını seçin.",
+        "themes": {
+          "light": "Açık",
+          "dark": "Koyu",
+          "minimal": "Minimal",
+          "after-glow": "After Glow",
+          "retro-80s": "Retro 80’ler",
+          "oceanic": "Okyanusal",
+          "pastel": "Pastel"
+        }
+      },
+      "language": {
+        "label": "Dil",
+        "description": "Başlatıcı için dili seçin."
+      }
+    },
+    "startup": {
+      "label": "Başlangıç",
+      "autoStart": "Otomatik Başlat",
+      "autoStartDescription": "Sistem başladığında uygulamayı otomatik başlat.",
+      "minimizeToTray": "Kapatıldığında simge durumuna küçült",
+      "minimizeToTrayDescription": "Uygulamayı sistem tepsisinde simge durumunda başlat."
+    },
+    "game": {
+      "versions": "Sürümler",
+      "showSnapshots": "Minecraft’ın Snapshot sürümlerini göster",
+      "showSnapshotsDescription": "Launcher’da Minecraft’ın snapshot (beta/deneysel) sürümlerini göster."
+    },
+    "performance": {
+      "label": "Performans",
+      "ramAllocation": "RAM tahsisi",
+      "ramAllocationDescription": "Oyuna tahsis edilen RAM miktarını ayarlayın. Yavaş makineler için önerilen minimum RAM en az 2 GB’dır."
+    },
+    "runtime": {
+      "label": "Çalışma zamanı",
+      "javaPath": "Java yolu",
+      "javaPathDescription": "Java yürütülebilir dosyasının yolunu belirtin.",
+      "customRunCommand": "Özel Çalıştır Komutu",
+      "customRunCommandDescription": "Oyunu başlatmak için özel bir komut belirtin (sadece ileri düzey kullanıcılar).",
+      "jvmArguments": "JVM Argümanları",
+      "jvmArgumentsDescription": "İleri düzey performans ayarı için ek JVM argümanları ayarlayın.",
+      "environmentVariables": "Ortam Değişkenleri",
+      "environmentVariablesDescription": "Çalışma süreci için ortam değişkenlerini ayarlayın.",
+      "runAsAdmin": "Yönetici olarak çalıştır",
+      "runAsAdminDescription": "Oyunu yönetici ayrıcalıklarıyla başlatın."
+    },
+    "launcher": {
+      "updates": "Güncellemeler",
+      "checkForUpdates": "Güncellemeleri kontrol et",
+      "checkForUpdatesDescription": "Başlatıcıyı açarken yeni güncellemeleri kontrol et."
+    },
+    "integration": {
+      "label": "Entegrasyon",
+      "discordRPC": "Discord Zengin Varlık",
+      "discordRPCDescription": "Discord Zengin Varlık entegrasyonunu etkinleştir veya devre dışı bırak."
+    },
+    "notification": {
+      "label": "Bildirim",
+      "showUpdateNotification": "Güncelleme Bildirimlerini Göster",
+      "showUpdateNotificationDescription": "Güncelleme bildirimlerini göster.",
+      "playSound": "Ses çal",
+      "playSoundDescription": "Güncelleme mevcut olduğunda ses çal."
+    },
+    "storage": {
+      "folders": "Klasörler",
+      "launcherFolder": "Başlatıcı klasörü",
+      "launcherFolderDescription": "Başlatıcının kurulu olduğu dizini ayarlayın.",
+      "minecraftFolder": "Minecraft klasörü",
+      "minecraftFolderDescription": "Minecraft’ın kurulu olduğu dizini ayarlayın."
+    },
+    "backup": {
+      "backupSaves": "Kaydetmeleri yedekle",
+      "backupSavesDescription": "Oyun kayıtlarının otomatik yedeğini etkinleştir veya devre dışı bırak.",
+      "backupFolder": "Yedek klasörü",
+      "backupFolderDescription": "Oyun yedekleri için dizini ayarla."
+    },
+    "developer": {
+      "debug": "Hata ayıklama",
+      "enableDevTools": "Geliştirici Araçlarını Etkinleştir",
+      "enableDevToolsDescription": "Hata ayıklama için geliştirici araçlarını etkinleştir.",
+      "experimental": "Deneysel",
+      "allowBetaFeatures": "Beta özelliklerine izin ver",
+      "allowBetaFeaturesDescription": "Deneysel başlatıcı özelliklerini etkinleştir."
+    },
+    "about": {
+      "version": "Sürüm",
+      "checkForUpdates": "Güncellemeleri Kontrol Et",
+      "credits": "Katkıda Bulunanlar",
+      "developedBy": "💖 ile geliştirildi ve yapıldı:",
+      "specialThanks": "Tüm katkıda bulunanlara ve testçilere özel teşekkürler.",
+      "openSourceLibraries": "Açık Kaynak Kütüphaneler",
+      "extraOpenSourceLibrariesDescription": "Bu projede kullanılan diğer açık kaynak kütüphaneler.",
+      "apisUsed": "Kullanılan API’ler",
+      "sourceCode": "Kaynak Kodu",
+      "donate": "Bağış Yap!",
+      "donateDescription": "Bu projeyi beğendiyseniz, geliştirmeyi desteklemek için bağış yapmayı düşünün!",
+      "contributors": "Katkıda Bulunanlar",
+      "disclaimer": "Feragatname",
+      "disclaimerDescription": "Bu başlatıcı bağımsız bir projedir ve Mojang, Microsoft veya herhangi bir resmi Minecraft kuruluşuyla ilişkili değildir. Tüm ticari markalar ve telif hakları sahiplerine aittir."
+    },
+    "buttons": {
+      "resetToDefault": "Varsayılana sıfırla",
+      "close": "Kapat"
+    }
+  },
+  "invoker": {
+    "loading": "YÜKLENİYOR",
+    "description": "Lütfen işlem tamamlanana kadar bekleyin.",
+    "closeNote": "Bu işlemi durdurmak için etkin pencereyi kapatabilirsiniz."
+  },
+  "mainContent": {
+    "social": {
+      "github": "Github",
+      "discord": "Discord",
+      "twitter": "Twitter"
+    },
+    "playersOnline": "Şu anda çevrimiçi oyuncular",
+    "supportProject": "Projeye Destek Ol",
+    "console": "Konsol",
+    "minimize": "Simge Durumuna Küçült",
+    "closeApp": "Uygulamayı Kapat",
+    "manageAccounts": "Hesapları Yönet",
+    "addAccount": "Hesap Ekle",
+    "adCredit": "Beam‑i destekli"
+  },
+  "sidebar": {
+    "buttons": {
+      "play": "Oyna",
+      "mods": "Modlar (Yakında)",
+      "quickServers": "Hızlı Sunucular (Yakında)"
+    },
+    "settings": "Ayarlar"
+  },
+  "accountAdder": {
+    "selectAccountType": "Hesap Türü Seçin",
+    "close": "Kapat",
+    "addMinecraftAccount": "Microsoft Hesabı",
+    "addMinecraftAccountDescription": "Çevrimiçi oynamak için resmi Minecraft hesabınızı ekleyin. (Geçerli bir Mojang veya Microsoft hesabı gereklidir.)",
+    "addOfflineAccount": "Çevrimdışı Hesap",
+    "addOfflineAccountDescription": "Minecraft hesabı olmadan resmi olmayan veya kırık sunucularda oynayın. (İlerleme ve kaplamalar cihazlar arasında senkronize edilmez.)",
+    "offlineAccountForm": {
+      "enterUsername": "Çevrimdışı bir Minecraft hesabı oluşturmak için bir kullanıcı adı girin. Bu hesap yalnızca resmi olmayan sunucularda çalışır.",
+      "usernamePlaceholder": "Kullanıcı adı girin",
+      "usernameRequired": "Kullanıcı adı gereklidir",
+      "cancel": "İptal",
+      "save": "Kaydet",
+      "saving": "Kaydediliyor..."
+    },
+    "accountAdded": "Hesap eklendi!",
+    "failedToAddAccount": "Hesap eklenemedi. Lütfen tekrar deneyin."
+  },
+  "dialog": {
+    "defaultTitle": "Dialog Başlığı",
+    "defaultMessage": "Dialog mesajı buraya gelir.",
+    "ok": "Tamam",
+    "cancel": "İptal",
+    "continue": "Devam Et",
+    "confirm": "Onayla",
+    "retry": "Yeniden Dene",
+    "titles": {
+      "deleteAccount": "Hesap kaldırılsın mı?",
+      "apiError": "API Hatası",
+      "apiUnreachable": "API Ulaşılamıyor"
+    },
+    "messages": {
+      "deleteAccount": "Bu hesabı kaldırmak istediğinizden emin misiniz?",
+      "apiError": "API ile bağlantı kurarken hata oluştu. Lütfen daha sonra tekrar deneyin.",
+      "apiUnreachable": "API sunucusuna ulaşılamıyor. İnternet bağlantınızı kontrol edin ve tekrar deneyin."
+    }
+  },
+  "toast": {
+    "defaultMessage": "Bir şey oldu!"
+  },
+  "accountManager": {
+    "title": "Hesap Yöneticisi",
+    "description": "Minecraft hesaplarınızı burada yönetin. Profiller arasında geçiş yapın, hesapları kaldırın veya oyun deneyiminizi kişiselleştirmek için skin ve pelerinlerinizi değiştirin.",
+    "deleteAccountTitle": "Hesap kaldırılsın mı?",
+    "deleteAccountMessage": "Bu hesabı kaldırmak istediğinizden emin misiniz?",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "removeAccountAriaLabel": "Hesabı kaldır",
+    "minecraft": "Minecraft",
+    "cracked": "Kırık",
+    "playtime": "Oynama süresi"
+  },
+  "versionSelector": {
+    "minecraftVersion": "Minecraft {version}",
+    "versionSummary": "Tercih ettiğiniz Minecraft sürümünü ve varyantını seçin.",
+    "closeButtonAriaLabel": "Kapatma düğmesi"
+  },
+  "console": {
+    "clearLogs": "Temizle",
+    "levels": {
+      "debug": "Hata ayıklama (Hepsi)",
+      "info": "Bilgi",
+      "warning": "Uyarı",
+      "error": "Hata"
+    },
+    "loggerTestMessage": "Logger test mesajı",
+    "levelChanged": "Seviye {level} olarak değiştirildi",
+    "somethingWentWrong": "Bir şeyler ters gitti"
+  },
+  "customOptions": {
+    "selectPlaceholder": "Seç",
+    "levels": {
+      "debug": "Hata ayıklama (Hepsi)",
+      "info": "Bilgi",
+      "warning": "Uyarı",
+      "error": "Hata"
+    },
+    "clear": "Temizle"
+  },
+  "launch": {
+    "launch": "Başlat",
+    "launchStatus": {
+      "downloading": "İndiriliyor",
+      "launching": "Başlatılıyor",
+      "patching": "Yama uygulanıyor",
+      "waiting": "Bekleniyor",
+      "retrying": "Tekrar deniyor",
+      "ready": "Oyun hazır",
+      "launchFailed": "Başlatma başarısız"
+    },
+    "changeVersion": "Sürümü değiştir"
+  },
+  "folderPicker": {
+    "browse": "Gözat",
+    "noFolderSelected": "Klasör seçilmedi"
+  },
+  "skinViewer": {
+    "defaultUsername": "MHF_Steve"
+  },
+  "logs": {
+    "languageSet": "Dil ayarlandı: {language}",
+    "discordRPCEnabled": "Discord RPC etkinleştirildi.",
+    "notificationSoundsEnabled": "Bildirim sesleri etkinleştirildi.",
+    "loadingSettings": "Ayarlar yükleniyor...",
+    "buildingVersions": "Sürümler hazırlanıyor...",
+    "checkingForUpdates": "Güncellemeler kontrol ediliyor...",
+    "initializingServices": "Servisler başlatılıyor...",
+    "validatingAccounts": "Hesaplar doğrulanıyor...",
+    "fetchingServerList": "Sunucu listesi alınıyor...",
+    "preparingLauncher": "Başlatıcı hazırlanıyor...",
+    "checkingAPIStatus": "API durumu kontrol ediliyor...",
+    "apiUnreachable": "API erişilemiyor. Bazı özellikler düzgün çalışmayabilir.",
+    "ready": "Hazır!"
+  }
+}

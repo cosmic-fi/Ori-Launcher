@@ -1,0 +1,49 @@
+{
+  "name": "ori-launcher",
+  "private": true,
+  "version": "2.0.0",
+  "main": "src/electron/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "build:ui": "vite build",
+    "build": "npm run build:ui",
+    "preview": "vite preview",
+    "dist": "npm run build && electron-builder"
+  },
+  "build": {
+    "appId": "online.cosmicfi.orilauncher",
+    "productName": "Ori Launcher",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "release"
+    },
+    "asar": true,
+    "win": {
+      "target": "nsis"
+    }
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "concurrently": "^9.2.0",
+    "electron": "^37.0.0",
+    "electron-builder": "^26.0.12",
+    "electron-reload": "^2.0.0-alpha.1",
+    "svelte": "^5.34.7",
+    "vite": "^6.3.5",
+    "wait-on": "^8.0.3"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.1.2",
+    "axios": "^1.10.0",
+    "cors": "^2.8.5",
+    "msmc": "^5.0.5",
+    "node-fetch": "^3.3.2",
+    "ori-mcc": "^1.0.1",
+    "skin3d": "^0.0.12"
+  }
+}

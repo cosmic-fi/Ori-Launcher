@@ -1,0 +1,15 @@
+// @ts-nocheck
+import { writable } from 'svelte/store';
+
+export const appVersion = writable('1.0.0');
+
+export async function fetchAppVersion() {
+    try {
+        const version = await window.electron.invoke('get-app-version');
+        appVersion.set(version);
+        return version;
+    } catch (error) {
+        console.error('Failed to fetch app version:', error);
+        return '1.0.0'; // Fallback version
+    }
+}
