@@ -28,6 +28,7 @@ export const defaultSettings = {
              }
         },
         resolution:{
+            fullscreen: { value: false },
             width: { value: 1280},
             height: { value: 720}
         },
@@ -35,7 +36,7 @@ export const defaultSettings = {
             JVMArgs: { value: '-XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M' },
             gameArgs: { value: '' },
             environmentVariables: { value: '' },
-            javaPath: { value: null },
+            javaPath: { value: '' },
             runAsAdmin: { value: false },
             runDetached: { value: true }
         }
@@ -63,7 +64,7 @@ export const defaultSettings = {
         }
     },
     developer: {
-        isDeveloper: false,
+        isDeveloper: { value: false },
         debug: {
             enableDevTools: { value: false }
         },

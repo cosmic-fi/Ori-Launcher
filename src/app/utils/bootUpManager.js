@@ -65,65 +65,98 @@ async function prepareLauncherStep() {
 
 // Check API status
 async function checkApiStatusStep() {
+  const wakeUpMessageArr = [
+    translate('logs.apiFetch.wakingUpServer'),
+    translate('logs.apiFetch.wakeup1'),
+    translate('logs.apiFetch.wakeup2'),
+    translate('logs.apiFetch.wakeup3'),
+    translate('logs.apiFetch.wakeup4'),
+    translate('logs.apiFetch.wakeup5'),
+    translate('logs.apiFetch.wakeup6'),
+    translate('logs.apiFetch.wakeup7')
+  ];
   bootStatus.set({ step: 2, message: translate('logs.checkingAPIStatus'), progress: 20 });
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 3000);
+  const maxWait = 60000; // 60 seconds
+  const retryDelay = 5000; // 5 seconds
+  const start = Date.now();
 
-  try {
-    const res = await fetch(`${baseURL}/ping`, {
-      method: 'GET',
-      cache: 'no-store',
-      signal: controller.signal
-    });
-    clearTimeout(timeout);
+  async function tryPing() {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
 
-    if (!res.ok) throw new Error('API not OK');
+    try {
+      const res = await fetch(`${baseURL}/ping`, {
+        method: 'GET',
+        cache: 'no-store',
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
 
-    const data = await res.json();
-    if (data.status !== 'ok') throw new Error('Bad ping response');
+      if (!res.ok) throw new Error('API not OK');
+      const data = await res.json();
+      if (data.status !== 'ok') throw new Error('Bad ping response');
+      // Success!
+      return true;
+    } catch (e) {
+      clearTimeout(timeout);
+      return false;
+    }
+  }
 
-  } catch (e) {
-    console.log(e)
-    clearTimeout(timeout);
+  // First attempt
+  if (await tryPing()) return;
+
+  // If failed, start "waking up" loop
+  while (Date.now() - start < maxWait) {
+    // Show a new random message each retry
     bootStatus.set({
       step: 2,
-      message: translate('logs.apiUnreachable'),
+      message: wakeUpMessageArr[Math.floor(Math.random() * wakeUpMessageArr.length)],
       progress: 20,
-      error: true
+      error: false
     });
+    await new Promise(res => setTimeout(res, retryDelay));
+    if (await tryPing()) return;
+  }
 
-    showDialog({
-      title: translate('dialog.titles.apiUnreachable'),
-      message: translate('dialog.messages.apiUnreachable'),
-      buttons: [
-        {
-          label: translate('dialog.continue'),
-          primary: false,
-          action: () => {
-            bootStatus.update(b => ({ ...b, error: false }));
-            runBootSequence(bootIndex + 1); // resume manually
-          }
-        },
-        {
-          label: translate('dialog.retry'),
-          primary: true,
-          type: 'danger',
-          action: async () => {
-            try {
-              await checkApiStatusStep(); // retry
-              runBootSequence(bootIndex + 1); // resume manually
-            } catch {
-              location.reload(); // fallback
-            }
+  // After maxWait, show error dialog
+  bootStatus.set({
+    step: 2,
+    message: translate('logs.apiUnreachable'),
+    progress: 20,
+    error: true
+  });
+
+  showDialog({
+    title: translate('dialog.titles.apiUnreachable'),
+    message: translate('dialog.messages.apiUnreachable'),
+    buttons: [
+      {
+        label: translate('dialog.continue'),
+        primary: false,
+        action: () => {
+          bootStatus.update(b => ({ ...b, error: false }));
+          runBootSequence(bootIndex + 1);
+        }
+      },
+      {
+        label: translate('dialog.retry'),
+        primary: true,
+        type: 'danger',
+        action: async () => {
+          try {
+            await checkApiStatusStep();
+            runBootSequence(bootIndex + 1);
+          } catch {
+            location.reload();
           }
         }
-      ]
-    });
+      }
+    ]
+  });
 
-    // ❗ Stop the boot sequence by throwing
-    throw new Error('API unreachable'); 
-  }
+  throw new Error('API unreachable');
 }
 
 // --- Boot Sequence Runner ---

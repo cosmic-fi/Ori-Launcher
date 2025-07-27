@@ -7,16 +7,20 @@
   import Dialog from './components/model/Dialog.svelte';
   import { dialogStore, closeDialog } from './stores/ui.js';
   import { applySystemSettings } from './utils/applySettings';
-  import { startConnectionDaemon } from './utils/connectionDaemon';
+  import { startConnectionDaemon, stopConnectionDaemon } from './utils/connectionDaemon';
   import { t } from './stores/i18n';
+    import { onMount } from 'svelte';
 
   const { isBootReady } = uiState;
-  applySystemSettings();    
   
-  startConnectionDaemon(
-    () => showToast($t('connection.connectionLost', 'error')),
-    () => showToast($t('connection.connectionRestored', 'success'))
-  );
+  onMount(() => {
+    applySystemSettings();    
+    startConnectionDaemon(
+      () => showToast($t('connection.connectionLost'), 'error'),
+      () => showToast($t('connection.connectionRestored'), 'success')
+    );
+    return stopConnectionDaemon();
+  })
   uiState.isBootReady.set(false);
 </script> 
 

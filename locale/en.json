@@ -39,7 +39,13 @@
     "game": {
       "versions": "Versions",
       "showSnapshots": "Show Snapshots versions of Minecraft",
-      "showSnapshotsDescription": "Show snapshot (beta/experimental) versions of Minecraft in the launcher."
+      "showSnapshotsDescription": "Show snapshot (beta/experimental) versions of Minecraft in the launcher.",
+      "display":{
+        "label": "Display",
+        "resolution": "Resolution",
+        "fullscreen": "Fullscreen",
+        "resolutionDescription": "Set the resolution of the game window."
+      }
     },
     "performance": {
       "label": "Performance",
@@ -50,12 +56,14 @@
       "label": "Runtime",
       "javaPath": "Java path",
       "javaPathDescription": "Specify the path to the Java executable.",
-      "customRunCommand": "Custom Run Command",
-      "customRunCommandDescription": "Specify a custom command to launch the game (advanced users only).",
+      "gameArgs": "Game Arguments",
+      "gameArgsDescription": "Specify game arguments to launch the game (advanced users only).",
       "jvmArguments": "JVM Arguments",
       "jvmArgumentsDescription": "Set additional JVM arguments for advanced performance tuning.",
       "environmentVariables": "Environment Variables",
       "environmentVariablesDescription": "Set environment variables for the runtime process.",
+      "runDetached": "Run Detached",
+      "runDetachedDescription": "Run the game in detached mode, allowing the launcher to close while the game is still running.",
       "runAsAdmin": "Run as Administrator",
       "runAsAdminDescription": "Launch the game with administrator privileges."
     },
@@ -257,6 +265,16 @@
     "fetchingServerList": "Fetching server list...",
     "preparingLauncher": "Preparing launcher...",
     "checkingAPIStatus": "Checking API status...",
+    "apiFetch": {
+      "wakingUpServer": "Waking up API server...",
+      "wakeup1": "Poking the server with a stick to wake it up...",
+      "wakeup2": "Politely asking the server to rise and shine...",
+      "wakeup3": "Bribing the server with virtual coffee...",
+      "wakeup4": "Sending a wake-up call to the server...",
+      "wakeup5": "Whispering 'good morning' to the server...",
+      "wakeup6": "Tickling the server's circuits...",
+      "wakeup7": "Playing loud music to get the server moving..."
+    },
     "apiUnreachable": "API unreachable. Some features might not work properly.",
     "ready": "Ready!"
   },

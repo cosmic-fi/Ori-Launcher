@@ -1,7 +1,7 @@
 <script>
 // @ts-nocheck
 
-    import { uiState } from "../../stores/ui";
+    import { showToast, uiState } from "../../stores/ui";
     import CustomOptions from "../ui/CustomOptions.svelte";
     import FolderPicker from "../ui/FolderPicker.svelte";
     import ToggleButton from "../ui/ToggleButton.svelte";
@@ -12,6 +12,7 @@
     import { currentLocale, t } from "../../stores/i18n";
     import { appVersion } from "../../utils/version";
     import ThemeCard from "../ui/ThemeCard.svelte";
+  import ResolutionPicker from "../ui/ResolutionPicker.svelte";
 
     let totalRam = null;
     let ramSize;
@@ -32,7 +33,6 @@
         { value: 'oceanic', label: $t('settings.appearance.theme.themes.oceanic'), colors: ['#1b2b34', '#6699cc', '#d8dee9'] },
         { value: 'pastel', label: $t('settings.appearance.theme.themes.pastel'), colors: ['#fdf6f0', '#ffb4a2', '#6d6875'] },
     ]
-
     function setTab(tab) {
         activeTab = tab;
     }
@@ -60,7 +60,15 @@
     function handleReset(){
         settings.reset();
     }
-
+    function handleResolutionPick(e) {
+        if (e.detail.width === 'fullscreen') {
+            settings.updatePath('game.resolution.fullscreen', true);
+        } else {
+            settings.updatePath('game.resolution.fullscreen', false);
+            settings.updatePath('game.resolution.width', e.detail.width);
+            settings.updatePath('game.resolution.height', e.detail.height);
+        }
+    }
     let ramPercent = 0; // 0-100
     let dragging = false;
 
@@ -90,16 +98,16 @@
         const selectedRam = Math.max(1, Math.round((ramPercent / 99) * (ramSize - 1) + 1));
 
         // Save to settings (if you want to persist it)
-        settings.updatePath('game.performance.ramAllocation', selectedRam);
+        settings.updatePath('game.performance.ramAllocation.max', selectedRam);
 
         // Optional: log for debugging
         console.log('Selected RAM:', selectedRam, 'GB');
     }
 
     // This will run whenever ramSize or the saved value changes
-    $: if (ramSize && $settings.game.performance.ramAllocation.value) {
+    $: if (ramSize && $settings.game.performance.ramAllocation.max.value) {
         // Clamp to min/max
-        const selectedRam = Math.max(1, Math.min($settings.game.performance.ramAllocation.value, ramSize));
+        const selectedRam = Math.max(1, Math.min($settings.game.performance.ramAllocation.max.value, ramSize));
         // Inverse of your slider formula:
         ramPercent = Math.round(((selectedRam - 1) / (ramSize - 1)) * 99);
     }
@@ -116,6 +124,39 @@
             contributors = [];
         }
     });
+
+    let bannerClickCount = 0;
+    const REQUIRED_CLICKS = 9;
+    const WARNING_THRESHOLD = 4;
+
+    function handleBannerClick() {
+        // Check if user is already a developer
+        if ($settings.developer.isDeveloper.value) {
+            showToast('You are already a developer! 😹', 'info', 1000);
+            return;
+        }
+        bannerClickCount++;
+        
+        const remainingClicks = REQUIRED_CLICKS - bannerClickCount;
+        
+        if (remainingClicks === WARNING_THRESHOLD) {
+            showToast(`Hmm what was that for!`, 'info', 500);
+        } else if (remainingClicks === 0) {
+            // Activate developer mode
+            settings.updatePath('developer.isDeveloper', true);
+            showToast('Developer mode activated! 😹', 'info', 4000);
+            bannerClickCount = 0; // Reset counter
+        } else if (remainingClicks > 0 && remainingClicks < WARNING_THRESHOLD) {
+            showToast(`${remainingClicks} clicks left to activate developer mode!`, 'info', 500);
+        }
+        
+        // Reset counter if user stops clicking for too long
+        setTimeout(() => {
+            if (bannerClickCount < REQUIRED_CLICKS) {
+                bannerClickCount = 0;
+            }
+        }, 10000); // Reset after 10 seconds of inactivity
+    }
 </script>
 
 <div class="settings">
@@ -133,7 +174,9 @@
                     <button class="cf-btn {activeTab === 'Game' ? 'active-tab' : ''}" onclick={() => setTab('Game')}>{$t('settings.tabs.game')}</button>
                     <button class="cf-btn {activeTab === 'Launcher' ? 'active-tab' : ''}" onclick={() => setTab('Launcher')}>{$t('settings.tabs.launcher')}</button>
                     <button class="cf-btn {activeTab === 'Storage' ? 'active-tab' : ''}" onclick={() => setTab('Storage')}>{$t('settings.tabs.storage')}</button>
-                    <button class="cf-btn {activeTab === 'Developer' ? 'active-tab' : ''}" onclick={() => setTab('Developer')}>{$t('settings.tabs.developer')}</button>
+                    {#if $settings.developer.isDeveloper.value}
+                        <button class="cf-btn {activeTab === 'Developer' ? 'active-tab' : ''}" onclick={() => setTab('Developer')}>{$t('settings.tabs.developer')}</button>
+                    {/if}
                     <button class="cf-btn {activeTab === 'About' ? 'active-tab' : ''}" onclick={() => setTab('About')}>{$t('settings.tabs.about')}</button>
                 </div>
             </div>
@@ -149,21 +192,17 @@
                             <span class="toggle-label">{$t('settings.appearance.theme.label')}</span>
                             <span class="group-description">{$t('settings.appearance.theme.description')}</span>
                             <div class="theme-cards-container">
-                                {#each themesOptions as theme}
+                                {#each themesOptions as theme(theme.label)}
                                     <ThemeCard 
-                                        themeName={theme.name}
-                                        displayName={theme.display}
+                                        value={theme.value}
+                                        displayName={theme.label}
+                                        selected={$settings.general.appearance.theme.value === theme.value}
                                         colors={theme.colors}
+                                        on:selecttheme={handleThemeChange}
                                     />
                                 {/each}
                             </div>
                             </div>
-                            <CustomOptions
-                                options={themesOptions}
-                                id="theme"
-                                value={$settings.general.appearance.theme.value}
-                                on:optionchange={handleThemeChange}
-                            />
                         </div>
                         <hr class="setting-seperator">
                         <div class="sub-item-group px-0">
@@ -224,7 +263,6 @@
                         <hr class="setting-seperator">
                         <div class="setting-item-group">
                             <span class="group-sub-label">{$t('settings.performance.label')}</span>
-
                             <div class="sub-item-group">
                                 <div class="toggle-label-group">
                                 <span class="toggle-label">{$t('settings.performance.ramAllocation')}</span>
@@ -342,13 +380,28 @@
                                                 text-align: center;
                                             "
                                         >
-                                            {$settings.game.performance.ramAllocation.value}GB
+                                            {$settings.game.performance.ramAllocation.max.value}GB
                                         </div>
                                     </div>
                                 </div>
                                 <span class="max-ram rsize">100%</span>
                             </div>
                             <br/> 
+                        </div>
+                        <div class="setting-item-group">
+                            <span class="group-sub-label">{$t('settings.game.display.label')}</span>
+                            <div class="sub-item-group">
+                                <div class="toggle-label-group">
+                                <span class="toggle-label">{$t('settings.game.display.resolution')}</span>
+                                <span class="group-description">{$t('settings.game.display.resolutionDescription')}</span>
+                                </div>
+                               <ResolutionPicker 
+                                    width={$settings.game.resolution.width.value || 1920}
+                                    height={$settings.game.resolution.height.value || 1080}
+                                    fullscreen={$settings.game.resolution.fullscreen.value || false}
+                                    on:resolutionchange={handleResolutionPick}
+                                />
+                            </div>                      
                         </div>
                         <hr class="setting-seperator">
                         <div class="setting-item-group">
@@ -360,22 +413,22 @@
                                 <span class="group-description">{$t('settings.runtime.javaPathDescription')}</span>
                                 </div>
                                 <FolderPicker
-                                    value={$settings.game.performance.javaPath.value}
-                                    on:change={e => settings.updatePath('game.performance.javaPath', e.detail.value)}
+                                    value={$settings.game.runtime.javaPath.value}
+                                    on:change={e => settings.updatePath('game.runtime.javaPath', e.detail.value)}
                                     placeholder="{$t('folderPicker.noFolderSelected')}"
                                 />
                             </div> 
                             <div class="sub-item-group folder-item-group">
                                 <div class="toggle-label-group">
-                                    <span class="toggle-label">{$t('settings.runtime.customRunCommand')}</span>
-                                    <span class="group-description">{$t('settings.runtime.customRunCommandDescription')}</span>
+                                    <span class="toggle-label">{$t('settings.runtime.gameArgs')}</span>
+                                    <span class="group-description">{$t('settings.runtime.gameArgsDescription')}</span>
                                 </div>
                                 <input
                                     type="text"
                                     class="s-input"
-                                    value={$settings.game.runtime.customRunCommand.value}
+                                    value={$settings.game.runtime.gameArgs.value}
                                     placeholder="e.g. java -Xmx4G -jar minecraft.jar"
-                                    oninput={e => settings.updatePath('game.runtime.customRunCommand', e.target.value)}
+                                    oninput={e => settings.updatePath('game.runtime.gameArgs', e.target.value)}
                                 />
                             </div>
                             <div class="sub-item-group folder-item-group">
@@ -402,6 +455,16 @@
                                     class="s-input"
                                     placeholder="e.g. JAVA_HOME=/usr/lib/jvm/java-17"
                                     oninput={e => settings.updatePath('game.runtime.environmentVariables', e.target.value)}
+                                />
+                            </div>
+                            <div class="sub-item-group">
+                                <div class="toggle-label-group">
+                                    <span class="toggle-label">{$t('settings.runtime.runDetached')}</span>
+                                    <span class="group-description">{$t('settings.runtime.runDetached')}</span>
+                                </div>
+                                <ToggleButton
+                                    checked={$settings.game.runtime.runDetached.value}
+                                    on:change={(e) => settings.updatePath('game.runtime.runDetached', e.detail.checked)}
                                 />
                             </div>
                             <div class="sub-item-group">
@@ -563,7 +626,9 @@
                     <div class="setting-group about-settings">
                         <div class="setting-item-group">
                             <span class="group-sub-label">
-                                <div class="banner"></div>
+                                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                                <!-- svelte-ignore a11y_no_static_element_interactions -->
+                                <div class="banner" onclick={handleBannerClick}></div>
                             </span>
                             <div class="sub-item-group">
                                 <div class="toggle-label-group">
@@ -683,6 +748,14 @@
 </div>
 
 <style>
+    .theme-cards-container{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: 30rem;
+        margin-top: 10px;
+    }
     .ram-slider-container {
         margin-top: .5vw;
         margin-bottom: 1rem;

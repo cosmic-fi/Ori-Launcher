@@ -1,13 +1,13 @@
 <script>
 // @ts-nocheck
+import { onMount } from 'svelte';
+import axios from 'axios';
 
 import SimpleTip from "../ui/SimpleTip.svelte";
 import { uiState, userAccountState, selectedAccountUsername, userBurst } from "../../stores/ui";
 import Launch from '../ui/Launch.svelte';
 import Console from '../ui/Console.svelte';
 import AccountManager from '../ui/AccountManager.svelte';
-import { onMount } from 'svelte';
-import axios from 'axios';
 import { fetchPlayerCounts } from "../../services/api";
 import { formatNumber } from "../../utils/helper";
 import { getSelectedAccount, refreshHasAccount } from '../../shared/user';
