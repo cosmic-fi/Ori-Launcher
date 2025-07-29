@@ -372,7 +372,7 @@ body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper 
   display: flex;
   flex-direction: row;
   margin-top: 1vw;
-  box-shadow: inset 0 0 0 3px var(--text-color-25);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.2823529412);
   background: linear-gradient(to bottom, #0c927c 50%, #096850);
   overflow: hidden;
   border-radius: var(--border-radius-10);
@@ -389,16 +389,18 @@ body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper 
   transition: all 0.2s ease-in-out;
 }
 body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper .launch-news-container .launch-container .launch-btn-container .launch-btn {
-  padding: 1vw 5vw;
+  padding: 1vw 4vw;
+  width: 15rem !important;
   transition: all 0.2s ease !important;
   text-shadow: 1px 1px 3px var(--base-variant-1-30);
 }
 body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper .launch-news-container .launch-container .launch-btn-container .launch-btn .version-label {
-  font-weight: 600;
+  font-weight: 800;
+  font-size: 1.3rem;
   text-transform: uppercase;
 }
 body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper .launch-news-container .launch-container .launch-btn-container .launch-btn .launch-status {
-  font-size: 0.87rem !important;
+  font-size: 0.99rem !important;
   color: var(--text-color);
   font-weight: 500;
   display: flex;
@@ -413,9 +415,10 @@ body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper 
   padding: 1.2vw 1.5vw !important;
   background-color: rgba(0, 0, 0, 0.1764705882);
   box-shadow: none;
-  color: var(--text-color-75);
-  font-size: var(--font-size-fluid-base);
+  color: var(--text-color);
+  font-size: 1.23rem;
   flex-grow: 1;
+  font-weight: 600;
 }
 body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper .launch-news-container .launch-container .launch-btn-container .version-change-btn:hover {
   color: var(--text-color);
@@ -423,6 +426,9 @@ body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper 
 }
 body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper .launch-news-container .launch-container .launch-btn-container .version-change-btn:active {
   color: var(--text-color-50);
+}
+body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper .launch-news-container .launch-container .busy-btn {
+  background: linear-gradient(to bottom, #DB4437 50%, #fd4343);
 }
 body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper .launch-news-container .bottom-group {
   flex-grow: 1;
@@ -558,7 +564,6 @@ body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper 
   padding: 1vw;
   font-size: var(--font-size-fluid-sm);
   font-family: "Courier New", Courier, monospace;
-  display: flex;
   flex-direction: column;
   overflow: hidden;
   overflow-y: auto;
@@ -567,8 +572,8 @@ body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper 
      -moz-user-select: text;
           user-select: text;
 }
-body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper .terminal .wrapper .console-container::-webkit-scrollbar {
-  display: none;
+body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper .terminal .wrapper .console-container .log-message {
+  width: 100%;
 }
 body .app .main .main-content .wrapper .bottom-container .wrapper .left-wrapper .terminal .wrapper .console-toolbar {
   position: absolute;

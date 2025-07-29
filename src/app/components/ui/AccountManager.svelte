@@ -5,7 +5,9 @@
     import { limitText, slideX } from '../../utils/helper';
     import { showDialog, uiState } from '../../stores/ui';
     import { accountsStore, userAccountState } from '../../stores/ui';
-  import { t } from '../../stores/i18n';
+    import { t } from '../../stores/i18n';
+    import { getAccountPlaytime } from "../../stores/playtime";
+    
     // Load accounts
     let accounts = getAccounts();
     let { selectedAccountUuid } = userAccountState;
@@ -15,6 +17,7 @@
         userAccountState.selectedAccountUuid.set(selectedAccount.uuid);
     }
     console.log(selectedAccount, selectedAccountUuid)
+    
     // Remove handler
     function handleDelete(account) {
         showDialog({
@@ -41,10 +44,17 @@
         const m = Math.floor((seconds % 3600) / 60);
         return h ? `${h}h ${m}min` : `${m}min`;
     }
+    
     $: accounts = $accountsStore;
     $: if(accounts.length === 0){
         uiState.activeTab.set('launch')
     }
+
+    // Create reactive playtime displays for all accounts
+    $: accountPlaytimes = accounts.reduce((acc, account) => {
+        acc[account.uuid || account.name] = formatPlaytime(getAccountPlaytime(account));
+        return acc;
+    }, {});
 </script>
 
 <div class="m-container user-account-manager-container">
@@ -76,17 +86,21 @@
                                 <span class="account-avatar" style="background: url({account.face});background-size: contain"></span>
                                 <div class="account-name-spec">
                                     <span class="account-name">
-                                        {#if account.username.length >= 20}
-                                            <SimpleTip text={account.username} direction="top">
-                                                <span  use:limitText={{size: 20}}>{account.username}</span>
+                                        {#if account.name.length >= 20}
+                                            <SimpleTip text={account.name} direction="top">
+                                                <span  use:limitText={{size: 20}}>{account.name}</span>
                                             </SimpleTip>
                                         {:else}
-                                            <span>{account.username}</span>
+                                            <span>{account.name}</span>
                                         {/if}
                                         <span class="account-type">{account.type === 'online' ? 'Minecraft' : 'Cracked'}</span>
                                     </span>
+                                    <!-- Updated reactive playtime display -->
                                     <div class="account-spec">
-                                        <span class="playtime">{$t('accountManager.playtime')}: <b>{formatPlaytime(account.playtime)}</b></span>
+                                        <span class="account-playtime">
+                                            <i class="fa fa-clock"></i>
+                                            {$t('accountManager.playtime')}: {accountPlaytimes[account.uuid || account.name] || '0min'}
+                                        </span>
                                     </div>
                                 </div>
                                 <span class="check-mark"><i class="fa fa-circle-check"></i></span>

@@ -396,7 +396,7 @@
                                 <span class="group-description">{$t('settings.game.display.resolutionDescription')}</span>
                                 </div>
                                <ResolutionPicker 
-                                    width={$settings.game.resolution.width.value || 1920}
+                                    width={$settings.game.resolution.width.value}
                                     height={$settings.game.resolution.height.value || 1080}
                                     fullscreen={$settings.game.resolution.fullscreen.value || false}
                                     on:resolutionchange={handleResolutionPick}

@@ -12,6 +12,7 @@ import { fetchPlayerCounts } from "../../services/api";
 import { formatNumber } from "../../utils/helper";
 import { getSelectedAccount, refreshHasAccount } from '../../shared/user';
 import { t } from '../../stores/i18n.js';
+  import { launchStatus } from '../../stores/launch';
 const { activeTab } = uiState;
 
 let totalOnlinePlayers = 0;
@@ -65,10 +66,12 @@ function toggleAccountManager(){
                         <i class="fa fa-heart"></i>{$t("mainContent.supportProject")}
                     </a>
                 </div>
-                <div class="wrapper-group">
+                <div class="wrapper-group console-btn-wrapper">
                     <SimpleTip text={$t("mainContent.console")} direction="bottom">
-                        <button onclick={toggleConsole} aria-label={$t("mainContent.console")}> <i class="fa fa-terminal"></i> </button>
+                        <button onclick={toggleConsole} aria-label={$t("mainContent.console")}> <i class="fa fa-terminal"></i>
+                        </button>
                     </SimpleTip>
+                    <span class="isntance-minecraft" class:blink={$launchStatus === 'running'} class:idle={$launchStatus !== 'running'} class:running={$launchStatus === 'running'}></span>
                 </div>
             </div>
             <div class="container-group">
@@ -140,4 +143,25 @@ function toggleAccountManager(){
         background-position: bottom !important;
         background-size: 70% !important;
     }
+    .console-btn-wrapper{
+        background-color: orange;
+        position: relative;
+    }
+    .isntance-minecraft{
+        width: 8px;
+        height: 8px;
+        background-color: orange;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        border-radius: 10px;
+    }
+
+    .isntance-minecraft.idle{
+        background-color: gray;
+    }
+    .isntance-minecraft.running{
+        background-color: var(--success-color);
+    }
+
 </style>

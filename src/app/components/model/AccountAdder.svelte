@@ -11,7 +11,7 @@ import { t, currentLocale } from '../../stores/i18n';
 const dispatch = createEventDispatcher();
 
 let showOfflineForm = false;
-let username = '';
+let name = '';
 let error = '';
 let submitting = false;
 
@@ -24,6 +24,7 @@ function selectType(type) {
         .then(async auth => {
             const result = JSON.parse(auth);
             const account = result.mc;
+            console.log(result);
 
             if (!result.success) {
                 uiState.toggleModel.set('none');
@@ -33,16 +34,18 @@ function selectType(type) {
 
                 let _mAccount = {
                     type: 'online',
-                    refresh_token: account.parent.msToken.refresh_token,
-                    access_token: account.parent.msToken.access_token,
-                    username: account.profile.name,
-                    uuid: account.profile.id,
-                    profile: account.profile 
+                    access_token: account.access_token,
+                    client_id: account.client_id,
+                    meta: account.meta,
+                    name: account.name,
+                    user_properties: account.user_properties,
+                    uuid: account.uuid
                 };
 
                 if ($accountsStore.length <= 0) {
                     setSelectedAccount(_mAccount.uuid);
                 }
+                // console.log(_mAccount);
                 console.log('before adding',$accountsStore.length <= 0, $accountsStore, _mAccount.uuid)
                 await addAccount(_mAccount);
                 console.log('after adding', $accountsStore.length <= 0, $accountsStore, _mAccount.uuid)
@@ -61,7 +64,7 @@ function submitOffline(e) {
     let uuid = generateHexUUID();
 
     error = '';
-    if (!username.trim()) {
+    if (!name.trim()) {
         error = $t('accountAdder.offlineAccountForm.usernameRequired');
         return;
     }
@@ -69,8 +72,12 @@ function submitOffline(e) {
 
     const _oAccount = {
         type: 'offline',
-        uuid: uuid,
-        username: username.trim()
+        access_token: 0,
+        client_id: 0,
+        meta: {},
+        name: name,
+        user_properties: {},
+        uuid: uuid 
     }
     setTimeout(() => {
         if($accountsStore.length <= 0){
@@ -78,10 +85,10 @@ function submitOffline(e) {
         }
         addAccount(_oAccount);
         submitting = false;
-        username = '';
+        name = '';
         showOfflineForm = false;
         showToast($t('accountAdder.accountAdded'), 'info');
-
+        console.log(_oAccount)
     }, 500);
 }
 </script>
@@ -123,17 +130,17 @@ function submitOffline(e) {
                             name="offline-name-input"
                             id="offline-account-name"
                             placeholder={$t('accountAdder.offlineAccountForm.usernamePlaceholder')}
-                            bind:value={username}
+                            bind:value={name}
                         >
                         {#if error}
                             <div class="form-error">{error}</div>
                         {/if}
                     </div>
                     <div class="button-group">
-                        <button class="cancel-btn" type="button" on:click={() => { showOfflineForm = false; username = ''; }}>
+                        <button class="cancel-btn" type="button" on:click={() => { showOfflineForm = false; name = ''; }}>
                             {$t('accountAdder.offlineAccountForm.cancel')}
                         </button>
-                        <button type="submit" disabled={submitting || !username.trim()}>
+                        <button type="submit" disabled={submitting || !name.trim()}>
                             {submitting ? $t('accountAdder.offlineAccountForm.saving') : $t('accountAdder.offlineAccountForm.save')}
                         </button>
                     </div>

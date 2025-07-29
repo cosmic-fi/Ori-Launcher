@@ -88,16 +88,16 @@ export const selectedAccountUsername = derived(
   [selectedAccount, accountsStore],
   ([$selectedAccount, $accountsStore]) => {
     const acc = $accountsStore.find(
-      a => a.uuid === $selectedAccount || a.username === $selectedAccount
+      a => a.uuid === $selectedAccount || a.name === $selectedAccount
     );
-    return acc ? acc.username : '';
+    return acc ? acc.name : '';
   }
 );
 export const userBurst = derived(
   [selectedAccount, accountsStore],
   ([$selectedAccount, $accountsStore]) => {
     const acc = $accountsStore.find(
-      a => a.uuid === $selectedAccount || a.username === $selectedAccount
+      a => a.uuid === $selectedAccount || a.name === $selectedAccount
     );
     return acc ? acc.burst : '';
   }

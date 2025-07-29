@@ -38,7 +38,33 @@ export const defaultSettings = {
             environmentVariables: { value: '' },
             javaPath: { value: '' },
             runAsAdmin: { value: false },
-            runDetached: { value: true }
+            runDetached: { value: true },
+            intelEnabledMac: { value: false },
+            verifyGameFiles: { value: false },
+            ignored: {
+                value: [
+                    'config',
+                    'essential',
+                    'logs',
+                    'resourcepacks',
+                    'saves',
+                    'screenshots',
+                    'shaderpacks',
+                    'W-OVERFLOW',
+                    'options.txt',
+                    'optionsof.txt'
+                ]
+            }
+        }
+    },
+    mods: {
+        enabled: { value: false },
+        modsFolder: { value: '' },
+        loader: { value: '' },
+        loaderConfig: {
+            javaPath: { value: '' },
+            minecraftJar: { value: '' },
+            minecraftJson: { value: '' },
         }
     },
     launcher: {

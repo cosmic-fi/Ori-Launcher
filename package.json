@@ -41,9 +41,11 @@
     "@electron/remote": "^2.1.2",
     "axios": "^1.10.0",
     "cors": "^2.8.5",
+    "minecraft-java-core": "^4.1.5",
+    "minecraft-launcher-js": "^0.1.0",
     "msmc": "^5.0.5",
     "node-fetch": "^3.3.2",
-    "ori-mcc": "^1.0.1",
+    "ori-mcc": "^1.0.5",
     "skin3d": "^0.0.12"
   }
 }

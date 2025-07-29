@@ -4,6 +4,7 @@
     "tabs": {
       "general": "General",
       "game": "Game",
+      "mods": "Mods",
       "launcher": "Launcher",
       "storage": "Storage",
       "developer": "Developer",
@@ -47,6 +48,26 @@
         "resolutionDescription": "Set the resolution of the game window."
       }
     },
+    "mods": {
+      "label": "Mods",
+      "description": "Manage and configure mods for the game.",
+      "modsFolder": "Mods folder",
+      "modsFolderDescription": "Set the directory where mods are installed.",
+      "enabledDescription": "Enable or disable mods.",
+      "loader": {
+        "label": "Mod loader",
+        "enabled": "Enabled",
+        "warning": "Warning: Changing the mod loader may break mod compatibility.",
+        "description": "Select the mod loader to use.",
+        "loaders": {
+          "forge": "Forge",
+          "fabric": "Fabric",
+          "neoforge": "NeoForge",
+          "quilt": "Quilt",
+          "legacyFabric": "Legacy Fabric"
+        }
+      }
+    },
     "performance": {
       "label": "Performance",
       "ramAllocation": "Ram allocation",
@@ -64,8 +85,15 @@
       "environmentVariablesDescription": "Set environment variables for the runtime process.",
       "runDetached": "Run Detached",
       "runDetachedDescription": "Run the game in detached mode, allowing the launcher to close while the game is still running.",
+      "verifyGameFiles": "Verify Game Files",
+      "verifyGameFilesDescription": "Verify game files integrity before launching.",
+      "verifyGameFilesWarning": "Warning: Enabling this option may increase launch time significantly and will delete all previous game progress.",
+      "intelEnabledMac": "Enable Intel Graphics on macOS",
+      "intelEnabledMacDescription": "Enable Intel graphics acceleration on macOS machines.",
       "runAsAdmin": "Run as Administrator",
-      "runAsAdminDescription": "Launch the game with administrator privileges."
+      "runAsAdminDescription": "Launch the game with administrator privileges.",
+      "ignored": "Ignored Files",
+      "ignoredDescription": "Specify files or directories to ignore when verifying game files."
     },
     "launcher": {
       "updates": "Updates",
@@ -235,6 +263,8 @@
   },
   "launch": {
     "launch": "Launch",
+    "cancel": "Cancel",
+    "closeGame": "Close Game",
     "launchStatus": {
       "downloading": "Downloading",
       "launching": "Launching",

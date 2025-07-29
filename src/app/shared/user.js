@@ -1,3 +1,4 @@
+// @ts-nocheck
 const ACCOUNTS_KEY = 'user_accounts';
 
 import { userAccountState, refreshAccounts, selectedAccount } from '../stores/ui.js';
@@ -20,17 +21,27 @@ export async function addAccount(account) {
     const accounts = loadAccounts();
     // Prevent duplicate: for online by uuid, for offline by username
     if (
-        (account.type === 'offline' && accounts.some(a => a.type === 'offline' && a.username === account.username)) ||
+        (account.type === 'offline' && accounts.some(a => a.type === 'offline' && a.name === account.name)) ||
         (account.type === 'online' && accounts.some(a => a.type === 'online' && a.uuid === account.uuid))
     ) {
         return false;
     }
 
     // Fetch face, skin, and burst
-    const { face, skin, burst } = await fetchFaceAndSkin(account.username);
+    const { face, skin, burst } = await fetchFaceAndSkin(account.name);
     account.face = face;
     account.skin = skin;
     account.burst = burst;
+    
+    // Initialize account_activities with playtime structure
+    account.account_activities = {
+        playtime: {
+            totalSeconds: 0,
+            lastUpdated: new Date().toISOString(),
+            lastSessionDuration: 0,
+            sessionCount: 0
+        }
+    };
 
     accounts.push(account);
     saveAccounts(accounts);
@@ -42,7 +53,7 @@ export async function addAccount(account) {
 export function updateAccount(identifier, updates) {
     const accounts = loadAccounts();
     const idx = accounts.findIndex(a =>
-        (a.type === 'offline' && a.username === identifier) ||
+        (a.type === 'offline' && a.name === identifier) ||
         (a.type === 'online' && a.uuid === identifier)
     );
     if (idx === -1) return false;
@@ -57,13 +68,13 @@ export function removeAccount(identifier) {
     const selectedId = localStorage.getItem('selectedAccount');
     const isSelected = accounts.some(
         a =>
-            ((a.type === 'offline' && a.username === identifier) ||
+            ((a.type === 'offline' && a.name === identifier) ||
              (a.type === 'online' && a.uuid === identifier)) &&
-            (a.uuid === selectedId || a.username === selectedId)
+            (a.uuid === selectedId || a.name === selectedId)
     );
 
     accounts = accounts.filter(a =>
-        !((a.type === 'offline' && a.username === identifier) ||
+        !((a.type === 'offline' && a.name === identifier) ||
           (a.type === 'online' && a.uuid === identifier))
     );
     saveAccounts(accounts);
@@ -84,7 +95,12 @@ export function refreshHasAccount() {
 
 export function setSelectedAccount(identifier) {
     selectedAccount.set(identifier);
-    userAccountState.selectedAccountUuid.set(identifier)
+    userAccountState.selectedAccountUuid.set(identifier);
+    
+    // Remove this obsolete call:
+    // if (typeof window !== 'undefined' && window.playtimeActions) {
+    //     window.playtimeActions.loadPlaytime();
+    // }
 }
 
 export function getSelectedAccount() {
@@ -92,5 +108,5 @@ export function getSelectedAccount() {
     if (!id) return null;
 
     const accounts = getAccounts();
-    return accounts.find(a => a.uuid === id || a.username === id) || null;
+    return accounts.find(a => a.uuid === id || a.name === id) || null;
 }

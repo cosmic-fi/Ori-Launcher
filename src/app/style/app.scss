@@ -436,7 +436,7 @@ body {
                                             flex-direction: row;
                                             // column-gap: 1.3vw;
                                             margin-top: 1vw;
-                                            box-shadow: inset 0 0 0 3px var(--text-color-25);
+                                            box-shadow: inset 0 0 0 3px #ffffff48;
                                             background: linear-gradient(to bottom, #0c927c 50%, #096850);
                                             overflow: hidden;
                                             border-radius: var(--border-radius-10);
@@ -454,17 +454,19 @@ body {
                                             }
 
                                             .launch-btn {
-                                                padding: 1vw 5vw;
+                                                padding: 1vw 4vw;
+                                                width: 15rem !important;
                                                 transition: all .2s ease !important;
                                                 text-shadow: 1px 1px 3px var(--base-variant-1-30);
 
                                                 .version-label {
-                                                    font-weight: 600;
+                                                    font-weight: 800;
+                                                    font-size: 1.3rem;
                                                     text-transform: uppercase;
                                                 }
 
                                                 .launch-status {
-                                                    font-size: .87rem !important;
+                                                    font-size: .99rem !important;
                                                     color: var(--text-color);
                                                     font-weight: 500;
                                                     display: flex;
@@ -489,9 +491,10 @@ body {
                                                 padding: 1.2vw 1.5vw !important;
                                                 background-color: #0000002d;
                                                 box-shadow: none;
-                                                color: var(--text-color-75);
-                                                font-size: var(--font-size-fluid-base);
+                                                color: var(--text-color);
+                                                font-size: 1.23rem;
                                                 flex-grow: 1;
+                                                font-weight: 600;
 
                                                 &:hover {
                                                     color: var(--text-color);
@@ -502,6 +505,9 @@ body {
                                                     color: var(--text-color-50);
                                                 }
                                             }
+                                        }
+                                        .busy-btn{
+                                            background: linear-gradient(to bottom, #DB4437 50%, #fd4343);
                                         }
                                     }
 
@@ -653,15 +659,14 @@ body {
                                             padding: 1vw;
                                             font-size: var(--font-size-fluid-sm);
                                             font-family: 'Courier New', Courier, monospace;
-                                            display: flex;
                                             flex-direction: column;
                                             overflow: hidden;
                                             overflow-y: auto;
                                             color: var(--text-color);
                                             user-select: text;
 
-                                            &::-webkit-scrollbar {
-                                                display: none;
+                                            .log-message{
+                                                width: 100%;
                                             }
                                         }
 
