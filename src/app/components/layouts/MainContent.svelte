@@ -569,19 +569,6 @@ function setupLaunchListeners(){
                                 background-image: url('https://i.ibb.co/B5P8DGT5/create-a-minecraft-themed-post.jpg');
                                 background-position: center;
                                 background-size: 100%;
-
-                                a{
-                                    display: flex;
-                                    justify-content: center;
-                                    align-items: center;
-                                    overflow: hidden;
-
-                                    img{
-                                        height: 100%;
-                                        width: 100%;
-                                        object-fit: cover;
-                                    }
-                                }
                             }
                             span{
                                 position: absolute;

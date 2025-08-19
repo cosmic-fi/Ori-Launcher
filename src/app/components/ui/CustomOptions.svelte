@@ -115,9 +115,6 @@
   gap: 1vw;
   white-space: nowrap;
 }
-img{
-  width: 20px !important;
-}
 .options .option-btn:hover,
 .options .dropdown-item:hover {
   background: var(--base-variant-3);

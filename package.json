@@ -1,6 +1,5 @@
 {
   "name": "ori-launcher",
-  "private": true,
   "version": "2.0.0",
   "description": "A modern Minecraft launcher with advanced features",
   "author": "Cosmic-fi <contact@cosmicfi.online>",
