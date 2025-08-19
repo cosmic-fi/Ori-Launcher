@@ -4,11 +4,6 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 
-# Build output
-dist/
-build/
-out/
-
 # IDE and editor files
 .idea/
 .vscode/
@@ -28,7 +23,7 @@ logs/
 *.log
 
 # Cache directories
-.cache/
+# .cache/
 .npm/
 .eslintcache
 
