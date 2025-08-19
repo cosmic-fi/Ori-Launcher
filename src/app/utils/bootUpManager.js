@@ -6,14 +6,17 @@ import { showDialog, uiState } from '../stores/ui.js';
 import { initVersionManager } from '../shared/versionManager.js';
 import { baseURL } from '../services/api.js';
 import { t } from '../stores/i18n.js';
+import { getAccounts, updateAccount, removeAccount } from '../shared/user.js';
+import { applySystemSettings } from './applySettings.js';
+import { settings } from '../stores/settings.js';
 
-const translate = get(t);
+let translate = (key) => key;
+t.subscribe(fn => translate = fn);
 let bootIndex = 0;
 
-// Splash status store for UI
 export const bootStatus = writable({
     step: 0,
-    message: 'Loading...',
+    message: `${translate('logs.loading')}`,
     progress: 0
 });
 
@@ -21,14 +24,21 @@ export const bootStatus = writable({
 async function loadSettingsStep() {
     bootStatus.set({ step: 1, message: translate('logs.loadingSettings'), progress: 10 });
     await new Promise(res => setTimeout(res, 300)); // Simulate delay
-    ensureSettingsInitialized();
+    await ensureSettingsInitialized();
+    await settings.init(); // Initialize the settings store
+    await applySystemSettings();
 }
 
 // Check for updates
 async function checkForUpdatesStep() {
-    bootStatus.set({ step: 2, message: translate('logs.checkingForUpdates'), progress: 25 });
-    // TODO: Replace with real update check
-    await new Promise(res => setTimeout(res, 500));
+    const currentSettings = get(settings);
+    if (currentSettings.launcher?.updates?.checkForUpdates?.value) {
+        bootStatus.set({ step: 2, message: translate('logs.checkingForUpdates'), progress: 25 });
+        // await checkForUpdates();
+    } else {
+        bootStatus.set({ step: 2, message: translate('logs.skippingUpdateCheck'), progress: 25 });
+    }
+  await new Promise(res => setTimeout(res, 500));
 }
 
 async function checkForVersions() {
@@ -45,8 +55,66 @@ async function initServicesStep() {
 // Validate accounts
 async function validateAccountsStep() {
     bootStatus.set({ step: 4, message: translate('logs.validatingAccounts'), progress: 60 });
-    // TODO: Refresh tokens, remove invalid accounts, etc.
-    await new Promise(res => setTimeout(res, 400));
+    
+    const accounts = getAccounts();
+    console.log(accounts);
+    const onlineAccounts = accounts.filter(account => account.type === 'online');
+    
+    if (onlineAccounts.length === 0) {
+        await new Promise(res => setTimeout(res, 200));
+        return;
+    }
+    console.log(onlineAccounts);
+    bootStatus.set({ step: 4, message: translate('logs.refreshingAccounts'), progress: 65 });
+    
+    let refreshedCount = 0;
+    let failedCount = 0;
+    
+    for (const account of onlineAccounts) {
+        try {
+            await window.electron.invoke('refresh-account', account)
+            .then(async (result) => {
+              if(result.success){
+                console.log(result);
+
+                let _mAccount = {
+                    ...account,
+                    access_token: result.mc.access_token,
+                    refresh_token: result.extra.msToken.refresh_token,
+                    client_id: result.mc.client_id,
+                    user_properties: result.mc.user_properties,
+                    profile: result.extra.profile
+                };
+                updateAccount(account.uuid || account.name, _mAccount);
+                refreshedCount++;
+              }else{
+                console.warn(`⚠ Failed to refresh account: ${account.name} - ${refreshResult.error || 'Unknown error'}`);
+                failedCount++;
+              }
+            });
+        } catch (error) {
+            console.error(`✗ Error refreshing account: ${account.name}`, error);
+            failedCount++;
+        }
+        
+        // Update progress for each account processed
+        const progress = 65 + (refreshedCount + failedCount) / onlineAccounts.length * 10;
+        bootStatus.set({ 
+            step: 4, 
+            message: `${translate('logs.refreshingAccounts')} (${refreshedCount + failedCount}/${onlineAccounts.length})`, 
+            progress 
+        });
+    }
+    
+    // Final status update
+    if (failedCount > 0) {
+        console.log(`Account refresh completed: ${refreshedCount} successful, ${failedCount} failed`);
+    } else {
+        console.log(`All ${refreshedCount} accounts refreshed successfully`);
+    }
+    
+    bootStatus.set({ step: 4, message: translate('logs.accountsValidated'), progress: 75 });
+    await new Promise(res => setTimeout(res, 300));
 }
 
 // Fetch server list
@@ -77,8 +145,8 @@ async function checkApiStatusStep() {
   ];
   bootStatus.set({ step: 2, message: translate('logs.checkingAPIStatus'), progress: 20 });
 
-  const maxWait = 60000; // 60 seconds
-  const retryDelay = 5000; // 5 seconds
+  const maxWait = 60000;
+  const retryDelay = 5000;
   const start = Date.now();
 
   async function tryPing() {
@@ -96,7 +164,6 @@ async function checkApiStatusStep() {
       if (!res.ok) throw new Error('API not OK');
       const data = await res.json();
       if (data.status !== 'ok') throw new Error('Bad ping response');
-      // Success!
       return true;
     } catch (e) {
       clearTimeout(timeout);

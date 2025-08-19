@@ -4,11 +4,9 @@ import en from '../../../locale/en.json';
 import fr from '../../../locale/fr.json';
 import id from '../../../locale/id.json';
 import tr from '../../../locale/tr.json';
-import ru from '../../../locale/ru.json';
 import es from '../../../locale/es.json';
-import jp from '../../../locale/jp.json';
 
-const locales = { en, fr, id, tr, ru, es, jp};
+const locales = { en, fr, id, tr, es};
 
 export const currentLocale = writable('en');
 

@@ -18,14 +18,14 @@ const __dirname = path.dirname(__filename);
 const isDev = !app.isPackaged;
 let window = undefined;
 
-const iconPath = `./src/assets/icons/${os.platform() === "win32" ? "win32.ico" : "default.png"}`;
+const iconPath = `./public/${os.platform() === "win32" ? "icon.ico" : "icon.png"}`;
 /**
  * Creates and sets up the main application window.
  */
 const setAppWindow = () => {
     window = new BrowserWindow({
         title: "Ori Launcher",
-        width: 1030,
+        width: 1024,
         height: 600,
         minHeight: 600,
         minWidth: 1030,
@@ -37,7 +37,7 @@ const setAppWindow = () => {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: true,
-            devTools: true,
+            devTools: false,
             preload: path.join(__dirname, '../preload.js')
         },
         backgroundColor: '#2F2F37',
@@ -47,13 +47,13 @@ const setAppWindow = () => {
     if (isDev) {
         window.loadURL('http://localhost:5173');
     } else {
-        window.loadFile(path.join(__dirname, '../../dist/index.html'));
+        window.loadFile(path.join(__dirname, '../../../dist/index.html'));
     }
 
     // Show the window once it's ready
     window.once('ready-to-show', () => {
         window.show();
-        window.webContents.openDevTools({ mode: "detach" });
+        // window.webContents.openDevTools({ mode: "detach" });
     });
 
     // Remove the default menu

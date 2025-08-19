@@ -10,7 +10,7 @@
   export let value = null;
 
   // Reactive statement to determine if this theme is selected
-  $: selected = $settings.general.appearance.theme.value === value;
+  $: selected = $settings.general?.appearance?.theme?.value === value;
 
   function onSelect(){
     dispatch('selecttheme', {

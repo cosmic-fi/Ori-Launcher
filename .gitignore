@@ -1,31 +1,44 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Dependencies
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
 
-node_modules
-dist
-dist-ssr
-*.local
-.src_
-.other
-.backup
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Build output
+dist/
+build/
+out/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
 .DS_Store
-*.suo
+
+# Environment variables
 .env
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+.env.local
+.env.development
+.env.test
+.env.production
 
-#Beta features and testing
-Servers.svelte
+# Logs
+logs/
+*.log
 
+# Cache directories
+.cache/
+.npm/
+.eslintcache
+
+# Test coverage
+coverage/
+
+# Misc
+*.bak
+*.tmp
+*.temp
+
+# Other
+TODO.md

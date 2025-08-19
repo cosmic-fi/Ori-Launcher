@@ -5,43 +5,103 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 contextBridge.exposeInMainWorld('electron', {
+  // System/Shell methods
   openExternal: (url) => shell.openExternal(url),
+  openPath: (path) => shell.openPath(path),
   invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
   on: (channel, listener) => ipcRenderer.on(channel, listener),
   getMemoryInfo: () => process.getSystemMemoryInfo(),
+  closeApp: () => ipcRenderer.invoke('quit-app'),
+  minimizeApp: () => ipcRenderer.invoke('minimize-app'),
+
+  // Dialog methods
   openFolderDialog: () => ipcRenderer.invoke('open-folder-dialog'),
+  
+  // App info methods
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   
+  // Account methods
+  refreshAccount: (profile) => ipcRenderer.invoke('refresh-account', profile),
+  downloadSkin: (skinUrl, filename) => ipcRenderer.invoke('download-skin', skinUrl, filename),
   
   // Game launch methods
   launchGame: async (options) => ipcRenderer.invoke('launch-game', options),
   cancelLaunch: async (event) => ipcRenderer.invoke('cancel-launch', event),
   
   // Launch event listeners
-  onLaunchProgress: (callback) => ipcRenderer.on('launch-progress', (event, data) => callback(data)),
-  onLaunchExtract: (callback) => ipcRenderer.on('launch-extract', (event, data) => callback(data)),
-  onLaunchCheck: (callback) => ipcRenderer.on('launch-check', (event, data) => callback(data)),
-  onLaunchData: (callback) => ipcRenderer.on('launch-data', (event,data) => callback(data)),
-  onLaunchClose: (callback) => ipcRenderer.on('launch-close', (event, code) => callback(code)),
-  onLaunchEstimatedTime: (callback) => ipcRenderer.on('launch-estimated-time', (event, data) => callback(data)),
-  onLaunchComplete: (callback) => ipcRenderer.on('launch-complete', (event, data) => callback(data)),
-  onLaunchError: (callback) => ipcRenderer.on('launch-error', (event, data) => callback(data)),
-  onLaunchCancelled: (callback) => ipcRenderer.on('launch-cancelled', (event, message) => callback(message)),
-  
-  // Remove event listeners
-  removeAllLaunchListeners: () => {
-    ipcRenderer.removeAllListeners('launch-progress');
-    ipcRenderer.removeAllListeners('launch-extract');
-    ipcRenderer.removeAllListeners('launch-check');
-    ipcRenderer.removeAllListeners('launch-estimated-time');
-    ipcRenderer.removeAllListeners('launch-complete');
-    ipcRenderer.removeAllListeners('launch-error');
-    ipcRenderer.removeAllListeners('launch-cancelled');
+  onLaunchProgress: (callback) => {
+    const wrappedCallback = (event, data) => callback(data);
+    ipcRenderer.on('launch-progress', wrappedCallback);
+    return () => ipcRenderer.removeListener('launch-progress', wrappedCallback);
+  },
+  onLaunchExtract: (callback) => {
+    const wrappedCallback = (event, data) => callback(data);
+    ipcRenderer.on('launch-extract', wrappedCallback);
+    return () => ipcRenderer.removeListener('launch-extract', wrappedCallback);
+  },
+  onLaunchCheck: (callback) => {
+    const wrappedCallback = (event, data) => callback(data);
+    ipcRenderer.on('launch-check', wrappedCallback);
+    return () => ipcRenderer.removeListener('launch-check', wrappedCallback);
+  },
+  onLaunchData: (callback) => {
+    const wrappedCallback = (event, data) => callback(data);
+    ipcRenderer.on('launch-data', wrappedCallback);
+    return () => ipcRenderer.removeListener('launch-data', wrappedCallback);
+  },
+  onLaunchClose: (callback) => {
+    const wrappedCallback = (event, code) => callback(code);
+    ipcRenderer.on('launch-close', wrappedCallback);
+    return () => ipcRenderer.removeListener('launch-close', wrappedCallback);
+  },
+  onLaunchEstimatedTime: (callback) => {
+    const wrappedCallback = (event, data) => callback(data);
+    ipcRenderer.on('launch-estimated-time', wrappedCallback);
+    return () => ipcRenderer.removeListener('launch-estimated-time', wrappedCallback);
+  },
+  onLaunchComplete: (callback) => {
+    const wrappedCallback = (event, data) => callback(data);
+    ipcRenderer.on('launch-complete', wrappedCallback);
+    return () => ipcRenderer.removeListener('launch-complete', wrappedCallback);
   },
   
+  // Error handling listeners
+  onError: (callback) => {
+    const wrappedCallback = (event, data) => callback(data);
+    ipcRenderer.on('error', wrappedCallback);
+    return () => ipcRenderer.removeListener('error', wrappedCallback);
+  },
+  onLaunchError: (callback) => {
+    const wrappedCallback = (event, data) => callback(data);
+    ipcRenderer.on('launch-error', wrappedCallback);
+    return () => ipcRenderer.removeListener('launch-error', wrappedCallback);
+  },
+  onLaunchCancelled: (callback) => {
+    const wrappedCallback = (event, message) => callback(message);
+    ipcRenderer.on('launch-cancelled', wrappedCallback);
+    return () => ipcRenderer.removeListener('launch-cancelled', wrappedCallback);
+  },
+  
+  // Launch listener cleanup
+  removeAllLaunchListeners: () => {
+    const events = ['launch-progress', 'launch-extract', 'launch-check', 'launch-data', 'launch-close', 'launch-estimated-time', 'launch-complete', 'error', 'launch-error', 'launch-cancelled'];
+    
+    events.forEach(event => {
+      const count = ipcRenderer.listenerCount(event);
+      if (count > 0) {
+        console.log(`[CLEANUP] Removing ${count} listeners for ${event}`);
+        ipcRenderer.removeAllListeners(event);
+      }
+    });
+    
+    console.log('[CLEANUP] All launch listeners removed');
+  },
+  
+  // File system methods
   getAppFolder: () => ipcRenderer.invoke('get-app-path'),
   getMinecraftFolder: () => ipcRenderer.invoke('get-minecraft-path'),
   getBackupFolder: () => ipcRenderer.invoke('get-backup-folder'),
+  openFolderInExplorer: (folderPath) => ipcRenderer.invoke('open-folder-in-explorer', folderPath),
   
   // File logging methods
   writeLog: (logEntry) => ipcRenderer.invoke('write-log', logEntry),
@@ -54,9 +114,19 @@ contextBridge.exposeInMainWorld('electron', {
   writeSessionLog: (logEntry) => ipcRenderer.invoke('write-session-log', logEntry),
   readSessionLogs: (options) => ipcRenderer.invoke('read-session-logs', options),
   
-  // Playtime tracking methods
-  getPlaytime: () => ipcRenderer.invoke('get-playtime'),
-  savePlaytime: (totalPlaytime, sessionDuration) => ipcRenderer.invoke('save-playtime', totalPlaytime, sessionDuration),
-  resetPlaytime: () => ipcRenderer.invoke('reset-playtime'),
-  getSessionHistory: () => ipcRenderer.invoke('get-session-history'),
+  // Discord RPC methods
+  discordRPC: {
+    init: () => ipcRenderer.invoke('discord-rpc-init'),
+    disconnect: () => ipcRenderer.invoke('discord-rpc-disconnect'),
+    setIdle: () => ipcRenderer.invoke('discord-rpc-set-idle'),
+    setLaunching: (version, variant) => ipcRenderer.invoke('discord-rpc-set-launching', version, variant),
+    setPlaying: (version, variant, username) => ipcRenderer.invoke('discord-rpc-set-playing', version, variant, username),
+    setDownloading: (progress, version) => ipcRenderer.invoke('discord-rpc-set-downloading', progress, version),
+    clear: () => ipcRenderer.invoke('discord-rpc-clear'),
+    getStatus: () => ipcRenderer.invoke('discord-rpc-status')
+  },
+  
+  // Notification methods
+  showSystemNotification: (options) => ipcRenderer.invoke('show-system-notification', options),
+  checkNotificationPermission: () => ipcRenderer.invoke('check-notification-permission'),
 });

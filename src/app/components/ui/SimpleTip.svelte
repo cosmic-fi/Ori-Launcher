@@ -65,3 +65,24 @@
 <div class="simple-tip" bind:this={tooltipEl}>
   {text}
 </div>
+
+<style>
+    .simple-tip{
+        position: fixed;
+        pointer-events: none;
+        z-index: 99999;
+        background-color: var(--base-variant-3);
+        color: var(--text-color-75);
+        border: 1px var(--base-color) solid;
+        border-radius: var(--border-radius-5);
+        font-size: var(--font-size-fluid-md);
+        box-shadow: 0 2px 8px var(--shadow-color);
+        transition: opacity 0.15s;
+        opacity: 0;
+        padding: .5vw 1vw;
+        max-width: 260px;           
+        word-break: break-word;  
+        overflow-wrap: break-word; 
+        white-space: pre-line; 
+    }
+</style>

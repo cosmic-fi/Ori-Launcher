@@ -1,4 +1,4 @@
-.<script>
+<script>
     import { toasts } from '../../stores/ui';
     import Toast from './Toast.svelte';
 </script>

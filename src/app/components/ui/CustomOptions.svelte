@@ -1,12 +1,12 @@
 <script>
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import { openDropdownId } from '../../stores/dropdown.js';
-  import { get } from 'svelte/store';
 
   export let options = [];
   export let value = null;
   export let id = '';
   export let disabled = false;
+  export let preferredPosition = '';
 
   const dispatch = createEventDispatcher();
 
@@ -15,43 +15,26 @@
 
   $: selectedOption = options.find(o => o.value === value) || options[0];
 
-  // Watch openDropdownId to close if another dropdown opens
   $: isOpen = $openDropdownId === id;
 
   function openDropdown(e) {
     if (disabled) return;
     e.stopPropagation();
     if ($openDropdownId === id) {
-      openDropdownId.set(null); // close if same dropdown clicked again
+      openDropdownId.set(null);
     } else {
-      openDropdownId.set(id); // open this one, close others
-      positionMenu();
+      openDropdownId.set(id);
+      // positionMenu();
     }
   }
 
   function selectOption(option) {
-    openDropdownId.set(null); // close dropdown
+    openDropdownId.set(null);
     dispatch('optionchange', {
       value: option.value,
-      data_value: option.label
+      data_value: option.label,
+      other: option.other
     });
-  }
-
-  function positionMenu() {
-    if (!menu || !toggle) return;
-    menu.classList.remove('open-up', 'open-down');
-    const toggleRect = toggle.getBoundingClientRect();
-    const menuRect = menu.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-
-    const spaceBelow = viewportHeight - toggleRect.bottom;
-    const spaceAbove = toggleRect.top;
-
-    if (spaceBelow < menuRect.height && spaceAbove > menuRect.height) {
-      menu.classList.add('open-up');
-    } else {
-      menu.classList.add('open-down');
-    }
   }
 
   function handleClickOutside(event) {
@@ -78,10 +61,16 @@
       disabled={disabled}
       type="button"
     >
-      <span class="btn-text">{selectedOption ? selectedOption.label : 'Select'}</span>
+      {@html selectedOption ? selectedOption.label : 'Select'}
       <i class="fa fa-caret-down"></i>
     </button>
-      <div class="dropdown-menu" bind:this={menu}>
+      <div 
+        class="dropdown-menu" bind:this={menu}
+        class:open-left={preferredPosition === 'left'}
+        class:open-right={preferredPosition === 'right'}
+        class:open-up={preferredPosition === 'up'}
+        class:open-down={preferredPosition === 'down'}
+      >
         <div class="menu-wrapper">
           {#each options as opt}
             <button
@@ -91,7 +80,7 @@
               data-value={opt.label}
               type="button"
             >
-              {opt.label}
+              {@html opt.label}
             </button>
           {/each}
         </div>
@@ -102,19 +91,109 @@
 <style>
 .options {
   position: relative;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+  border-radius: 5px;
 }
-.dropdown.open .dropdown-menu {
-  display: block;
+
+.options .option-btn,
+.options .dropdown-item {
+  background: var(--base-variant-1);
+  color: var(--text-color-75);
+  border: 1px var(--border-color) solid;
+  padding: 7px 16px;
+  border-radius: var(--border-radius-5);
+  font-size: var(--font-size-fluid-base);
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1vw;
+  white-space: nowrap;
 }
-.dropdown-menu {
-  background-color: green;
+img{
+  width: 20px !important;
+}
+.options .option-btn:hover,
+.options .dropdown-item:hover {
+  background: var(--base-variant-3);
+  color: var(--text-color-75);
+}
+
+.options .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.options .dropdown-toggle:after {
+    display: none;
+}
+
+.options .dropdown-menu {
+  display: none;
+  position: absolute;
+  background: var(--base-variant-2);
+  border: 1px var(--border-color) solid;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px var(--shadow-color-15);
   max-height: 200px;
   overflow: hidden;
   overflow-y: auto;
-  padding: 4px !important;
-  position: absolute;
+  padding: 4px;
   z-index: 10;
-  min-width: 100%;
-  font-weight: 100 !important;
+  font-weight: 100;
+  flex-direction: column;
+}
+
+.options .dropdown.open .dropdown-menu {
+  display: flex;
+}
+
+.options .dropdown-item {
+  background: none;
+  border: none;
+  color: var(--text-color-50);
+  padding: 8px 16px;
+  text-align: left;
+  width: 100%;
+  font-weight: 400;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.2s;
+  min-width: auto;
+  gap: 10px;
+  align-items: start;
+  justify-content: start;
+}
+
+/* Positioning classes for adaptive dropdown */
+.open-up {
+  bottom: calc(100% + 5px) !important;
+  right: 0 !important;
+}
+
+.open-down {
+  top: calc(100% + 5px) !important;
+  right: 0 !important;
+  left: auto !important;
+}
+
+.open-left {
+  right: calc(100% + 5px) !important;
+  top: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+}
+
+.open-right {
+  top: 0 !important;
+  left: calc(100% + 5px) !important;
+  bottom: auto !important;
+  right: auto !important;
 }
 </style>

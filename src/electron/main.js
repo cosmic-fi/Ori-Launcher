@@ -5,11 +5,13 @@
  */
 "use strict";
 
-import{ app, ipcMain, dialog } from "electron";
+import{ app, ipcMain, dialog, Notification, shell } from "electron";
 import msmc, { Auth } from 'msmc';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os'
+import http from 'http';
+import https from 'https';
 import { fileURLToPath } from 'url';
 
 // import autoUpdater from "electron-updater";
@@ -18,97 +20,127 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 import { setAppWindow, getAppWindow, closeAppWindow } from './window/appWindow.js';
-import setTray from "./utils/tray.js";
-// import { Launch, Microsoft } from "minecraft-java-core";
-import { MinecraftLauncher } from "./utils/MinecraftLauncher.js";
 import { Launch } from "ori-mcc";
 import { execSync } from "child_process";
+import { discordRPC } from './utils/discordRPC.js';
+import AppUpdater from './updater.js';
+
+
+const rootDirectory = process.env.APPDATA || (process.platform === 'darwin' ? `${process.env.APPDATA}/Library/Application Support`: process.env.HOME);
+
+const LOG_DIR = `${rootDirectory}/.OriLauncher/logs`
 
 /**
  * Sets up IPC handlers for communication between the main and renderer processes.
 */
-const launcher = new Launch();
-const rootDirectory = process.env.APPDATA || (process.platform === 'darwin' ? `${process.env.APPDATA}/Library/Application Support`: process.env.HOME);
-
 const setupIpcHandlers = () => {
-    // Game launch handlers
+    // GAME LAUNCH HANDLERS
     ipcMain.handle('launch-game', async (event, options) => {
+        // Create a new launcher instance for each launch
+        const launcher = new Launch();
+        let isCancelled = false;
+        
+        console.log(options);
+        // Set up cancel listener WITHIN this handler
+        const cancelHandler = ipcMain.handle('cancel-launch', async (cancelEvent, _) => {
+            try {
+                console.log('=============Requesting to cancel==============');
+                console.log('Cancelling launcher instance from within launch handler...');
+                
+                if (launcher) {
+                    try {
+                        await launcher.cancel();
+                        isCancelled = true;
+                        console.log('Launcher cancelled successfully', launcher);
+                    } catch (cancelError) {
+                        console.error('Error cancelling launcher:', cancelError);
+                    }
+                }
+                return { success: true };
+            } catch (error) {
+                console.error('Cancel failed:', error);
+                return { success: false, error: error.message };
+            }
+        });
+    
         try {
+            console.log(options);
             console.log("======= Starting game launch =======");
-            // Set up event forwarding from MinecraftLauncher to renderer
+            
             launcher.on('progress', (progress, size, element) => {
-                event.sender.send('launch-progress', { progress, size, element });
+                if (!isCancelled) {
+                    event.sender.send('launch-progress', { progress, size, element });
+                }
             });
             
             launcher.on('extract', (data) => {
-                event.sender.send('launch-extract', data);
+                if (!isCancelled) {
+                    event.sender.send('launch-extract', data);
+                }
             });
             
             launcher.on('check', (data) => {
-                event.sender.send('launch-check', data);
+                if (!isCancelled) {
+                    event.sender.send('launch-check', data);
+                }
             });
             
             launcher.on('estimated_time', (data) => {
-                event.sender.send('launch-estimated-time', data);
+                if (!isCancelled) {
+                    event.sender.send('launch-estimated-time', data);
+                }
             });
             
             launcher.on('complete', (data) => {
-                event.sender.send('launch-complete', data);
+                if (!isCancelled) {
+                    event.sender.send('launch-complete', data);
+                }
             });
-
+    
             launcher.on('data', (data) => {
-                event.sender.send('launch-data', data);
+                if (!isCancelled) {
+                    event.sender.send('launch-data', data);
+                }
             });
-
+    
             launcher.on('error', (error) => {
-                event.sender.send('launch-error', error);
+                if (!isCancelled) {
+                    event.sender.send('error', error);
+                    console.log(error);
+                }
             });
-
+    
             launcher.on('close', code => {
-                event.sender.send('launch-close', code);
+                if (!isCancelled) {
+                    event.sender.send('launch-close', code);
+                }
+                ipcMain.removeHandler('cancel-launch');
             });
             
             launcher.on('cancelled', message => {
-                event.sender.send('launch-cancelled');
-            })
+                event.sender.send('launch-cancelled', message);
+                console.log('huh---cancelling? Aw man!!!!!@@')
+                ipcMain.removeHandler('cancel-launch');
+            });
             
-            launcher.Launch(options);
+            await launcher.Launch(options);
+            console.log(options);
+            console.log('Launch initiated successfully');
             return { success: true };
         } catch (error) {
             console.error('Launch failed:', error);
-            return { success: false, error: error.message };
-        }
-    });
-    
-    // Cancel launch handler
-    ipcMain.handle('cancel-launch', async (event, _) => {
-        try {
-            await launcher.cancel();
-            console.log('=============Requesting to cancel==============');
-            return { success: true };
-        } catch (error) {
+            event.sender.send('launch-error', error);
+            console.log(error);
+            // Clean up the cancel handler on error
+            ipcMain.removeHandler('cancel-launch');
             return { success: false, error: error.message };
         }
     });
 
-    ipcMain.handle('get-app-version', () => {
-        return app.getVersion();
-    });
-
-    ipcMain.handle("open-folder-dialog", async () => {
-        const result = await dialog.showOpenDialog({
-            title: "Select a Folder",
-            properties: ["openDirectory", "dontAddToRecent"],
-        });
-
-        console.log('ahhhhh opening folderrrr')
-        return result.filePaths[0] || null;
-    });
-
+    // ACCOUNT HANDLERS
     ipcMain.handle('add-account', async () => {
         try {
             const auth = new msmc.Auth('select_account');
-
             const result = await auth.launch('electron', {
                 resizable: false,
                 width: 700,
@@ -116,7 +148,7 @@ const setupIpcHandlers = () => {
                 title: "Add Minecraft Account",
                 icon: path.join(
                     __dirname,
-                    `../../public/icons/${os.platform() === "win32" ? "win32.ico" : "default.png"}`
+                    `../../public/${os.platform() === "win32" ? "icon.ico" : "icon.png"}`
                 )
             })
             const mc = await result.getMinecraft();
@@ -126,6 +158,7 @@ const setupIpcHandlers = () => {
             return JSON.stringify({
                 success: true,
                 mc: mc.mclc(),
+                extra: mc
             });
         } catch (error) {
             console.error("Error during account authentication:", error);
@@ -135,7 +168,44 @@ const setupIpcHandlers = () => {
             });
         }
     });
+    ipcMain.handle('refresh-account', async (event, profile) => {
+        try {
+            console.log(profile);
+            if(!profile){
+                return {
+                    success: false,
+                    error: 'Profile is null!'
+                }
+            }    
+            const refreshed = await new msmc.Auth().refresh(profile.refresh_token);
+            return {
+                success: true,
+                mc: (await refreshed.getMinecraft()).mclc(),
+                extra: refreshed
+            }
+        } catch (error) {
+            console.log('Account refresh error: ', error);
+            return {
+                success: false,
+                error: error.message | 'Account refresh failed!'
+            }
+        }
+    });
 
+    // SYSTEM & UTILITY HANDLERS
+    ipcMain.handle('get-app-version', () => {
+        return app.getVersion();
+    });
+    ipcMain.handle("open-folder-dialog", async () => {
+        const result = await dialog.showOpenDialog(getAppWindow(), {
+            properties: ["openDirectory", "dontAddToRecent"],
+        });
+
+        return result.filePaths[0] || null;
+    });
+    ipcMain.handle('open-folder-in-explorer', async (event, folderPath) => {
+        await shell.openPath(folderPath);
+    });
     ipcMain.handle('get-app-path', () => {
         return `${rootDirectory}/.OriLauncher`
     });
@@ -144,36 +214,64 @@ const setupIpcHandlers = () => {
     });
     ipcMain.handle('get-backup-folder', () => {
         return `${rootDirectory}/.OriLauncher/Backup`
-    })
-    ipcMain.on("close-app-window", () => {
-        closeAppWindow();
     });
-
-    ipcMain.on("minimize-app-window", () => {
+    ipcMain.handle("minimize-app", () => {
         const win = getAppWindow();
         if (win) win.minimize();
     });
-
-    ipcMain.on("maximize-app-window", () => {
-        const win = getAppWindow();
-        if (win && !win.isMaximized()) win.maximize();
-    });
-
-    ipcMain.on("hide-app-window", () => {
-        const win = getAppWindow();
-        if (win) win.hide();
-    });
-
-    ipcMain.on("show-app-window", () => {
-        const win = getAppWindow();
-        if (win) win.show();
-    });
-
-    ipcMain.on("quit-app", () => {
+    ipcMain.handle("quit-app", () => {
         app.quit();
     });
+    ipcMain.handle('download-skin', async (event, skinUrl, filename) => {
+        try {
+            // Show save dialog
+            const result = await dialog.showSaveDialog({
+                title: 'Save Skin',
+                defaultPath: filename || 'skin.png',
+                filters: [
+                    { name: 'PNG Images', extensions: ['png'] },
+                    { name: 'All Files', extensions: ['*'] }
+                ]
+            });
+            
+            if (result.canceled) {
+                return { success: false, canceled: true };
+            }
+            
+            // Download the skin
+            const protocol = skinUrl.startsWith('https:') ? https : http;
+            
+            return new Promise((resolve) => {
+                protocol.get(skinUrl, (response) => {
+                    if (response.statusCode === 200) {
+                        const chunks = [];
+                        
+                        response.on('data', (chunk) => {
+                            chunks.push(chunk);
+                        });
+                        
+                        response.on('end', async () => {
+                            try {
+                                const buffer = Buffer.concat(chunks);
+                                await fs.writeFile(result.filePath, buffer);
+                                resolve({ success: true, filePath: result.filePath });
+                            } catch (error) {
+                                resolve({ success: false, error: error.message });
+                            }
+                        });
+                    } else {
+                        resolve({ success: false, error: `HTTP ${response.statusCode}` });
+                    }
+                }).on('error', (error) => {
+                    resolve({ success: false, error: error.message });
+                });
+            });
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    });
 
-    // Session-based file logging handlers
+    // LOG HANDLERS
     ipcMain.handle('start-log-session', async () => {
         try {
             const logsDir = path.join(rootDirectory, '.OriLauncher', 'logs');
@@ -198,7 +296,6 @@ const setupIpcHandlers = () => {
             return { success: false, error: error.message };
         }
     });
-    
     ipcMain.handle('end-log-session', async () => {
         try {
             if (global.currentLogSession) {
@@ -212,7 +309,6 @@ const setupIpcHandlers = () => {
             return { success: false, error: error.message };
         }
     });
-    
     ipcMain.handle('write-session-log', async (event, logEntry) => {
         try {
             if (!global.currentLogSession) {
@@ -228,7 +324,6 @@ const setupIpcHandlers = () => {
             return { success: false, error: error.message };
         }
     });
-    
     ipcMain.handle('read-session-logs', async (event, options = {}) => {
         try {
             const logsDir = path.join(rootDirectory, '.OriLauncher', 'logs');
@@ -290,7 +385,6 @@ const setupIpcHandlers = () => {
             return { success: false, error: error.message, logs: [] };
         }
     });
-    
     ipcMain.handle('clear-log-files', async () => {
         try {
             const logsDir = path.join(rootDirectory, '.OriLauncher', 'logs');
@@ -308,91 +402,6 @@ const setupIpcHandlers = () => {
             return { success: false, error: error.message };
         }
     });
-
-    ipcMain.handle('get-playtime', async () => {
-        try {
-            const playtimeFile = path.join(rootDirectory, '.OriLauncher', 'playtime.json');
-            
-            try {
-                const data = await fs.readFile(playtimeFile, 'utf8');
-                const playtimeData = JSON.parse(data);
-                return { success: true, playtime: playtimeData.totalPlaytime || 0 };
-            } catch (error) {
-                // File doesn't exist, return 0
-                return { success: true, playtime: 0 };
-            }
-        } catch (error) {
-            console.error('Failed to get playtime:', error);
-            return { success: false, error: error.message, playtime: 0 };
-        }
-    });
-    
-    ipcMain.handle('save-playtime', async (event, totalPlaytime, sessionDuration) => {
-        try {
-            const appDir = path.join(rootDirectory, '.OriLauncher');
-            await fs.mkdir(appDir, { recursive: true });
-            
-            const playtimeFile = path.join(appDir, 'playtime.json');
-            const sessionsFile = path.join(appDir, 'sessions.json');
-            
-            // Save total playtime
-            const playtimeData = {
-                totalPlaytime,
-                lastUpdated: new Date().toISOString()
-            };
-            await fs.writeFile(playtimeFile, JSON.stringify(playtimeData, null, 2), 'utf8');
-            
-            // Save session history
-            let sessions = [];
-            try {
-                const sessionsData = await fs.readFile(sessionsFile, 'utf8');
-                sessions = JSON.parse(sessionsData);
-            } catch {
-                // File doesn't exist, start with empty array
-            }
-            
-            sessions.push({
-                duration: sessionDuration,
-                timestamp: new Date().toISOString(),
-                date: new Date().toDateString()
-            });
-            
-            // Keep only last 100 sessions
-            if (sessions.length > 100) {
-                sessions = sessions.slice(-100);
-            }
-            
-            await fs.writeFile(sessionsFile, JSON.stringify(sessions, null, 2), 'utf8');
-            
-            return { success: true };
-        } catch (error) {
-            console.error('Failed to save playtime:', error);
-            return { success: false, error: error.message };
-        }
-    });
-    
-    ipcMain.handle('reset-playtime', async () => {
-        try {
-            const appDir = path.join(rootDirectory, '.OriLauncher');
-            const playtimeFile = path.join(appDir, 'playtime.json');
-            const sessionsFile = path.join(appDir, 'sessions.json');
-            
-            // Reset playtime data
-            const playtimeData = {
-                totalPlaytime: 0,
-                lastUpdated: new Date().toISOString()
-            };
-            
-            await fs.writeFile(playtimeFile, JSON.stringify(playtimeData, null, 2), 'utf8');
-            await fs.writeFile(sessionsFile, JSON.stringify([], null, 2), 'utf8');
-            
-            return { success: true };
-        } catch (error) {
-            console.error('Failed to reset playtime:', error);
-            return { success: false, error: error.message };
-        }
-    });
-    
     ipcMain.handle('get-session-history', async () => {
         try {
             const sessionsFile = path.join(rootDirectory, '.OriLauncher', 'sessions.json');
@@ -409,46 +418,158 @@ const setupIpcHandlers = () => {
             return { success: false, error: error.message, sessions: [] };
         }
     });
-    // ipcMain.handle("check-for-updates", async () => {
-    //     try {
-    //         const updateCheck = await autoUpdater.checkForUpdates();
-    //         return updateCheck.updateInfo;
-    //     } catch (error) {
-    //         return { error: true, message: error.message };
-    //     }
-    // });
 
-    // ipcMain.on("start-update", () => autoUpdater.downloadUpdate());
-    // ipcMain.on("install-update", () => autoUpdater.quitAndInstall());
+    // DISCORD RPC HANDLERS
+    ipcMain.handle('discord-rpc-init', async () => {
+        try {
+            await discordRPC.initialize();
+            return { success: true };
+        } catch (error) {
+            console.error('Discord RPC initialization failed:', error);
+            return { success: false, error: error.message };
+        }
+    });
+    ipcMain.handle('discord-rpc-disconnect', async () => {
+        try {
+            await discordRPC.disconnect();
+            return { success: true };
+        } catch (error) {
+            console.error('Discord RPC disconnect failed:', error);
+            return { success: false, error: error.message };
+        }
+    });
+    ipcMain.handle('discord-rpc-set-idle', () => {
+        discordRPC.setIdleActivity();
+        return { success: true };
+    });
+    ipcMain.handle('discord-rpc-set-launching', (event, version, variant) => {
+        discordRPC.setLaunchingActivity(version, variant);
+        return { success: true };
+    });
+    ipcMain.handle('discord-rpc-set-playing', (event, version, variant, username) => {
+        discordRPC.setPlayingActivity(version, variant, username);
+        return { success: true };
+    });
+    ipcMain.handle('discord-rpc-set-downloading', (event, progress, version) => {
+        discordRPC.setDownloadingActivity(progress, version);
+        return { success: true };
+    });
+    ipcMain.handle('discord-rpc-clear', async () => {
+        try {
+            await discordRPC.clearActivity();
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    });
+    ipcMain.handle('discord-rpc-status', () => {
+        return discordRPC.getStatus();
+    });
+
+    // SYSTEM NOTIFICATION HANDLERS
+    ipcMain.handle('show-system-notification', async (_, { title, body, icon, actions, silent = true }) => {
+        try {
+            const notification = new Notification({
+                title,
+                body,
+                icon: icon || path.join(__dirname, '../../public/icons/default.png'),
+                actions: actions || [],
+                silent: silent // This disables the default Windows notification sound
+            });
+
+            notification.show();
+            
+            return { success: true };
+        } catch (error) {
+            console.error('Failed to show system notification:', error);
+            return { success: false, error: error.message };
+        }
+    });
+    ipcMain.handle('check-notification-permission', async () => {
+        // On Windows/Linux, notifications are always available
+        // On macOS, we might need to check system preferences
+        return { permission: 'granted' };
+    });
+
+    // AUTO-UPDATER HANDLERS
+    let updaterInstance = null;
+    
+    ipcMain.handle('check-for-updates', async () => {
+        try {
+            if (!app.isPackaged) {
+                return { success: false, message: 'Updates not available in development mode' };
+            }
+            
+            if (!updaterInstance) {
+                const AppUpdater = require('./updater.js');
+                updaterInstance = new AppUpdater();
+            }
+            
+            updaterInstance.checkForUpdates();
+            return { success: true, message: 'Checking for updates...' };
+        } catch (error) {
+            console.error('Error checking for updates:', error);
+            return { success: false, error: error.message };
+        }
+    });
+    
+    ipcMain.handle('get-app-version', async () => {
+        return {
+            version: app.getVersion(),
+            isPackaged: app.isPackaged
+        };
+    });
+    
+    ipcMain.handle('set-update-channel', async (event, channel) => {
+        try {
+            if (!app.isPackaged) {
+                return { success: false, message: 'Update channel not available in development mode' };
+            }
+            
+            if (!updaterInstance) {
+                const AppUpdater = require('./updater.js');
+                updaterInstance = new AppUpdater();
+            }
+            
+            updaterInstance.setChannel(channel);
+            return { success: true, message: `Update channel set to ${channel}` };
+        } catch (error) {
+            console.error('Error setting update channel:', error);
+            return { success: false, error: error.message };
+        }
+    });
 };
 
-/**
- * Sets up auto-updater event listeners.
-*/
-// const setupAutoUpdaterListeners = () => {
-//     autoUpdater.autoDownload = false;
-
-//     autoUpdater.on("update-available", (info) => {
-//         getAppWindow().webContents.send("update-available", info);
-//     });
-
-//     autoUpdater.on("update-not-available", () => {
-//         getAppWindow().webContents.send("update-not-available");
-//     });
-
-//     autoUpdater.on("download-progress", (progress) => {
-//         getAppWindow().webContents.send("update-progress", progress);
-//     });
-
-//     autoUpdater.on("update-downloaded", () => {
-//         getAppWindow().webContents.send("update-ready");
-//     });
-// };
+// HELPER FUNCTIONS
+async function copyDirectory(src, dest) {
+    await fs.mkdir(dest, { recursive: true });
+    const items = await fs.readdir(src, { withFileTypes: true });
+    
+    for (const item of items) {
+        const srcPath = path.join(src, item.name);
+        const destPath = path.join(dest, item.name);
+        
+        if (item.isDirectory()) {
+            await copyDirectory(srcPath, destPath);
+        } else {
+            await fs.copyFile(srcPath, destPath);
+        }
+    }
+}
+async function ensureLogDir() {
+  try {
+    await fs.mkdir(LOG_DIR, { recursive: true });
+  } catch {}
+}
+function formatEntry(entry) {
+  const { timestamp, level, message, data } = entry;
+  const payload = data !== null && data !== undefined ? ` | ${JSON.stringify(data)}` : '';
+  return `[${timestamp}] [${level}] ${message}${payload}\n`;
+}
 
 /**
  * Initializes the application.
 */
-
 const initializeApp = async () => {
     const gotTheLock = app.requestSingleInstanceLock();
     if (!gotTheLock) {
@@ -477,9 +598,15 @@ const initializeApp = async () => {
     try {
         await app.whenReady();
         setupIpcHandlers();
-        // setupAutoUpdaterListeners();
         setAppWindow();
-        setTray();
+        
+        // Initialize auto-updater (only in production)
+        if (!app.isPackaged) {
+            console.log('Development mode - auto-updater disabled');
+        } else {
+            console.log('Initializing auto-updater...');
+            new AppUpdater();
+        }
     } catch (error) {
         console.error("Error during app initialization:", error);
         app.quit();

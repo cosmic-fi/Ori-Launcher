@@ -1,13 +1,16 @@
+// @ts-nocheck
 import axios from 'axios';
 
-export const baseURL = 'https://api.cosmicfi.online/api'; 
+export const baseURL = 'https://api.cosmicfi.online/api';
+export const fabricMetaURL = 'https://meta.fabricmc.net/v1/versions';
+
 /**
  * Fetch all Minecraft servers.
  * @returns {Promise<Array>} Array of server objects, or [] on error.
  */
 export async function fetchPlayerCounts() {
   try {
-    const response = await axios.get(`${baseURL}/players-hype`); // ← changed
+    const response = await axios.get(`${baseURL}/players-hype`);
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -17,7 +20,6 @@ export async function fetchPlayerCounts() {
     } else {
       console.error('Error setting up request:', error.message);
     }
-    // @ts-ignore
     return { totalOnlinePlayers: 0 };
   }
 }
@@ -34,15 +36,154 @@ export async function fetchNews() {
   return await res.json();
 }
 
-export async function fetchFaceAndSkin(username) {
-  // Face: 512px, Skin: full PNG, Burst: bust image
-  const faceUrl = `https://minotar.net/avatar/${username}.png`;
-  const skinUrl = `https://minotar.net/skin/${username}.png`;
-  const burstUrl = `https://minotar.net/bust/${username}/600.png`;
+// Helper function to add delay between requests
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-  return {
-    face: faceUrl,
-    skin: skinUrl,
-    burst: burstUrl
-  };
+// Helper function to validate URL accessibility
+async function validateImageUrl(url, retries = 2) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+            const response = await fetch(url, { method: 'HEAD' });
+            if (response.ok) {
+                return url;
+            }
+            if (response.status === 404) {
+                return null; // Don't retry 404s
+            }
+        } catch (error) {
+            if (attempt === retries) {
+                console.warn(`Failed to validate image URL after ${retries + 1} attempts:`, url, error.message);
+                return null;
+            }
+            await delay(1000 * Math.pow(2, attempt)); // Exponential backoff
+        }
+    }
+    return null;
+}
+
+// Updated fetchStarlightSkins function - returns URLs instead of base64
+async function fetchStarlightSkins(username) {
+    const baseUrl = 'https://starlightskins.lunareclipse.studio/render/ultimate';
+    const skinTypes = [
+        { key: 'face', path: '/face/512' },
+        { key: 'rawSkin', path: '/skin' },
+        { key: 'default', path: '/default/512' },
+        { key: 'lunging', path: '/lunging/512' },
+        { key: 'walking', path: '/walking/512' },
+        { key: 'running', path: '/running/512' },
+        { key: 'crouching', path: '/crouching/512' },
+        { key: 'crossed', path: '/crossed/512' },
+        { key: 'criss_cross', path: '/criss_cross/512' },
+        { key: 'ultimate', path: '/ultimate/512' },
+        { key: 'isometric', path: '/isometric/512' },
+        { key: 'head', path: '/head/512' },
+        { key: 'bust', path: '/bust/512' },
+        { key: 'full', path: '/full/512' },
+        { key: 'skin', path: '/skin/512' },
+        { key: 'processed', path: '/processed/512' },
+        { key: 'pixel', path: '/pixel/512' },
+        { key: 'orb', path: '/orb/512' },
+        { key: 'ornament', path: '/ornament/512' },
+        { key: 'christmas', path: '/christmas/512' },
+        { key: 'halloween', path: '/halloween/512' }
+    ];
+
+    const results = {};
+    
+    // Sequential downloads with delay to prevent API overload
+    for (const skinType of skinTypes) {
+        const url = `${baseUrl}${skinType.path}/${username}`;
+        const validatedUrl = await validateImageUrl(url);
+        
+        if (validatedUrl) {
+            results[skinType.key] = validatedUrl;
+        }
+        
+        // Add delay between requests
+        await delay(150);
+    }
+
+    return results;
+}
+
+// Updated fetchSkinDataForUser function
+async function fetchSkinDataForUser(username) {
+    try {
+        const skinData = await fetchStarlightSkins(username);
+        
+        // Validate that we have critical skin data
+        if (!skinData.face && !skinData.rawSkin) {
+            console.warn(`No critical skin data found for ${username}`);
+            return null; // This will trigger MHF_Steve fallback
+        }
+        
+        return skinData;
+    } catch (error) {
+        console.error('Error fetching skin data:', error);
+        return null;
+    }
+}
+
+// Updated fetchFaceAndSkin function - now returns URLs
+async function fetchFaceAndSkin(username, accountType = 'online') {
+    console.log(`Fetching skin data for ${username} (${accountType})`);
+    
+    try {
+        // Try Starlight Skins API for all account types
+        const skinData = await fetchSkinDataForUser(username);
+        
+        if (skinData && (skinData.face || skinData.rawSkin)) {
+            console.log(`Successfully fetched skin data for ${username}`);
+            return {
+                face: skinData.face || null,
+                skin: skinData.rawSkin || null,
+                renders: skinData // All render types
+            };
+        }
+        
+        // Fallback to MHF_Steve if no valid skin data
+        console.log(`Falling back to MHF_Steve for ${username}`);
+        const steveSkinData = await fetchSkinDataForUser('MHF_Steve');
+        
+        if (steveSkinData) {
+            return {
+                face: steveSkinData.face || null,
+                skin: steveSkinData.rawSkin || null,
+                renders: steveSkinData
+            };
+        }
+        
+        // Final hardcoded fallback URLs
+        const starlightBaseUrl = 'https://starlightskins.lunareclipse.studio/render/ultimate';
+        return {
+            face: `${starlightBaseUrl}/face/512/MHF_Steve`,
+            skin: `${starlightBaseUrl}/skin/MHF_Steve`,
+            renders: {
+                face: `${starlightBaseUrl}/face/512/MHF_Steve`,
+                rawSkin: `${starlightBaseUrl}/skin/MHF_Steve`,
+                default: `${starlightBaseUrl}/default/512/MHF_Steve`,
+                bust: `${starlightBaseUrl}/bust/512/MHF_Steve`,
+                full: `${starlightBaseUrl}/full/512/MHF_Steve`
+            }
+        };
+        
+    } catch (error) {
+        console.error(`Error in fetchFaceAndSkin for ${username}:`, error);
+        
+        // Final hardcoded fallback URLs
+        const starlightBaseUrl = 'https://starlightskins.lunareclipse.studio/render/ultimate';
+        return {
+            face: `${starlightBaseUrl}/face/512/MHF_Steve`,
+            skin: `${starlightBaseUrl}/skin/MHF_Steve`,
+            renders: {
+                face: `${starlightBaseUrl}/face/512/MHF_Steve`,
+                rawSkin: `${starlightBaseUrl}/skin/MHF_Steve`,
+                default: `${starlightBaseUrl}/default/512/MHF_Steve`,
+                bust: `${starlightBaseUrl}/bust/512/MHF_Steve`,
+                full: `${starlightBaseUrl}/full/512/MHF_Steve`
+            }
+        };
+    }
 }

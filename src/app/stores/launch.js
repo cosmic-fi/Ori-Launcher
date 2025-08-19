@@ -1,54 +1,48 @@
-import { writable, derived } from 'svelte/store';
+// @ts-nocheck
+import { writable, derived, get } from 'svelte/store'; // Add 'get' import
+import { logger } from '../utils/logger';
+import { showToast } from './ui';
+import { t } from './i18n';
 
 // Core launch state
 export const isLaunching = writable(false);
-export const launchStatus = writable('ready'); // 'ready', 'preparing', 'downloading', 'extracting', 'verifying', 'launching', 'error'
-export const launchProgress = writable(null);
+export const launchStatus = writable('ready');
 export const launchError = writable(null);
+export const launchTimeout = writable(null); // Add missing launchTimeout
 
-// Derived stores for UI states
+// Derived stores
 export const canLaunch = derived(
     [isLaunching, launchStatus],
-    ([$isLaunching, $launchStatus]) => !$isLaunching && $launchStatus !== 'error'
+    ([$isLaunching, $launchStatus]) => {
+        return !$isLaunching && ($launchStatus === 'ready' || $launchStatus === 'error');
+    }
 );
 
 export const launchButtonText = derived(
-    [isLaunching, launchStatus, launchProgress],
-    ([$isLaunching, $launchStatus, $launchProgress]) => {
-        if (!$isLaunching) return 'ready';
-        
+    [launchStatus, t],
+    ([$launchStatus, $t]) => {
         switch ($launchStatus) {
             case 'preparing':
-                return 'Preparing Minecraft';
+                return `${$t('mainContent.launch.launchStatus.preparing')}...`;
             case 'downloading':
-                return 'Downloading Assets';
+                return `${$t('mainContent.launch.launchStatus.downloading')} ${$t('mainContent.launch.launchStatus.assets')}...`;
             case 'extracting':
-                return 'Extracting Files';
+                return `${$t('mainContent.launch.launchStatus.extracting')}...`;
             case 'verifying':
-                return 'Verifying Files';
-            case 'launching':
-                return 'Starting Minecraft';
+                return `${$t('mainContent.launch.launchStatus.verifying')}...`;
             case 'running':
-                return 'Minecraft Running';
-            case 'cancelling':
-                return 'Canceling Launch';
-            case 'closing':
-                return 'Closiing Game';
+                return `${$t('mainContent.launch.launchStatus.running')}`;
             case 'error':
-                return 'Launch Failed';
+                return `${$t('mainContent.launch.launchStatus.error')}`;
             default:
-                return 'Prepairing Minecraft';
+                return `${$t('mainContent.launch.launchStatus.ready')}`;
         }
     }
 );
 
-// Launch state management functions
 export const launchActions = {
     setLaunching: (launching) => {
         isLaunching.set(launching);
-        if (!launching) {
-            launchProgress.set(null);
-        }
     },
     
     setStatus: (status) => {
@@ -57,22 +51,35 @@ export const launchActions = {
             launchError.set(null);
         }
     },
-    
-    setProgress: (progress) => {
-        launchProgress.set(progress);
-    },
-    
     setError: (error) => {
         launchError.set(error);
         launchStatus.set('error');
         isLaunching.set(false);
-        launchProgress.set(null);
+        
+        // Clear timeout on error
+        const timeoutId = get(launchTimeout);
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            launchTimeout.set(null);
+        }
+        
+        // Auto-reset after timeout errors (allow retry)
+        if (error && error.includes('timeout')) {
+            launchStatus.set('ready');
+            launchError.set(null);
+        }
+    },
+    
+    // Add manual reset for timeout errors
+    resetTimeout: () => {
+        launchStatus.set('ready');
+        launchError.set(null);
+        isLaunching.set(false);
     },
     
     reset: () => {
         isLaunching.set(false);
         launchStatus.set('ready');
-        launchProgress.set(null);
         launchError.set(null);
     }
 };

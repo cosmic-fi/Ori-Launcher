@@ -49,6 +49,7 @@
   <CustomOptions
     options={resolutionOptions}
     value={selectedValue}
+    preferredPosition="down"
     id="resolution"
     on:optionchange={handleResolutionPick}
   />

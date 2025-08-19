@@ -158,6 +158,10 @@ export async function openFolderPicker() {
     return await window.electron.openFolderDialog();
 }
 
+export async function openFolderInExplorer(path) {
+  await window.electron.openFolderInExplorer(path);
+}
+
 export async function getAppFolder(){
     return await window.electron.getAppFolder(); 
 }

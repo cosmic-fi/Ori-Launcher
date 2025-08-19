@@ -43,3 +43,58 @@
     </div>
   </div>
 {/if}
+<style>
+  .dialog-container{
+    position: absolute;
+    z-index: 9999;
+    /* background-color: rgba($color: #000000, $alpha: .1); */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .3s ease; 
+    backdrop-filter: blur(3px);
+
+    .d-wrapper{
+        background-color: var(--base-variant-1);
+        border: 2px var(--border-color) solid;
+        border-radius: 10px;
+        width: 22rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .d-title-description-container{
+            display: flex;
+            flex-direction: column;
+            padding: 15px 10px;
+            color: var(--text-color-75);
+            .d-title{
+                color: var(--text-color);
+                font-size: 1.2rem;
+                font-weight: 600;
+            }
+        }
+        .d-btn-container{
+            display: flex;
+            flex-direction: row;
+            padding: 10px;
+            border-top: 1px var(--border-color) solid;
+            column-gap: 10px;
+
+            .btn{
+                background-color: var(--base-variant-3);
+                padding: 8px 20px;
+                flex-grow: 1;
+                border-radius: 5px;
+                color: var(--text-color);
+                text-align: center;
+                font-family: inherit;
+                font-size: 1.02rem;
+                box-shadow: 2px 2px 5px var(--box-shadow);
+            }
+        }
+    }
+}
+</style>

@@ -4,7 +4,7 @@ import { writable } from 'svelte/store';
 export const versions = writable([]); // All grouped versions
 export const selectedMajor = writable('');
 export const selectedVariant = writable('');
-export const selectedType = writable('');
+export const selectedType = writable('release'); // Default to vanilla (release)
 
 // --- Helpers for localStorage persistence ---
 function persistStore(store, key) {
@@ -22,7 +22,7 @@ export async function initVersionManager() {
     const res = await fetch('https://piston-meta.mojang.com/mc/game/version_manifest.json');
     const data = await res.json();
 
-    // Only keep releases
+    // Only keep releases for now (we'll handle modded versions separately)
     const releases = data.versions.filter(v => v.type === "release");
 
     // Group by major version (e.g., "1.21", "1.20", etc.)
@@ -60,7 +60,7 @@ export async function initVersionManager() {
         const latestVariant = latest.variants.find(v => v.id === latest.name) || latest.variants[0];
         selectedMajor.set(latest.name);
         selectedVariant.set(latestVariant.id);
-        selectedType.set(latestVariant.type);
+        selectedType.set('release'); // Default to vanilla
     }
 }
 
@@ -69,4 +69,29 @@ export function setSelectedVersion(major, variantId, type) {
     selectedMajor.set(major);
     selectedVariant.set(variantId);
     selectedType.set(type);
+}
+
+// --- Get loader configuration based on selected type ---
+export function getLoaderConfig(selectedType) {
+    switch (selectedType) {
+        case 'forge':
+            return {
+                enable: true,
+                type: 'forge',
+                build: 'latest'
+            };
+        case 'fabric':
+            return {
+                enable: true,
+                type: 'fabric', 
+                build: 'latest'
+            };
+        case 'release':
+        default:
+            return {
+                enable: false,
+                type: null, 
+                build: null 
+            };
+    }
 }

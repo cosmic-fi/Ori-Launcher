@@ -6,13 +6,15 @@
     import FolderPicker from "../ui/FolderPicker.svelte";
     import ToggleButton from "../ui/ToggleButton.svelte";
     import { settings } from "../../stores/settings";
-    import { onMount } from "svelte";
+    import { onMount, tick } from "svelte";
     import { getTotalSystemRamGB } from "../../utils/helper";
     import SimpleTip from "../ui/SimpleTip.svelte";
     import { currentLocale, t } from "../../stores/i18n";
     import { appVersion } from "../../utils/version";
     import ThemeCard from "../ui/ThemeCard.svelte";
-  import ResolutionPicker from "../ui/ResolutionPicker.svelte";
+    import ResolutionPicker from "../ui/ResolutionPicker.svelte";
+    import { discordRPCManager } from '../../utils/discordRPCManager.js';
+    import { notificationService } from "../../services/notificationService";
 
     let totalRam = null;
     let ramSize;
@@ -24,15 +26,42 @@
 
     let activeTab = 'General';
     let currentTheme = 'light';
+    let currentLang = 'english';
+
+    let bannerClickCount = 0;
+    const REQUIRED_CLICKS = 9;
+    const WARNING_THRESHOLD = 4;
+
+    $: currentLauncherStyle = $settings?.general?.appearance?.launcherStyle?.value;
     $: themesOptions = [
-        { value: 'light', label: $t('settings.appearance.theme.themes.light'), colors: ['#f5f6fa', '#5865f2', '#23272a'] },
-        { value: 'dark', label: $t('settings.appearance.theme.themes.dark'), colors: ['#111011', '#1F5ADA', '#FFFFFF'] },
-        { value: 'minimal', label: $t('settings.appearance.theme.themes.minimal'), colors: ['#ffffff', '#007aff', '#222222'] },
-        { value: 'after-glow', label: $t('settings.appearance.theme.themes.after-glow'), colors: ['#232136', '#eb6f92', '#e0def4'] },
-        { value: 'retro-80s', label: $t('settings.appearance.theme.themes.retro-80s'), colors: ['#1a1a2e', '#e94560', '#f5f6fa'] },
-        { value: 'oceanic', label: $t('settings.appearance.theme.themes.oceanic'), colors: ['#1b2b34', '#6699cc', '#d8dee9'] },
-        { value: 'pastel', label: $t('settings.appearance.theme.themes.pastel'), colors: ['#fdf6f0', '#ffb4a2', '#6d6875'] },
-    ]
+        { value: 'light', label: $t('settings.general.appearance.theme.themes.light'), colors: ['#f5f6fa', '#8A2BE2', '#23272a'] },
+        { value: 'dark', label: $t('settings.general.appearance.theme.themes.dark'), colors: ['#111011', '#8A2BE2', '#FFFFFF'] },
+        { value: 'minimal', label: $t('settings.general.appearance.theme.themes.minimal'), colors: ['#ffffff', '#8A2BE2', '#222222'] },
+        { value: 'after-glow', label: $t('settings.general.appearance.theme.themes.after-glow'), colors: ['#232136', '#8A2BE2', '#e0def4'] },
+        { value: 'retro-80s', label: $t('settings.general.appearance.theme.themes.retro-80s'), colors: ['#1a1a2e', '#8A2BE2', '#f5f6fa'] },
+        { value: 'oceanic', label: $t('settings.general.appearance.theme.themes.oceanic'), colors: ['#1b2b34', '#8A2BE2', '#d8dee9'] },
+        { value: 'pastel', label: $t('settings.general.appearance.theme.themes.pastel'), colors: ['#fdf6f0', '#8A2BE2', '#6d6875'] }
+    ];
+
+    $: langOptions = [
+        { value: 'en', label: 'English' },
+        { value: 'id', label: 'Bahasa Indonesia' },
+        { value: 'tr', label: 'Türkçe' },
+        { value: 'fr', label: 'Français' },
+        { value: 'es', label: 'Español' }
+    ];
+    $: {
+        if ($settings?.launcher?.integration?.discordRichPresence?.value !== undefined) {
+            const isEnabled = $settings.launcher?.integration?.discordRichPresence?.value;
+            discordRPCManager.updateSettings(isEnabled).then(() => {
+                if (isEnabled) {
+                    discordRPCManager.refreshActivity();
+                }
+            }).catch(error => {
+                console.error('Failed to update Discord RPC settings:', error);
+            });
+        }
+    };
     function setTab(tab) {
         activeTab = tab;
     }
@@ -40,18 +69,6 @@
         settings.updatePath('general.appearance.theme', e.detail.value)
         document.body.setAttribute('data-theme', e.detail.value);
     }
-    let currentLang = 'english';
-    
-    let langOptions = [
-        { value: 'en', label: 'English' },
-        { value: 'id', label: 'Bahasa Indonesia' },
-        { value: 'tr', label: 'Türkçe' },
-        { value: 'fr', label: 'Français' },
-        { value: 'ru', label: 'Русский' },
-        { value: 'es', label: 'Español' },
-        { value: 'jp', label: '日本語' },
-        { value: 'ar', label: 'العربية' },
-    ]
     function handleLangChange(e){
         const newLang = e.detail.value;
         currentLocale.set(newLang);
@@ -105,49 +122,25 @@
     }
 
     // This will run whenever ramSize or the saved value changes
-    $: if (ramSize && $settings.game.performance.ramAllocation.max.value) {
+    $: if (ramSize && $settings.game?.performance?.ramAllocation?.max?.value) {
         // Clamp to min/max
-        const selectedRam = Math.max(1, Math.min($settings.game.performance.ramAllocation.max.value, ramSize));
+        const selectedRam = Math.max(1, Math.min($settings.game?.performance?.ramAllocation?.max?.value, ramSize));
         // Inverse of your slider formula:
         ramPercent = Math.round(((selectedRam - 1) / (ramSize - 1)) * 99);
     }
-
-    let contributors = [];
-
-    onMount(async () => {
-        try {
-            const res = await fetch('https://api.github.com/repos/cosmic-fi/Ori-Launcher/contributors');
-            if (res.ok) {
-                contributors = await res.json();
-            }
-        } catch (e) {
-            contributors = [];
-        }
-    });
-
-    let bannerClickCount = 0;
-    const REQUIRED_CLICKS = 9;
-    const WARNING_THRESHOLD = 4;
-
     function handleBannerClick() {
-        // Check if user is already a developer
-        if ($settings.developer.isDeveloper.value) {
-            showToast('You are already a developer! 😹', 'info', 1000);
+        if ($settings.developer?.isDeveloper?.value) {
+            showToast(`${$t('settings.about.alreadyADevMessage')}`, 'info', 1000);
             return;
         }
         bannerClickCount++;
         
         const remainingClicks = REQUIRED_CLICKS - bannerClickCount;
-        
-        if (remainingClicks === WARNING_THRESHOLD) {
-            showToast(`Hmm what was that for!`, 'info', 500);
-        } else if (remainingClicks === 0) {
-            // Activate developer mode
+       
+        if(remainingClicks === 0){
             settings.updatePath('developer.isDeveloper', true);
-            showToast('Developer mode activated! 😹', 'info', 4000);
-            bannerClickCount = 0; // Reset counter
-        } else if (remainingClicks > 0 && remainingClicks < WARNING_THRESHOLD) {
-            showToast(`${remainingClicks} clicks left to activate developer mode!`, 'info', 500);
+            showToast($t('settings.about.devUnlockedMessage'), 'info', 4000);
+            bannerClickCount = 0;
         }
         
         // Reset counter if user stops clicking for too long
@@ -171,10 +164,10 @@
             <div class="sb-category-container">
                 <div class="sb-category-item">
                     <button class="cf-btn {activeTab === 'General' ? 'active-tab' : ''}" onclick={() => setTab('General')}>{$t('settings.tabs.general')}</button>
-                    <button class="cf-btn {activeTab === 'Game' ? 'active-tab' : ''}" onclick={() => setTab('Game')}>{$t('settings.tabs.game')}</button>
                     <button class="cf-btn {activeTab === 'Launcher' ? 'active-tab' : ''}" onclick={() => setTab('Launcher')}>{$t('settings.tabs.launcher')}</button>
+                    <button class="cf-btn {activeTab === 'Game' ? 'active-tab' : ''}" onclick={() => setTab('Game')}>{$t('settings.tabs.game')}</button>
                     <button class="cf-btn {activeTab === 'Storage' ? 'active-tab' : ''}" onclick={() => setTab('Storage')}>{$t('settings.tabs.storage')}</button>
-                    {#if $settings.developer.isDeveloper.value}
+                    {#if $settings.developer?.isDeveloper?.value}
                         <button class="cf-btn {activeTab === 'Developer' ? 'active-tab' : ''}" onclick={() => setTab('Developer')}>{$t('settings.tabs.developer')}</button>
                     {/if}
                     <button class="cf-btn {activeTab === 'About' ? 'active-tab' : ''}" onclick={() => setTab('About')}>{$t('settings.tabs.about')}</button>
@@ -185,89 +178,65 @@
             <div class="top-content-container setting-content-container">
                 {#if activeTab === 'General'}
                     <div class="setting-group general-settings">
-                    <div class="setting-item-group">
-                        <span class="group-sub-label">{$t('settings.appearance.label')}</span>
-                        <div class="sub-item-group px-0">
-                            <div class="toggle-label-group">
-                            <span class="toggle-label">{$t('settings.appearance.theme.label')}</span>
-                            <span class="group-description">{$t('settings.appearance.theme.description')}</span>
-                            <div class="theme-cards-container">
-                                {#each themesOptions as theme(theme.label)}
-                                    <ThemeCard 
-                                        value={theme.value}
-                                        displayName={theme.label}
-                                        selected={$settings.general.appearance.theme.value === theme.value}
-                                        colors={theme.colors}
-                                        on:selecttheme={handleThemeChange}
-                                    />
-                                {/each}
+                        <div class="setting-item-group">
+                            <span class="group-sub-label">{$t('settings.general.appearance.label')}</span>
+                            <div class="sub-item-group px-0">
+                                <div class="toggle-label-group">
+                                    <span class="toggle-label">{$t('settings.general.appearance.theme.label')}</span>
+                                    <span class="group-description">{$t('settings.general.appearance.theme.description')}</span>
+                                    <div class="theme-cards-container">
+                                        {#each themesOptions as theme(theme.label)}
+                                            <ThemeCard 
+                                                value={theme.value}
+                                                displayName={theme.label}
+                                                selected={$settings.general?.appearance?.theme?.value === theme.value}
+                                                colors={theme.colors}
+                                                on:selecttheme={handleThemeChange}
+                                            />
+                                        {/each}
+                                    </div>
+                                </div>
                             </div>
+
+                            <hr class="setting-seperator">
+                            <div class="sub-item-group px-0">
+                                <div class="toggle-label-group">
+                                <span class="toggle-label">{$t('settings.general.appearance.language.label')}</span>
+                                <span class="group-description">{$t('settings.general.appearance.language.description')}</span>
+                                </div>
+                                <CustomOptions
+                                    options={langOptions}
+                                    id="langauge"
+                                    preferredPosition="up"
+                                    value={$settings.general?.appearance?.language?.value}
+                                    on:optionchange={handleLangChange}
+                                />
                             </div>
                         </div>
                         <hr class="setting-seperator">
-                        <div class="sub-item-group px-0">
-                            <div class="toggle-label-group">
-                            <span class="toggle-label">{$t('settings.appearance.language.label')}</span>
-                            <span class="group-description">{$t('settings.appearance.language.description')}</span>
-                            </div>
-                            <CustomOptions
-                                options={langOptions}
-                                id="langauge"
-                                value={$settings.general.appearance.language.value}
-                                on:optionchange={handleLangChange}
-                            />
+                        <div class="setting-item-group">
+                            <span class="group-sub-label">{$t('settings.general.startup.label')}</span>
+                            <div class="sub-item-group">
+                                <div class="toggle-label-group">
+                                <span class="toggle-label">{$t('settings.general.startup.autoStart')}</span>
+                                <span class="group-description">{$t('settings.general.startup.autoStartDescription')}</span>
+                                </div>
+                                <ToggleButton
+                                    checked={$settings.general?.startup?.autoStart?.value}
+                                    on:change={(e) => settings.updatePath('general.startup.autoStart', e.detail.checked)}
+                                />
+                            </div>                      
                         </div>
-                    </div>
-                    <hr class="setting-seperator">
-                    <div class="setting-item-group">
-                        <span class="group-sub-label">{$t('settings.startup.label')}</span>
-
-                        <div class="sub-item-group">
-                            <div class="toggle-label-group">
-                            <span class="toggle-label">{$t('settings.startup.autoStart')}</span>
-                            <span class="group-description">{$t('settings.startup.autoStartDescription')}</span>
-                            </div>
-                            <ToggleButton
-                                checked={$settings.general.startup.autoStart.value}
-                                on:change={(e) => settings.updatePath('general.startup.autoStart', e.detail.checked)}
-                            />
-                        </div>                      
-                        <div class="sub-item-group">
-                            <div class="toggle-label-group">
-                                <span class="toggle-label">{$t('settings.startup.minimizeToTray')}</span>
-                                <span class="group-description">{$t('settings.startup.minimizeToTrayDescription')}</span>
-                            </div>
-                            <ToggleButton
-                                checked={$settings.general.startup.minimizeToTray.value}
-                                on:change={(e) => settings.updatePath('general.startup.minimizeToTray', e.detail.checked)}
-                            />
-                        </div>                      
-                    </div>
                     </div>
                 {/if}
                 {#if activeTab === 'Game'}
                     <div class="setting-group game-settings">
                         <div class="setting-item-group">
-                            <span class="group-sub-label">{$t('settings.game.versions')}</span>
+                            <span class="group-sub-label">{$t('settings.game.performance.label')}</span>
                             <div class="sub-item-group">
                                 <div class="toggle-label-group">
-                                <span class="toggle-label">{$t('settings.game.showSnapshots')}</span>
-                                <span class="group-description">{$t('settings.game.showSnapshotsDescription')}</span>
-                                </div>
-                                <ToggleButton
-                                    checked={$settings.game.versions.allowSnapshotVersions.value}
-                                    on:change={e => settings.updatePath('game.versions.allowSnapshotVersions', e.detail.checked)}
-                                />
-                            </div>                      
-                        </div>
-                        <hr class="setting-seperator">
-                        <div class="setting-item-group">
-                            <span class="group-sub-label">{$t('settings.performance.label')}</span>
-                            <div class="sub-item-group">
-                                <div class="toggle-label-group">
-                                <span class="toggle-label">{$t('settings.performance.ramAllocation')}</span>
-
-                                <span class="group-description">{$t('settings.performance.ramAllocationDescription')}</span>
+                                <span class="toggle-label">{$t('settings.game.performance.ramAllocation')}</span>
+                                <span class="group-description">{$t('settings.game.performance.ramAllocationDescription')}</span>
                                 </div>
                             </div>
                             <br/>
@@ -380,7 +349,7 @@
                                                 text-align: center;
                                             "
                                         >
-                                            {$settings.game.performance.ramAllocation.max.value}GB
+                                            {$settings.game?.performance?.ramAllocation?.max?.value}GB
                                         </div>
                                     </div>
                                 </div>
@@ -396,62 +365,62 @@
                                 <span class="group-description">{$t('settings.game.display.resolutionDescription')}</span>
                                 </div>
                                <ResolutionPicker 
-                                    width={$settings.game.resolution.width.value}
-                                    height={$settings.game.resolution.height.value || 1080}
-                                    fullscreen={$settings.game.resolution.fullscreen.value || false}
+                                    width={$settings.game?.resolution?.width?.value}
+                                    height={$settings.game?.resolution?.height?.value || 1080}
+                                    fullscreen={$settings.game?.resolution?.fullscreen?.value || false}
                                     on:resolutionchange={handleResolutionPick}
                                 />
                             </div>                      
                         </div>
                         <hr class="setting-seperator">
                         <div class="setting-item-group">
-                            <span class="group-sub-label">{$t('settings.runtime.label')}</span>
+                            <span class="group-sub-label">{$t('settings.game.runtime.label')}</span>
                             <div class="sub-item-group folder-item-group">
                                 <div class="toggle-label-group">
-                                <span class="toggle-label">{$t('settings.runtime.javaPath')}</span>
-
-                                <span class="group-description">{$t('settings.runtime.javaPathDescription')}</span>
+                                <span class="toggle-label">{$t('settings.game.runtime.javaPath')}</span>
+                                <span class="group-description">{$t('settings.game.runtime.javaPathDescription')}</span>    
                                 </div>
                                 <FolderPicker
-                                    value={$settings.game.runtime.javaPath.value}
+                                    actionType='pick'
+                                    value={$settings.game?.runtime?.javaPath?.value}
                                     on:change={e => settings.updatePath('game.runtime.javaPath', e.detail.value)}
                                     placeholder="{$t('folderPicker.noFolderSelected')}"
                                 />
                             </div> 
                             <div class="sub-item-group folder-item-group">
                                 <div class="toggle-label-group">
-                                    <span class="toggle-label">{$t('settings.runtime.gameArgs')}</span>
-                                    <span class="group-description">{$t('settings.runtime.gameArgsDescription')}</span>
+                                    <span class="toggle-label">{$t('settings.game.runtime.gameArgs')}</span>
+                                    <span class="group-description">{$t('settings.game.runtime.gameArgsDescription')}</span>
                                 </div>
                                 <input
                                     type="text"
                                     class="s-input"
-                                    value={$settings.game.runtime.gameArgs.value}
+                                    value={$settings.game?.runtime?.gameArgs?.value}
                                     placeholder="e.g. java -Xmx4G -jar minecraft.jar"
                                     oninput={e => settings.updatePath('game.runtime.gameArgs', e.target.value)}
                                 />
                             </div>
                             <div class="sub-item-group folder-item-group">
                                 <div class="toggle-label-group">
-                                    <span class="toggle-label">{$t('settings.runtime.jvmArguments')}</span>
-                                    <span class="group-description">{$t('settings.runtime.jvmArgumentsDescription')}</span>
+                                    <span class="toggle-label">{$t('settings.game.runtime.jvmArguments')}</span>
+                                    <span class="group-description">{$t('settings.game.runtime.jvmArgumentsDescription')}</span>
                                 </div>
                                 <input
                                     type="text"
                                     class="s-input"
-                                    value="{$settings.game.runtime.JVMArgs.value}"
+                                    value="{$settings.game?.runtime?.JVMArgs?.value}"
                                     placeholder="e.g. -Xmx4G -XX:+UseG1GC"
                                     oninput={e => settings.updatePath('game.runtime.JVMArgs', e.target.value)}
                                 />
                             </div>
                             <div class="sub-item-group folder-item-group">
                                 <div class="toggle-label-group">
-                                    <span class="toggle-label">{$t('settings.runtime.environmentVariables')}</span>
-                                    <span class="group-description">{$t('settings.runtime.environmentVariablesDescription')}</span>
+                                    <span class="toggle-label">{$t('settings.game.runtime.environmentVariables')}</span>
+                                    <span class="group-description">{$t('settings.game.runtime.environmentVariablesDescription')}</span>
                                 </div>
                                 <input
                                     type="text"
-                                    value="{$settings.game.runtime.environmentVariables.value}"
+                                    value="{$settings.game?.runtime?.environmentVariables?.value}"
                                     class="s-input"
                                     placeholder="e.g. JAVA_HOME=/usr/lib/jvm/java-17"
                                     oninput={e => settings.updatePath('game.runtime.environmentVariables', e.target.value)}
@@ -459,22 +428,12 @@
                             </div>
                             <div class="sub-item-group">
                                 <div class="toggle-label-group">
-                                    <span class="toggle-label">{$t('settings.runtime.runDetached')}</span>
-                                    <span class="group-description">{$t('settings.runtime.runDetached')}</span>
+                                    <span class="toggle-label">{$t('settings.game.runtime.runDetached')}</span>
+                                    <span class="group-description">{$t('settings.game.runtime.runDetached')}</span>
                                 </div>
                                 <ToggleButton
-                                    checked={$settings.game.runtime.runDetached.value}
+                                    checked={$settings.game?.runtime?.runDetached?.value}
                                     on:change={(e) => settings.updatePath('game.runtime.runDetached', e.detail.checked)}
-                                />
-                            </div>
-                            <div class="sub-item-group">
-                                <div class="toggle-label-group">
-                                    <span class="toggle-label">{$t('settings.runtime.runAsAdmin')}</span>
-                                    <span class="group-description">{$t('settings.runtime.runAsAdminDescription')}</span>
-                                </div>
-                                <ToggleButton
-                                    checked={$settings.game.runtime.runAsAdmin.value}
-                                    on:change={(e) => settings.updatePath('game.runtime.runAsAdmin', e.detail.checked)}
                                 />
                             </div>
                         </div>
@@ -490,48 +449,87 @@
                                 <span class="group-description">{$t('settings.launcher.checkForUpdatesDescription')}</span>
                                 </div>
                                 <ToggleButton
-                                    checked={$settings.launcher.updates.checkForUpdates.value}
+                                    checked={$settings.launcher?.updates?.checkForUpdates?.value}
                                     on:change={(e) => settings.updatePath('launcher.updates.checkForUpdates', e.detail.checked)}
                                 />
                             </div>                      
                         </div>
                         <hr class="setting-seperator">
                         <div class="setting-item-group">
-                            <span class="group-sub-label">{$t('settings.integration.label')}</span>
+                            <span class="group-sub-label">{$t('settings.launcher.integration.label')}</span>
                             <div class="sub-item-group">
                                 <div class="toggle-label-group">
-                                    <span class="toggle-label">{$t('settings.integration.discordRPC')}</span>
-                                    <span class="group-description">{$t('settings.integration.discordRPCDescription')}</span>
+                                    <span class="toggle-label">{$t('settings.launcher.integration.discordRPC')}</span>
+                                    <span class="group-description">{$t('settings.launcher.integration.discordRPCDescription')}</span>
                                 </div>
                                 <ToggleButton
-                                    checked={$settings.launcher.integration.discordRichPresence.value}
+                                    checked={$settings.launcher?.integration?.discordRichPresence?.value}
                                     on:change={(e) => settings.updatePath('launcher.integration.discordRichPresence', e.detail.checked)}
                                 />
                             </div>
                         </div>
                         <hr class="setting-seperator">
                         <div class="setting-item-group">
-                            <span class="group-sub-label">{$t('settings.notification.label')}</span>
-
+                            <span class="group-sub-label">{$t('settings.launcher.notification.label')}</span>
                             <div class="sub-item-group">
                                 <div class="toggle-label-group">
-                                    <span class="toggle-label">{$t('settings.notification.showUpdateNotification')}</span>
-                                    <span class="group-description">{$t('settings.notification.showUpdateNotificationDescription')}</span>
+                                    <span class="toggle-label">{$t('settings.launcher.notification.systemNotifications')}</span>
+                                    <span class="group-description">{$t('settings.launcher.notification.systemNotificationsDescription')}</span>    
                                 </div>
                                 <ToggleButton
-                                    checked={$settings.launcher.notification.updateNotification.value}
+                                    checked={$settings.launcher?.notification?.systemNotifications?.value}
+                                    on:change={(e) => settings.updatePath('launcher.notification.systemNotifications', e.detail.checked)}
+                                />
+                            </div>
+                            
+                            <!-- Update Notifications -->
+                            <div class="sub-item-group">
+                                <div class="toggle-label-group">
+                                    <span class="toggle-label">{$t('settings.launcher.notification.showUpdateNotification')}</span>
+                                    <span class="group-description">{$t('settings.launcher.notification.showUpdateNotificationDescription')}</span>
+                                </div>
+                                <ToggleButton
+                                    checked={$settings.launcher?.notification?.updateNotification?.value}
                                     on:change={(e) => settings.updatePath('launcher.notification.updateNotification', e.detail.checked)}
                                 />
                             </div>
+                            
+                            <!-- Sound Settings -->
                             <div class="sub-item-group">
                                 <div class="toggle-label-group">
-                                    <span class="toggle-label">{$t('settings.notification.playSound')}</span>
-                                    <span class="group-description">{$t('settings.notification.playSoundDescription')}</span>
+                                    <span class="toggle-label">{$t('settings.launcher.notification.playSound')}</span>
+                                    <span class="group-description">{$t('settings.launcher.notification.playSoundDescription')}</span>
                                 </div>
                                 <ToggleButton
-                                    checked={$settings.launcher.notification.playSound.value}
-                                    on:change={(e) => settings.updatePath('launcher.notification.playSound', e.detail.checked)}
+                                    checked={$settings.launcher?.notification?.playSound?.value}
+                                    on:change={(e) => {
+                                        settings.updatePath('launcher.notification.playSound', e.detail.checked);
+                                    }}
                                 />
+                            </div>
+                            
+                            <!-- Notification Categories -->
+                            <div class="sub-item-group notification-category-container">
+                                <div class="toggle-label-group">
+                                    <span class="toggle-label">{$t('settings.launcher.notification.categories.label')}</span>
+                                    <span class="group-description">{$t('settings.launcher.notification.categories.description')}</span>
+                                </div>
+                                <div class="notification-categories">
+                                    <div class="category-item">
+                                        <span>{$t('settings.launcher.notification.categories.updates')}</span>
+                                        <ToggleButton
+                                            checked={$settings.launcher?.notification?.categories?.updates?.value}
+                                            on:change={(e) => settings.updatePath('launcher.notification.categories.updates', e.detail.checked)}
+                                        />
+                                    </div>
+                                    <div class="category-item">
+                                        <span>{$t('settings.launcher.notification.categories.launches')}</span>
+                                        <ToggleButton
+                                            checked={$settings.launcher?.notification?.categories?.launches?.value}
+                                            on:change={(e) => settings.updatePath('launcher.notification.categories.launches', e.detail.checked)}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -546,7 +544,9 @@
                                     <span class="group-description">{$t('settings.storage.launcherFolderDescription')}</span>
                                 </div>
                                 <FolderPicker
-                                    value={$settings.storage.directories.launcherFolder.value}
+                                    actionType="open"
+                                    inputReadOnly={true}
+                                    value={$settings.storage?.directories?.launcherFolder?.value}
                                     on:change={e => settings.updatePath('storage.directories.launcherFolder', e.detail.value)}
                                     placeholder="{$t('folderPicker.noFolderSelected')}"
                                 />
@@ -557,69 +557,45 @@
                                     <span class="group-description">{$t('settings.storage.minecraftFolderDescription')}</span>
                                 </div>
                                 <FolderPicker
-                                    value={$settings.storage.directories.minecraftFolder.value}
+                                    actionType='open'
+                                    inputReadOnly={true}
+                                    value={$settings.storage?.directories?.minecraftFolder?.value}
+                                    on:change={e => settings.updatePath('storage.directories.minecraftFolder', e.detail.value)}
+                                    placeholder="{$t('folderPicker.noFolderSelected')}"
+                                />
+                            </div>                                           
+                            <div class="sub-item-group folder-item-group">
+                                <div class="toggle-label-group">
+                                    <span class="toggle-label">{$t('settings.storage.modFolder')}</span>
+                                    <span class="group-description">{$t('settings.storage.modFolderDescription')}</span>
+                                </div>
+                                <FolderPicker
+                                    actionType='open'
+                                    inputReadOnly={true}
+                                    value={$settings.storage?.directories?.minecraftFolder?.value+'/mods'}
                                     on:change={e => settings.updatePath('storage.directories.minecraftFolder', e.detail.value)}
                                     placeholder="{$t('folderPicker.noFolderSelected')}"
                                 />
                             </div>                                           
                         </div>
-                        <hr class="setting-seperator">
-                        <div class="setting-item-group">
-                            <span class="group-sub-label">{$t('settings.backup.backupSaves')}</span>
-                            <div class="sub-item-group">
-                                <div class="toggle-label-group">
-                                <span class="toggle-label">{$t('settings.backup.backupSaves')}</span>
-                                <span class="group-description">{$t('settings.backup.backupSavesDescription')}</span>
-                                </div>
-                                <ToggleButton
-                                    checked={$settings.storage.backup.backupSaves.value}
-                                    on:change={(e) => settings.updatePath('storage.backup.backupSaves', e.detail.checked)}
-                                />
-                            </div>
-                            <div class="sub-item-group folder-item-group">
-                                <div class="toggle-label-group">
-                                <span class="toggle-label">{$t('settings.backup.backupFolder')}</span>
-                                <span class="group-description">{$t('settings.backup.backupFolderDescription')}</span>
-                                </div>
-                                <FolderPicker
-                                    value={$settings.storage.backup.backupFolder.value}
-                                    on:change={e => settings.updatePath('storage.backup.backupFolder', e.detail.value)}
-                                    placeholder="{$t('folderPicker.noFolderSelected')}"
-                                />
-                            </div> 
-                        </div>
                     </div>
                 {/if}
                 {#if activeTab === 'Developer'}
                     <div class="setting-group developer-settings">
-                    <div class="setting-item-group">
-                        <span class="group-sub-label">{$t('settings.developer.debug')}</span>
-                        <div class="sub-item-group">
-                            <div class="toggle-label-group">
-                                <span class="toggle-label">{$t('settings.developer.enableDevTools')}</span>
-                                <span class="group-description">{$t('settings.developer.enableDevToolsDescription')}</span>
-                            </div>
-                            <ToggleButton
-                                checked={$settings.developer.debug.enableDevTools.value}
-                                on:change={(e) => settings.updatePath('developer.debug.enableDevTools', e.detail.checked)}
-                            />
-                        </div>
-                    </div>
-                    <hr class="setting-seperator">
-                    <div class="setting-item-group">
-                        <span class="group-sub-label">{$t('settings.developer.experimental')}</span>
-                        <div class="sub-item-group">
-                            <div class="toggle-label-group">
-                                <span class="toggle-label">{$t('settings.developer.allowBetaFeatures')}</span>
+                        <div class="setting-item-group">
+                            <span class="group-sub-label">{$t('settings.developer.experimental')}</span>
+                            <div class="sub-item-group">
+                                <div class="toggle-label-group">
+                                    <span class="toggle-label">{$t('settings.developer.allowBetaFeatures')}</span>
 
-                                <span class="group-description">{$t('settings.developer.allowBetaFeaturesDescription')}</span>
+                                    <span class="group-description">{$t('settings.developer.allowBetaFeaturesDescription')}</span>
+                                </div>
+                                <ToggleButton
+                                    checked={$settings.developer?.experimental?.allowBetaFeatures?.value}
+                                    on:change={(e) => settings.updatePath('developer.experimental.allowBetaFeatures', e.detail.checked)}
+                                />
                             </div>
-                            <ToggleButton
-                                checked={$settings.developer.experimental.allowBetaFeatures.value}
-                                on:change={(e) => settings.updatePath('developer.experimental.allowBetaFeatures', e.detail.checked)}
-                            />
                         </div>
-                    </div>
                     </div>
                 {/if}
                 {#if activeTab === 'About'}
@@ -641,7 +617,7 @@
                                 <div class="toggle-label-group">
                                     <span class="toggle-label">{$t('settings.about.credits')}</span>
                                     <span class="group-description">
-                                        {$t('settings.about.developedBy')} <b class="credit-owner-text">Cosmic</b>&nbsp;&&nbsp;<b class="credit-owner-text">Olly</b>.<br>
+                                        {@html $t('settings.about.developedBy')} <b class="credit-owner-text">Cosmic</b>&nbsp;&&nbsp;<b class="credit-owner-text">Olly</b>.<br>
 
                                         {$t('settings.about.specialThanks')}
                                     </span>
@@ -702,24 +678,7 @@
                                     <span class="toggle-label"><i class="fa fa-heart"></i>&nbsp;&nbsp;&nbsp;{$t('settings.about.donate')}</span>
 
                                     <span class="group-description" style="margin-top: 0.5em;">
-                                        {$t('settings.about.donateDescription')} <a href="https://www.buymeacoffee.com/cosmic_fi" target="_blank" rel="noopener noreferrer"><i class="fa fa-heart"></i>&nbsp;{$t('mainContent.supportProject')}</a>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="sub-item-group">
-                                <div class="toggle-label-group">
-                                    <span class="toggle-label"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;{$t('settings.about.contributors')}</span>
-
-                                    <span class="group-description" style="margin-top: 0.5em;">
-                                        <div class="contributors-container">
-                                            {#each contributors as contributor}
-                                                <SimpleTip text="{contributor.login}" direction="bottom">
-                                                    <a href={contributor.html_url} target="_blank" rel="noopener noreferrer">
-                                                        <img src={contributor.avatar_url} alt={contributor.login} width="24" height="24" style="border-radius:50%;vertical-align:middle;margin-right:8px;">
-                                                    </a>
-                                                </SimpleTip>
-                                            {/each}
-                                        </div>
+                                        {$t('settings.about.donateDescription')} <a href="https://www.buymeacoffee.com/cosmic_fi" target="_blank" rel="noopener noreferrer"><i class="fa fa-heart"></i>&nbsp;{$t('settings.about.donateButton')}</a>
                                     </span>
                                 </div>
                             </div>
@@ -748,6 +707,218 @@
 </div>
 
 <style>
+    .settings {
+        position: absolute;
+        z-index: 9999;
+        background-color: var(--shadow-color-10);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        top: 0;
+        left: 0;
+        justify-content: center;
+        align-items: center;
+        transition: all .3s ease;
+        backdrop-filter: blur(3px);
+
+        .s-wrapper {
+            border: 2px var(--border-color) solid;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+
+            .sidebar {
+                background-color: var(--base-variant);
+                width: 14vw;
+                display: flex;
+                flex-direction: column;
+                border-right: 1px var(--border-color) solid;
+
+                .sb-header {
+                    border-bottom: 1px var(--border-color) solid;
+                    padding: 1vw;
+                    color: var(--text-color-75);
+                    display: flex;
+
+                    .header-title {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        font-size: var(--font-size-fluid-lg);
+                        column-gap: 8px;
+                        color: var(--text-color-50);
+                        justify-content: start;
+                        flex-grow: 1;
+                    }
+                }
+
+                .sb-category-container {
+                    display: flex;
+                    flex-direction: column;
+                    row-gap: 1vw;
+                    padding-top: 2vw;
+
+                    .sb-category-item {
+                        display: flex;
+                        flex-direction: column;
+                        font-size: var(--font-size-fluid-base);
+
+                        button {
+                            padding: .7vw 1.3vw;
+                            color: var(--text-color);
+                            font-size: .98rem;
+                            text-align: start;
+
+                            &:hover {
+                                background-color: var(--accent-color-dark);
+                                color: var(--on-accent-text);
+                            }
+
+                            &:active {
+                                background-color: var(--accent-color-25);
+                                transform: none !important;
+                                color: var(--on-accent-text) !important;
+                            }
+
+                            &:focus {
+                                background-color: var(--accent-color-dark);
+                                color: var(--on-accent-text);
+                            }
+                        }
+
+                        .active-tab {
+                            background-color: var(--accent-color-50);
+                            /* color: var(--on-accent-text); */
+                            border-right: 3px var(--accent-color) solid;
+                        }
+                    }
+                }
+            }
+
+            .right-content {
+                width: 50vw;
+                display: flex;
+                flex-direction: column;
+                background-color: var(--base-variant);
+
+                .top-content-container {
+                    height: 60vh;
+                    margin: .5vw .3vw;
+                    overflow: hidden;
+                    overflow-y: auto;
+                    display: flex;
+                    flex-direction: column;
+
+                    .setting-group {
+                        display: flex;
+                        flex-direction: column;
+                        padding: 15px 10px 5px 10px;
+
+                        .setting-item-group {
+                            display: flex;
+                            flex-direction: column;
+                            row-gap: 1vw;
+
+                            .group-sub-label {
+                                opacity: .8;
+                                font-size: 1rem;
+                                color: var(--text-color-50);
+                            }
+
+                            .group-description {
+                                font-size: var(--font-size-fluid-sm);
+                                color: var(--text-color-50)
+                            }
+
+                            .sub-item-group {
+                                display: flex;
+                                flex-direction: row;
+                                color: var(--text-color);
+                                justify-content: space-between;
+                                align-items: center;
+                                padding-left: 10px;
+                                column-gap: 20px;
+
+                                .toggle-label-group {
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: start;
+                                    width: 80%;
+                                }
+
+                                .s-input {
+                                    background-color: var(--base-variant);
+                                    padding: 1vw;
+                                    border-radius: var(--border-radius-5);
+                                    margin-top: .5vw;
+                                    color: var(--text-color-75);
+                                    border: 1px var(--border-color) solid;
+                                    &:focus {
+                                        box-shadow: 0 0 0 2px var(--accent-color-75);
+                                    }
+                                }
+                            }
+                            .folder-item-group {
+                                flex-direction: column !important;
+                                justify-content: start;
+                                align-items: start;
+                            }
+                        }
+
+                        .setting-seperator {
+                            width: 100%;
+                            background-color: transparent;
+                            border: none;
+                            border-top: 1px var(--border-color) solid;
+                            opacity: .5;
+                        }
+                    }
+                }
+
+                .save-btn-container {
+                    flex-grow: 1;
+                    border-top: 1px var(--border-color) solid;
+                    padding: 1vw;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+                    background-color: var(--base-variant);
+
+                    button {
+                        padding: .5vw 2vw;
+                        border-radius: var(--border-radius-5);
+                        color: var(--on-accent-text);
+                        border: 1px var(--border-color) solid;
+                        background-color: var(--accent-color);
+                        font-size: var(--font-size-fluid-base);
+
+                        &:hover {
+                            background-color: var(--accent-color-dark);
+                        }
+
+                        &:active {
+                            background-color: var(--accent-color);
+                        }
+                    }
+
+                    .setting-reset-btn {
+                        background-color: transparent;
+                        color: var(--text-color-75) !important;
+
+                        &:hover {
+                            background-color: var(--base-variant-1);
+                        }
+
+                        &:active {
+                            background-color: transparent;
+                        }
+                    }
+                }
+            }
+        }
+    }
     .theme-cards-container{
         display: flex;
         flex-direction: row;
@@ -805,7 +976,7 @@
         width: 100%;
         height: 10vw;
         display: flex;
-        background: url(../../../../images/static/0.png);
+        background: url('/images/static/0.png');
         overflow: hidden;
         background-position: center;
         background-size: cover;
@@ -817,19 +988,37 @@
         opacity: 1 !important;
         color: var(--accent-color) !important;
     }
-    .contributors-container{
-        display: flex;
-        overflow: hidden;
-        flex-direction: row;
-        flex-wrap: wrap;
-        padding: 1vw;
-        column-gap: .5vw;
-        gap: .5vw;
-    }
     .check-update-btn{
         white-space: nowrap;
         background-color: var(--base-variant-1);
         padding: .5vw 1vw;
         border-radius: var(--border-radius-5);
+    }
+    .notification-category-container{
+        flex-direction: column !important;
+        justify-content: start !important;
+        align-items: start !important;
+    }
+    .notification-categories {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        flex-wrap: wrap !important;
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 6px;
+    }
+    
+    .category-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        gap: 10px;
+    }
+    
+    .category-item span {
+        font-size: 0.9em;
+        color: var(--text-color-75);
     }
 </style>

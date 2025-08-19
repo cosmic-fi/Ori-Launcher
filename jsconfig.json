@@ -9,12 +9,24 @@
     "sourceMap": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "checkJs": true
+    "checkJs": true,
+    "allowJs": true,
+    "strict": false,
+    "types": ["svelte"]
   },
   "include": [
     "global.d.ts",
-    "src/**/*.svelte",
     "src/**/*.js",
-    "svelte.config.js"
+    "src/**/*.ts",
+    "src/**/*.svelte",
+    "svelte.config.js",
+    "vite.config.mjs"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "release",
+    "**/.svelte2tsx-language-server-files/**"
   ]
 }

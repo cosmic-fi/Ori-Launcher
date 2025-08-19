@@ -2,18 +2,22 @@
 Theme variables for all themes 
 */
 body[data-theme="dark"] {
-  --accent-color: #1F5ADA;
-  --accent-color-lighter: #4a7cff;
-  --accent-color-light: #386be6;
-  --accent-color-dark: #1947ae;
-  --accent-color-darker: #143a8e;
-  --accent-color-10: rgba(31,90,218,0.1);
-  --accent-color-20: rgba(31,90,218,0.2);
-  --accent-color-25: rgba(31,90,218,0.25);
-  --accent-color-50: rgba(31,90,218,0.5);
-  --accent-color-60: rgba(31,90,218,0.6);
-  --accent-color-75: rgba(31,90,218,0.75);
-  --accent-color-80: rgba(31,90,218,0.8);
+  --accent-color: #8A2BE2;
+  --accent-color-lighter: #B873FF;
+  --accent-color-light: #B816FF;
+  --accent-color-dark: #4E00A6;
+  --accent-color-darker: #2E0052;
+  --accent-color-10: #8A2BE210;
+  --accent-color-20: #8A2BE220;
+  --accent-color-25: #8A2BE225;
+  --accent-color-50: #8A2BE250;
+  --accent-color-60: #8A2BE260;
+  --accent-color-75: #8A2BE275;
+  --accent-color-80: #8A2BE280;
+
+  /* Text colors for accent backgrounds */
+  --on-accent-text: #FFFFFF;
+  --on-accent-text-secondary: #E6E6E6;
 
   --base-color: #111011;
   --base-variant: #1D1D1D;
@@ -102,18 +106,22 @@ body[data-theme="dark"] {
 LIGHT THEME 
 */
 body[data-theme="light"] {
-  --accent-color: #5865f2;
-  --accent-color-lighter: #7d8aff;
-  --accent-color-light: #6e7df2;
-  --accent-color-dark: #3d47b3;
-  --accent-color-darker: #2a338a;
-  --accent-color-10: rgba(88,101,242,0.1);
-  --accent-color-20: rgba(88,101,242,0.2);
-  --accent-color-25: rgba(88,101,242,0.25);
-  --accent-color-50: rgba(88,101,242,0.5);
-  --accent-color-60: rgba(88,101,242,0.6);
-  --accent-color-75: rgba(88,101,242,0.75);
-  --accent-color-80: rgba(88,101,242,0.8);
+  --accent-color: #8A2BE2;
+  --accent-color-lighter: #B873FF;
+  --accent-color-light: #B816FF;
+  --accent-color-dark: #4E00A6;
+  --accent-color-darker: #2E0052;
+  --accent-color-10: #8A2BE210;
+  --accent-color-20: #8A2BE220;
+  --accent-color-25: #8A2BE225;
+  --accent-color-50: #8A2BE250;
+  --accent-color-60: #8A2BE260;
+  --accent-color-75: #8A2BE275;
+  --accent-color-80: #8A2BE280;
+
+  /* Text colors for accent backgrounds */
+  --on-accent-text: #FFFFFF;
+  --on-accent-text-secondary: #E6E6E6;
 
   --base-color: #f5f6fa;
   --base-variant: #e3e5e8;
@@ -202,18 +210,22 @@ body[data-theme="light"] {
 OCEANIC 
 */
 body[data-theme="oceanic"] {
-  --accent-color: #6699cc;
-  --accent-color-lighter: #8fbce6;
-  --accent-color-light: #7bb0e6;
-  --accent-color-dark: #4a6b99;
-  --accent-color-darker: #35507a;
-  --accent-color-10: rgba(102,153,204,0.1);
-  --accent-color-20: rgba(102,153,204,0.2);
-  --accent-color-25: rgba(102,153,204,0.25);
-  --accent-color-50: rgba(102,153,204,0.5);
-  --accent-color-60: rgba(102,153,204,0.6);
-  --accent-color-75: rgba(102,153,204,0.75);
-  --accent-color-80: rgba(102,153,204,0.8);
+  --accent-color: #8A2BE2;
+  --accent-color-lighter: #B873FF;
+  --accent-color-light: #B816FF;
+  --accent-color-dark: #4E00A6;
+  --accent-color-darker: #2E0052;
+  --accent-color-10: #8A2BE210;
+  --accent-color-20: #8A2BE220;
+  --accent-color-25: #8A2BE225;
+  --accent-color-50: #8A2BE250;
+  --accent-color-60: #8A2BE260;
+  --accent-color-75: #8A2BE275;
+  --accent-color-80: #8A2BE280;
+
+  /* Text colors for accent backgrounds */
+  --on-accent-text: #FFFFFF;
+  --on-accent-text-secondary: #E6E6E6;
 
   --base-color: #1b2b34;
   --base-variant: #22313a;
@@ -302,18 +314,22 @@ body[data-theme="oceanic"] {
 AFTER GLOW 
 */
 body[data-theme="after-glow"] {
-  --accent-color: #eb6f92;
-  --accent-color-lighter: #ff9bb8;
-  --accent-color-light: #f48fb1;
-  --accent-color-dark: #b84e6e;
-  --accent-color-darker: #8e3954;
-  --accent-color-10: rgba(235,111,146,0.1);
-  --accent-color-20: rgba(235,111,146,0.2);
-  --accent-color-25: rgba(235,111,146,0.25);
-  --accent-color-50: rgba(235,111,146,0.5);
-  --accent-color-60: rgba(235,111,146,0.6);
-  --accent-color-75: rgba(235,111,146,0.75);
-  --accent-color-80: rgba(235,111,146,0.8);
+  --accent-color: #8A2BE2;
+  --accent-color-lighter: #B873FF;
+  --accent-color-light: #B816FF;
+  --accent-color-dark: #4E00A6;
+  --accent-color-darker: #2E0052;
+  --accent-color-10: #8A2BE210;
+  --accent-color-20: #8A2BE220;
+  --accent-color-25: #8A2BE225;
+  --accent-color-50: #8A2BE250;
+  --accent-color-60: #8A2BE260;
+  --accent-color-75: #8A2BE275;
+  --accent-color-80: #8A2BE280;
+
+  /* Text colors for accent backgrounds */
+  --on-accent-text: #FFFFFF;
+  --on-accent-text-secondary: #E6E6E6;
 
   --base-color: #232136;
   --base-variant: #2a273f;
@@ -392,18 +408,23 @@ body[data-theme="after-glow"] {
 PASTEL 
 */
 body[data-theme="pastel"] {
-  --accent-color: #ffb4a2;
-  --accent-color-lighter: #ffd6c9;
-  --accent-color-light: #ffd6c9;
-  --accent-color-dark: #e5989b;
-  --accent-color-darker: #b5838d;
-  --accent-color-10: rgba(255,180,162,0.1);
-  --accent-color-20: rgba(255,180,162,0.2);
-  --accent-color-25: rgba(255,180,162,0.25);
-  --accent-color-50: rgba(255,180,162,0.5);
-  --accent-color-60: rgba(255,180,162,0.6);
-  --accent-color-75: rgba(255,180,162,0.75);
-  --accent-color-80: rgba(255,180,162,0.8);
+  --accent-color: #8A2BE2;
+  --accent-color-lighter: #B873FF;
+  --accent-color-light: #B816FF;
+  --accent-color-dark: #4E00A6;
+  --accent-color-darker: #2E0052;
+  --accent-color-10: #8A2BE210;
+  --accent-color-20: #8A2BE220;
+  --accent-color-25: #8A2BE225;
+  --accent-color-50: #8A2BE250;
+  --accent-color-60: #8A2BE260;
+  --accent-color-75: #8A2BE275;
+  --accent-color-80: #8A2BE280;
+
+  /* Text colors for accent backgrounds */
+  --on-accent-text: #FFFFFF;
+  --on-accent-text-secondary: #E6E6E6;
+
 
   --base-color: #fdf6f0;
   --base-variant: #f7e7e1;
@@ -482,18 +503,22 @@ body[data-theme="pastel"] {
 MINIMAL 
 */
 body[data-theme="minimal"] {
-  --accent-color: #007aff;
-  --accent-color-lighter: #339cff;
-  --accent-color-light: #339cff;
-  --accent-color-dark: #005bb5;
-  --accent-color-darker: #003f7f;
-  --accent-color-10: rgba(0,122,255,0.1);
-  --accent-color-20: rgba(0,122,255,0.2);
-  --accent-color-25: rgba(0,122,255,0.25);
-  --accent-color-50: rgba(0,122,255,0.5);
-  --accent-color-60: rgba(0,122,255,0.6);
-  --accent-color-75: rgba(0,122,255,0.75);
-  --accent-color-80: rgba(0,122,255,0.8);
+  --accent-color: #8A2BE2;
+  --accent-color-lighter: #B873FF;
+  --accent-color-light: #B816FF;
+  --accent-color-dark: #4E00A6;
+  --accent-color-darker: #2E0052;
+  --accent-color-10: #8A2BE210;
+  --accent-color-20: #8A2BE220;
+  --accent-color-25: #8A2BE225;
+  --accent-color-50: #8A2BE250;
+  --accent-color-60: #8A2BE260;
+  --accent-color-75: #8A2BE275;
+  --accent-color-80: #8A2BE280;
+
+  /* Text colors for accent backgrounds */
+  --on-accent-text: #FFFFFF;
+  --on-accent-text-secondary: #E6E6E6;
 
   --base-color: #ffffff;
   --base-variant: #f5f5f5;
@@ -572,18 +597,22 @@ body[data-theme="minimal"] {
 RETRO 80s 
 */
 body[data-theme="retro-80s"] {
-  --accent-color: #e94560;
-  --accent-color-lighter: #ff6f91;
-  --accent-color-light: #ff6f91;
-  --accent-color-dark: #b82e4a;
-  --accent-color-darker: #8e2338;
-  --accent-color-10: rgba(233,69,96,0.1);
-  --accent-color-20: rgba(233,69,96,0.2);
-  --accent-color-25: rgba(233,69,96,0.25);
-  --accent-color-50: rgba(233,69,96,0.5);
-  --accent-color-60: rgba(233,69,96,0.6);
-  --accent-color-75: rgba(233,69,96,0.75);
-  --accent-color-80: rgba(233,69,96,0.8);
+  --accent-color: #8A2BE2;
+  --accent-color-lighter: #B873FF;
+  --accent-color-light: #B816FF;
+  --accent-color-dark: #4E00A6;
+  --accent-color-darker: #2E0052;
+  --accent-color-10: #8A2BE210;
+  --accent-color-20: #8A2BE220;
+  --accent-color-25: #8A2BE225;
+  --accent-color-50: #8A2BE250;
+  --accent-color-60: #8A2BE260;
+  --accent-color-75: #8A2BE275;
+  --accent-color-80: #8A2BE280;
+
+  /* Text colors for accent backgrounds */
+  --on-accent-text: #FFFFFF;
+  --on-accent-text-secondary: #E6E6E6;
 
   --base-color: #1a1a2e;
   --base-variant: #16213e;
@@ -612,6 +641,110 @@ body[data-theme="retro-80s"] {
   --shadow-color-10: rgba(233,69,96,0.012);
   --shadow-color-15: rgba(233,69,96,0.018);
   --shadow-color-30: rgba(233,69,96,0.036);
+
+  --lime: #68C715;
+  --lime-lighter: #8cff3a;
+  --lime-light: #7be62a;
+  --lime-dark: #4e9b0f;
+  --lime-darker: #3d7a0c;
+  --lime-10: rgba(104,199,21,0.1);
+  --lime-25: rgba(104,199,21,0.25);
+  --lime-50: rgba(104,199,21,0.5);
+  --lime-75: rgba(104,199,21,0.75);
+
+  --pink: #EF417E;
+  --pink-lighter: #ff6fa7;
+  --pink-light: #ff5c97;
+  --pink-dark: #b82e5d;
+  --pink-darker: #8e2348;
+  --pink-10: rgba(239,65,126,0.1);
+  --pink-25: rgba(239,65,126,0.25);
+  --pink-50: rgba(239,65,126,0.5);
+  --pink-75: rgba(239,65,126,0.75);
+
+  --success-color: #20C63F;
+  --success-color-light: #3ee65b;
+  --success-color-dark: #18992f;
+  --success-color-25: rgba(32,198,63,0.25);
+  --success-color-50: rgba(32,198,63,0.5);
+
+  --error-color: #DC3545;
+  --error-color-light: #ff5c6b;
+  --error-color-dark: #a71d2a;
+  --error-color-25: rgba(220,53,69,0.25);
+  --error-color-50: rgba(220,53,69,0.5);
+
+  --warning-color: #FFC107;
+  --warning-color-light: #ffe066;
+  --warning-color-dark: #b28704;
+  --warning-color-25: rgba(255,193,7,0.25);
+  --warning-color-50: rgba(255,193,7,0.5);
+
+  --info-color: #17A2B8;
+  --info-color-light: #3ed6e6;
+  --info-color-dark: #11707f;
+  --info-color-25: rgba(23,162,184,0.25);
+  --info-color-50: rgba(23,162,184,0.5);
+}
+
+/* 
+CLASSIC THEME 
+*/
+body[data-theme="classic"] {
+  --accent-color: #8A2BE2;
+  --accent-color-lighter: #B873FF;
+  --accent-color-light: #B816FF;
+  --accent-color-dark: #4E00A6;
+  --accent-color-darker: #2E0052;
+  --accent-color-10: #8A2BE210;
+  --accent-color-20: #8A2BE220;
+  --accent-color-25: #8A2BE225;
+  --accent-color-50: #8A2BE250;
+  --accent-color-60: #8A2BE260;
+  --accent-color-75: #8A2BE275;
+  --accent-color-80: #8A2BE280;
+
+  /* Text colors for accent backgrounds */
+  --on-accent-text: #FFFFFF;
+  --on-accent-text-secondary: #E6E6E6;
+
+  --base-color: #c6c6c6;
+  --base-variant: #b8b8b8;
+  --base-variant-1: #adadad;
+  --base-variant-1-30: rgba(173,173,173,0.3);
+  --base-variant-1-40: rgba(173,173,173,0.4);
+  --base-variant-2: #a3a3a3;
+  --base-variant-3: #999999;
+  --base-variant-40: rgba(184,184,184,0.4);
+  --base-variant-80: rgba(184,184,184,0.8);
+
+  --text-color: #2c2c2c;
+  --text-color-light: #404040;
+  --text-color-lighter: #555555;
+  --text-color-dark: #1a1a1a;
+  --text-color-darker: #0d0d0d;
+  --text-color-10: rgba(44,44,44,0.1);
+  --text-color-25: rgba(44,44,44,0.25);
+  --text-color-50: rgba(44,44,44,0.5);
+  --text-color-70: rgba(44,44,44,0.7);
+  --text-color-75: rgba(44,44,44,0.75);
+
+  --text-color-light-10: rgba(64,64,64,0.1);
+  --text-color-light-25: rgba(64,64,64,0.25);
+  --text-color-light-50: rgba(64,64,64,0.5);
+  --text-color-light-75: rgba(64,64,64,0.75);
+
+  --text-color-dark-10: rgba(26,26,26,0.1);
+  --text-color-dark-25: rgba(26,26,26,0.25);
+  --text-color-dark-50: rgba(26,26,26,0.5);
+  --text-color-dark-75: rgba(26,26,26,0.75);
+
+  --border-color: #999999;
+  --border-color-80: rgba(153,153,153,0.8);
+  --shadow-color: rgba(0,0,0,0.15);
+  --shadow-color-10: rgba(0,0,0,0.015);
+  --shadow-color-15: rgba(0,0,0,0.0225);
+  --shadow-color-30: rgba(0,0,0,0.045);
 
   --lime: #68C715;
   --lime-lighter: #8cff3a;

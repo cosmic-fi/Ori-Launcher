@@ -10,19 +10,30 @@ import {
 } from '../shared/configurations.js';
 import { applySystemSettings } from '../utils/applySettings.js';
 
-// Ensure settings exist on boot
-ensureSettingsInitialized();
-
 function createSettingsStore() {
-    const { subscribe, set, update } = writable(loadSettings());
+    const { subscribe, set, update } = writable({});
+    let initialized = false;
+
+    // Initialize the store asynchronously
+    const init = async () => {
+        if (!initialized) {
+            await ensureSettingsInitialized();
+            const settings = await loadSettings();
+            set(settings);
+            initialized = true;
+        }
+    };
 
     // Keep localStorage in sync on every change
     subscribe(value => {
-        saveSettings(value);
+        if (initialized && Object.keys(value).length > 0) {
+            saveSettings(value);
+        }
     });
 
     return {
         subscribe,
+        init,
         set: (val) => {
             set(val);
             saveSettings(val);
@@ -35,16 +46,18 @@ function createSettingsStore() {
             });
         },
         // Update a single nested setting by path (e.g. "general.appearance.theme")
-        updatePath: (path, value) => {
-            updateSetting(path, value);
-            set(loadSettings());
+        updatePath: async (path, value) => {
+            await updateSetting(path, value);
+            const settings = await loadSettings();
+            set(settings);
         },
         // Get a single nested setting by path
-        getPath: (path) => getSetting(path),
-        reset: () => {
-            resetSettings();
-            set(structuredClone(defaultSettings));
-            applySystemSettings();
+        getPath: async (path) => await getSetting(path),
+        reset: async () => {
+            await resetSettings();
+            const defaults = await loadSettings();
+            set(structuredClone(defaults));
+            await applySystemSettings();
         }
     };
 }

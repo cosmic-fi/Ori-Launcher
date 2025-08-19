@@ -12,6 +12,19 @@
 </div>
 
 <style>
+    .invoker{
+        position: absolute;
+        z-index: 99999;
+        background-color: var(--base-variant-1-40);
+        backdrop-filter: blur(2px);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-color-75)
+    }
     span{
         font-size: 1.1rem;
         font-weight: 600;

@@ -1,28 +1,70 @@
-// import { writable, derived } from "svelte/store";
+import { writable, derived } from "svelte/store";
 
-// export const userAccountState = {
-//   accounts: writable([]),
-//   selectedAccountId: writable(null),
-//   // ...other state
-// };
+// === Account Store ===
+// Initialize empty first, then load accounts after
+export const accountsStore = writable([]);
 
-// export const selectedAccountUsername = derived(
-//   [userAccountState.accounts, userAccountState.selectedAccountId],
-//   ([$accounts, $selectedAccountId]) => {
-//     const acc = $accounts.find(a => a.id === $selectedAccountId);
-//     return acc ? acc.username : "";
-//   }
-// );
+// Helper to refresh the store after add/remove
+export async function refreshAccounts() {
+    // Import getAccounts here to avoid circular dependency
+    const { getAccounts } = await import("../shared/user.js");
+    accountsStore.set(getAccounts());
+}
 
-// export const selectedAccount = writable(
-//     localStorage.getItem('selectedAccount') || null
-// );
+// Initialize accounts after module loads
+async function initializeAccounts() {
+    const { getAccounts } = await import("../shared/user.js");
+    accountsStore.set(getAccounts());
+}
 
-// // Keep localStorage in sync
-// selectedAccount.subscribe(val => {
-//     if (val) {
-//         localStorage.setItem('selectedAccount', val);
-//     } else {
-//         localStorage.removeItem('selectedAccount');
-//     }
-// });
+// Call initialization
+initializeAccounts();
+
+// === Selected Account Store ===
+export const selectedAccount = writable(
+    localStorage.getItem('selectedAccount') || null
+);
+
+// Keep localStorage in sync
+selectedAccount.subscribe(val => {
+    if (val) {
+        localStorage.setItem('selectedAccount', val);
+    } else {
+        localStorage.removeItem('selectedAccount');
+    }
+});
+
+// === Derived Account States ===
+export const selectedAccountData = derived(
+    [selectedAccount, accountsStore],
+    ([$selectedAccount, $accountsStore]) => {
+        if (!$selectedAccount) return null;
+        return $accountsStore.find(a => a.uuid === $selectedAccount || a.name === $selectedAccount) || null;
+    }
+);
+
+export const selectedAccountUsername = derived(
+    selectedAccountData,
+    ($selectedAccountData) => $selectedAccountData?.name || ''
+);
+
+export const userBurst = derived(
+    selectedAccountData,
+    ($selectedAccountData) => {
+        if (!$selectedAccountData?.skinData) {
+            return '';
+        }
+        return $selectedAccountData.skinData.urls?.walking?.bust || '';
+    }
+);
+
+export const hasAnyAccount = derived(
+    accountsStore,
+    ($accountsStore) => $accountsStore.length > 0
+);
+
+// === User Account State (for backward compatibility) ===
+export const userAccountState = {
+    hasAccount: derived(accountsStore, ($accountsStore) => $accountsStore.length > 0),
+    selectedAccountUuid: derived(selectedAccountData, ($selectedAccountData) => $selectedAccountData?.uuid || null)
+};

@@ -1,10 +1,10 @@
-// @ts-nocheck
+import { writable } from 'svelte/store';
+import { refreshAccounts, selectedAccount, userAccountState } from '../stores/account.js';
+import { skinService } from '../services/skinService.js';
+
 const ACCOUNTS_KEY = 'user_accounts';
 
-import { userAccountState, refreshAccounts, selectedAccount } from '../stores/ui.js';
-import { fetchFaceAndSkin } from '../services/api.js';
-
-
+// === Storage Functions ===
 function loadAccounts() {
     return JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '[]');
 }
@@ -13,41 +13,69 @@ function saveAccounts(accounts) {
     localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
 }
 
+// === Account Management ===
 export function getAccounts() {
     return loadAccounts();
 }
 
 export async function addAccount(account) {
     const accounts = loadAccounts();
-    // Prevent duplicate: for online by uuid, for offline by username
-    if (
-        (account.type === 'offline' && accounts.some(a => a.type === 'offline' && a.name === account.name)) ||
-        (account.type === 'online' && accounts.some(a => a.type === 'online' && a.uuid === account.uuid))
-    ) {
+    
+    // Prevent duplicates
+    const isDuplicate = accounts.some(a => 
+        (account.type === 'offline' && a.type === 'offline' && a.name === account.name) ||
+        (account.type === 'online' && a.type === 'online' && a.uuid === account.uuid)
+    );
+    
+    if (isDuplicate) {
         return false;
     }
 
-    // Fetch face, skin, and burst
-    const { face, skin, burst } = await fetchFaceAndSkin(account.name);
-    account.face = face;
-    account.skin = skin;
-    account.burst = burst;
+    console.log(`Adding ${account.type} account: ${account.name}`);
     
-    // Initialize account_activities with playtime structure
-    account.account_activities = {
-        playtime: {
-            totalSeconds: 0,
-            lastUpdated: new Date().toISOString(),
-            lastSessionDuration: 0,
-            sessionCount: 0
-        }
-    };
+    // Fetch skin data
+    try {
+        account.skinData = await skinService.getSkinData(account.name);
+        console.log(`Successfully loaded skin data for ${account.name}`);
+    } catch (error) {
+        console.warn(`Failed to load skin data for ${account.name}, using Steve fallback`);
+        account.skinData = skinService.getSteveSkinData();
+    }
 
     accounts.push(account);
     saveAccounts(accounts);
-    refreshHasAccount();
     refreshAccounts();
     return true;
+}
+
+export async function refreshAccountSkins(account) {
+    try {
+        account.skinData = await skinService.getSkinData(account.name);
+        return true;
+    } catch (error) {
+        console.error(`Failed to refresh skin for ${account.name}:`, error);
+        return false;
+    }
+}
+
+export async function refreshAllAccountSkins() {
+    const accounts = loadAccounts();
+    let hasChanges = false;
+
+    for (const account of accounts) {
+        const success = await refreshAccountSkins(account);
+        if (success) {
+            hasChanges = true;
+        }
+    }
+
+    if (hasChanges) {
+        saveAccounts(accounts);
+        refreshAccounts();
+    }
+    
+    // Cleanup expired cache
+    skinService.cleanupCache();
 }
 
 export function updateAccount(identifier, updates) {
@@ -56,51 +84,42 @@ export function updateAccount(identifier, updates) {
         (a.type === 'offline' && a.name === identifier) ||
         (a.type === 'online' && a.uuid === identifier)
     );
+    
     if (idx === -1) return false;
+
     accounts[idx] = { ...accounts[idx], ...updates };
     saveAccounts(accounts);
+    refreshAccounts();
     return true;
 }
 
 export function removeAccount(identifier) {
     let accounts = loadAccounts();
-    // Check if the account to be removed is the selected account
     const selectedId = localStorage.getItem('selectedAccount');
-    const isSelected = accounts.some(
-        a =>
-            ((a.type === 'offline' && a.name === identifier) ||
-             (a.type === 'online' && a.uuid === identifier)) &&
-            (a.uuid === selectedId || a.name === selectedId)
+
+    // Check if removing selected account
+    const isSelected = accounts.some(a => 
+        (a.uuid === identifier || a.name === identifier) &&
+        (a.uuid === selectedId || a.name === selectedId)
     );
 
-    accounts = accounts.filter(a =>
-        !((a.type === 'offline' && a.name === identifier) ||
-          (a.type === 'online' && a.uuid === identifier))
+    // Remove account
+    accounts = accounts.filter(a => 
+        a.uuid !== identifier && a.name !== identifier
     );
+
     saveAccounts(accounts);
-    refreshHasAccount();
     refreshAccounts();
 
+    // Clear selection if needed
     if (isSelected) {
-        localStorage.removeItem('selectedAccount');
         selectedAccount.set(null);
-        userAccountState.selectedAccountUuid.set(null);
     }
 }
 
-export function refreshHasAccount() {
-    const accounts = getAccounts();
-    userAccountState.hasAccount.set(accounts.length > 0);
-}
-
+// === Selection Management ===
 export function setSelectedAccount(identifier) {
     selectedAccount.set(identifier);
-    userAccountState.selectedAccountUuid.set(identifier);
-    
-    // Remove this obsolete call:
-    // if (typeof window !== 'undefined' && window.playtimeActions) {
-    //     window.playtimeActions.loadPlaytime();
-    // }
 }
 
 export function getSelectedAccount() {
@@ -109,4 +128,39 @@ export function getSelectedAccount() {
 
     const accounts = getAccounts();
     return accounts.find(a => a.uuid === id || a.name === id) || null;
+}
+
+// === Skin Data Access ===
+export function getSkinUrl(account, renderType = 'default') {
+    if (!account || !account.skinData) {
+        return skinService.getSkinUrl(null, renderType);
+    }
+    
+    return skinService.getSkinUrl(account.skinData, renderType);
+}
+
+export function getRawSkinUrl(account) {
+    if (!account || !account.skinData) {
+        return skinService.getSkinUrl(null, 'raw');
+    }
+    
+    return account.skinData.urls.raw;
+}
+
+export function getFaceUrl(account) {
+    if (!account || !account.skinData) {
+        return skinService.getSkinUrl(null, 'face');
+    }
+    
+    return account.skinData.urls.pixel.face;
+}
+
+export function getDefaultSkin(){
+    return skinService.getSteveSkinData();
+}
+
+// Legacy function for backward compatibility
+export function refreshHasAccount() {
+    // No longer needed as hasAccount is now a derived store
+    console.warn('refreshHasAccount is deprecated - hasAccount is now reactive');
 }

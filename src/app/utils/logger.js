@@ -1,143 +1,216 @@
 // @ts-nocheck
 import { writable } from 'svelte/store';
 
-const logLevels = {
-    DEBUG: { level: 0, color: '#ba68c8' },
-    INFO: { level: 1, color: '#4fc3f7' },
-    SUCCESS: { level: 2, color: '#69f0ae' },
-    WARNING: { level: 3, color: '#ffb300' },
-    ERROR: { level: 4, color: '#ff5252' }
+export const logLevels = {
+  DEBUG: { level: 0, label: 'DEBUG', consoleStyle: 'color: #ba68c8' },
+  INFO: { level: 1, label: 'INFO', consoleStyle: 'color: #4fc3f7' },
+  SUCCESS: { level: 2, label: 'SUCCESS', consoleStyle: 'color: #69f0ae' },
+  WARNING: { level: 3, label: 'WARNING', consoleStyle: 'color: #ffb300' },
+  ERROR: { level: 4, label: 'ERROR', consoleStyle: 'color: #ff5252' }
 };
 
+const defaultMaxEntries = 1000;
+
 function createLogger() {
-    const { subscribe, set, update } = writable([]);
-    let minLevel = 'DEBUG';
-    let showTimestamps = true;
-    let maxEntries = 1000;
-    let isInitialized = false;
-    let sessionActive = false;
+  const { subscribe, set, update } = writable([]);
+  let minLevelKey = 'DEBUG';
+  let maxEntries = defaultMaxEntries;
+  let sessionActive = false;
+  let isInitialized = false;
 
-    // Initialize by loading previous session logs
-    async function initialize() {
-        if (isInitialized) return;
-        
-        try {
-            // Load previous session logs for context
-            const result = await window.electron?.readSessionLogs?.({ maxSessions: 3, maxLines: maxEntries });
-            if (result?.success && result.logs) {
-                set(result.logs);
-                console.log(`Loaded ${result.logs.length} log entries from previous sessions`);
-            }
-        } catch (error) {
-            console.error('Failed to load session logs:', error);
-        }
-        
-        isInitialized = true;
+  function getLevelValue(key) {
+    return logLevels[key]?.level ?? 0;
+  }
+
+  function shouldLog(entryLevelKey) {
+    return getLevelValue(entryLevelKey) >= getLevelValue(minLevelKey);
+  }
+
+  function formatEntry({ timestamp, level, message, data }) {
+    const payload = data !== null && data !== undefined ? ` | ${typeof data === 'string' ? data : JSON.stringify(data)}` : '';
+    return `[${timestamp}] [${level}] ${message}${payload}`;
+  }
+
+  // Define which messages should be stacked (only specific ones)
+  function getStackablePattern(message) {
+    const stackablePatterns = [
+      { regex: /^▽ Downloading .+\.\.\.\./, base: '▽ Downloading files', shouldStack: true },
+      { regex: /^※ Extracting Files \.\.\. .+/, base: '※ Extracting Files', shouldStack: true },
+      { regex: /^⁂ Verifying Files \.\.\. .+/, base: '⁂ Verifying Files', shouldStack: true },
+      // Add more patterns here for messages you want to stack
+      // { regex: /^Some pattern/, base: 'Base message', shouldStack: true },
+    ];
+
+    for (const pattern of stackablePatterns) {
+      if (pattern.regex.test(message) && pattern.shouldStack) {
+        return pattern.base;
+      }
     }
+    return null; // Not stackable - show normally
+  }
 
-    // Start a new log session
-    async function startSession() {
-        if (sessionActive) return;
-        
-        try {
-            const result = await window.electron?.startLogSession?.();
-            if (result?.success) {
-                sessionActive = true;
-                // Clear current logs and start fresh
-                set([]);
-                await addLog('INFO', 'New log session started');
-                console.log('Log session started:', result.sessionFile);
-            }
-        } catch (error) {
-            console.error('Failed to start log session:', error);
-        }
-    }
-
-    // End the current log session
-    async function endSession() {
-        if (!sessionActive) return;
-        
-        try {
-            await addLog('INFO', 'Log session ending');
-            await window.electron?.endLogSession?.();
-            sessionActive = false;
-            console.log('Log session ended');
-        } catch (error) {
-            console.error('Failed to end log session:', error);
-        }
-    }
-
-    async function addLog(level, message, data = null) {
-        const timestamp = new Date().toISOString();
-        const entry = { timestamp, level, message, data };
-        
-        // Add to memory store
-        update(logs => {
-            const newLogs = [...logs, entry];
-            return newLogs.slice(-maxEntries);
+  async function initialize(loadPreviousSessions = false) {
+    if (isInitialized) return;
+    if (loadPreviousSessions) {
+      try {
+        const result = await window.electron?.readSessionLogs?.({
+          maxSessions: 3,
+          maxLines: maxEntries
         });
+        if (result?.success && Array.isArray(result.logs)) {
+          // transform raw lines into minimal entries for display
+          // since we don't have structured data from log file, just store strings
+          set(result.logs.map(line => ({ raw: line })));
+          console.log(`%c[LOGGER]%c Loaded ${result.logs.length} previous log lines`, 'font-weight:bold', '');
+        }
+      } catch (e) {
+        console.error('[LOGGER] Failed to load previous session logs:', e);
+      }
+    } else {
+      set([]);
+    }
+    isInitialized = true;
+  }
+
+  async function startSession() {
+    if (sessionActive) return;
+    try {
+      const result = await window.electron?.startLogSession?.();
+      if (result?.success) {
+        sessionActive = true;
+        set([]);
+        console.log('%c[LOGGER]%c Session started:', 'font-weight:bold', '', result.sessionFile);
+      }
+    } catch (e) {
+      console.error('[LOGGER] startSession failed:', e);
+    }
+  }
+
+  async function endSession() {
+    if (!sessionActive) return;
+    try {
+      await window.electron?.endLogSession?.();
+      sessionActive = false;
+      console.log('%c[LOGGER]%c Session ended', 'font-weight:bold', '');
+    } catch (e) {
+      console.error('[LOGGER] endSession failed:', e);
+    }
+  }
+
+  async function addLog(levelKey, message, data = null) {
+    if (!logLevels[levelKey]) levelKey = 'INFO';
+    const timestamp = new Date().toISOString();
+    const entry = { timestamp, level: levelKey, message, data };
+
+    // Check if this message should be stacked
+    const stackPattern = getStackablePattern(message);
+
+    if (shouldLog(levelKey)) {
+      update(logs => {
+        let newLogs = [...logs];
         
-        // Write to session file if session is active
-        if (sessionActive) {
-            try {
-                await window.electron?.writeSessionLog?.(entry);
-            } catch (error) {
-                console.error('Failed to write to session log:', error);
+        if (stackPattern) {
+          // Look for existing stackable entry (only check last few entries for performance)
+          const searchRange = Math.min(5, newLogs.length);
+          let foundIndex = -1;
+          
+          for (let i = newLogs.length - 1; i >= newLogs.length - searchRange; i--) {
+            if (newLogs[i] && 
+                newLogs[i].level === levelKey && 
+                newLogs[i].stackPattern === stackPattern) {
+              foundIndex = i;
+              break;
             }
+          }
+          
+          if (foundIndex !== -1) {
+            // Update existing stacked entry
+            newLogs[foundIndex] = {
+              ...newLogs[foundIndex],
+              count: (newLogs[foundIndex].count || 1) + 1,
+              lastMessage: message,
+              timestamp: timestamp,
+              data: data,
+              lastUpdate: Date.now()
+            };
+          } else {
+            // Create new stackable entry
+            newLogs.push({
+              ...entry,
+              stackPattern: stackPattern,
+              count: 1,
+              lastMessage: message,
+              isStackable: true,
+              lastUpdate: Date.now()
+            });
+          }
+        } else {
+          // Regular message - show normally (not stacked)
+          newLogs.push(entry);
         }
         
-        // Also log to browser console
-        const consoleMethod = level === 'ERROR' ? 'error' :
-                             level === 'WARNING' ? 'warn' : 'log';
-        console[consoleMethod](`[${level}] ${message}`, data || '');
+        if (newLogs.length > maxEntries) {
+          return newLogs.slice(newLogs.length - maxEntries);
+        }
+        return newLogs;
+      });
     }
 
-    return {
-        subscribe,
-        
-        // Initialize the logger
-        init: initialize,
-        
-        // Session management
-        startSession,
-        endSession,
-        
-        // Logging methods
-        debug: (message, data) => addLog('DEBUG', message, data),
-        info: (message, data) => addLog('INFO', message, data),
-        success: (message, data) => addLog('SUCCESS', message, data),
-        warn: (message, data) => addLog('WARNING', message, data),
-        error: (message, data) => addLog('ERROR', message, data),
-        
-        // Clear current session logs
-        clear: () => {
-            set([]);
-        },
-        
-        // Reload logs from sessions
-        reload: async () => {
-            try {
-                const result = await window.electron?.readSessionLogs?.({ maxSessions: 3, maxLines: maxEntries });
-                if (result?.success && result.logs) {
-                    set(result.logs);
-                }
-            } catch (error) {
-                console.error('Failed to reload session logs:', error);
-            }
-        },
-        
-        // Configuration methods
-        setMinLevel: (level) => { minLevel = level; },
-        setShowTimestamps: (show) => { showTimestamps = show; },
-        setMaxEntries: (max) => { maxEntries = max; },
-        
-        // Getters
-        logLevels,
-        getCurrentLevel: () => minLevel,
-        getShowTimestamps: () => showTimestamps,
-        getMaxEntries: () => maxEntries,
-        isSessionActive: () => sessionActive
-    };
+    // Write to session file if active
+    if (sessionActive) {
+      try {
+        await window.electron?.writeSessionLog?.(entry);
+      } catch (e) {
+        console.error('[LOGGER] Failed to write session log:', e);
+      }
+    }
+
+    // Mirror to console with styling
+    const style = logLevels[levelKey].consoleStyle;
+    const prefix = `[${levelKey}] ${message}`;
+    if (levelKey === 'ERROR') {
+      console.error(`%c${prefix}`, style, data || '');
+    } else if (levelKey === 'WARNING') {
+      console.warn(`%c${prefix}`, style, data || '');
+    } else {
+      console.log(`%c${prefix}`, style, data || '');
+    }
+  }
+
+  return {
+    subscribe,
+
+    // initialization
+    init: (loadPreviousSessions = false) => initialize(loadPreviousSessions),
+
+    // session
+    startSession,
+    endSession,
+
+    // logging helpers
+    debug: (msg, data) => addLog('DEBUG', msg, data),
+    info: (msg, data) => addLog('INFO', msg, data),
+    success: (msg, data) => addLog('SUCCESS', msg, data),
+    warn: (msg, data) => addLog('WARNING', msg, data),
+    error: (msg, data) => addLog('ERROR', msg, data),
+
+    // utility
+    clear: () => set([]),
+    reload: () => initialize(true),
+
+    // config
+    setMinLevel: (levelKey) => {
+      if (logLevels[levelKey]) minLevelKey = levelKey;
+    },
+    setMaxEntries: (n) => {
+      maxEntries = n;
+    },
+
+    // getters
+    getCurrentLevel: () => minLevelKey,
+    isSessionActive: () => sessionActive,
+    logLevels
+  };
 }
 
 export const logger = createLogger();
