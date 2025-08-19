@@ -30,7 +30,7 @@
     ],
     "directories": {
       "buildResources": "public",
-      "output": "release"
+      "output": "build"
     },
     "asar": true,
     "compression": "maximum",
