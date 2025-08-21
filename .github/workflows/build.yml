@@ -44,40 +44,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run release
         shell: bash
-
-  build-beta:
-    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/develop'
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [macos-14, ubuntu-latest, windows-latest]
-
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install Dependencies
-        run: npm ci
-        shell: bash
-
-      - name: Create Beta Version
-        run: npm version prerelease --preid=beta --no-git-tag-version
-        shell: bash
-
-      - name: Build Vite Frontend, Build Launcher, and Publish Beta
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run release
-        shell: bash
+        timeout-minutes: 30

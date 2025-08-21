@@ -73,6 +73,7 @@ const buildApp = async () => {
                 productName: 'Ori Launcher',
                 copyright: 'Copyright © 2025 Ori Launcher',
                 forceCodeSigning: false,
+                afterSign: null,
                 artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
                 extraMetadata: {
                     main: 'app/electron/main.js'
@@ -90,7 +91,7 @@ const buildApp = async () => {
                     buildResources: "public",
                     output: 'build'
                 },
-                compression: 'maximum',
+                compression: 'normal',
                 asar: true,
                 win: {
                     target: {
@@ -98,13 +99,18 @@ const buildApp = async () => {
                         arch: ['x64']
                     },
                     icon: 'public/icon.ico',
+                    sign: null,
+                    certificateFile: null,
+                    certificatePassword: null
                 },
                 nsis: {
                     oneClick: false,
                     allowToChangeInstallationDirectory: true,
                     createDesktopShortcut: true,
                     createStartMenuShortcut: true,
-                    allowElevation: false
+                    allowElevation: false,
+                    artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
+                    deleteAppDataOnUninstall: false
                 },
                 mac: {
                     target: [
@@ -118,14 +124,20 @@ const buildApp = async () => {
                         }
                     ],
                     icon: 'public/icon.icns',
+                    identity: null,
+                    hardenedRuntime: false,
+                    gatekeeperAssess: false,
                     sign: null
                 },
                 linux: {
-                    target: {
-                        target: 'AppImage',
-                        arch: ['x64']
-                    },
-                    icon: 'public/icon.png'
+                    target: [
+                        {
+                            target: 'AppImage',
+                            arch: ['x64']
+                        }
+                    ],
+                    icon: 'public/icon.png',
+                    category: 'Game'
                 },
                 publish: {
                     provider: 'github',
