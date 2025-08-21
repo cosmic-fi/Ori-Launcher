@@ -26,3 +26,5 @@ if (window.electron?.openExternal) {
     }
   });
 }
+
+console.log("App version:", appVersion);
