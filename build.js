@@ -98,10 +98,7 @@ const buildApp = async () => {
                         target: 'nsis',
                         arch: ['x64']
                     },
-                    icon: 'public/icon.ico',
-                    sign: null,
-                    certificateFile: null,
-                    certificatePassword: null
+                    icon: 'public/icon.ico'
                 },
                 nsis: {
                     oneClick: false,
@@ -126,8 +123,7 @@ const buildApp = async () => {
                     icon: 'public/icon.icns',
                     identity: null,
                     hardenedRuntime: false,
-                    gatekeeperAssess: false,
-                    sign: null
+                    gatekeeperAssess: false
                 },
                 linux: {
                     target: [
@@ -137,13 +133,18 @@ const buildApp = async () => {
                         }
                     ],
                     icon: 'public/icon.png',
-                    category: 'Game'
+                    category: 'Game',
+                    synopsis: 'Ori Launcher - Game Launcher',
+                    description: 'A modern game launcher for Ori games'
                 },
-                publish: {
-                    provider: 'github',
-                    owner: 'cosmic-fi',
-                    repo: 'Ori-Launcher'
-                }
+                publish: [
+                    {
+                        provider: 'github',
+                        owner: 'cosmic-fi',
+                        repo: 'Ori-Launcher',
+                        releaseType: 'release'
+                    }
+                ]
             }
         });
         console.log('Build completed successfully!');

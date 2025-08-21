@@ -1,7 +1,4 @@
 import { writable } from "svelte/store";
-import { getAccounts } from "../shared/user.js";
-
-export const accountsStore = writable(getAccounts());
 
 export const uiState = {
     activeTab: writable('launch'),

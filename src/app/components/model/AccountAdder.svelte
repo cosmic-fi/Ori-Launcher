@@ -2,7 +2,8 @@
 // @ts-nocheck
 
 import { createEventDispatcher } from 'svelte';
-import { accountsStore, showToast, uiState } from '../../stores/ui';
+import { accountsStore } from '../../stores/account';
+import { showToast, uiState } from '../../stores/ui';
 import SimpleTip from '../ui/SimpleTip.svelte';
 import { addAccount, getAccounts, getSelectedAccount, setSelectedAccount } from '../../shared/user';
 import { generateHexUUID } from '../../utils/helper';
