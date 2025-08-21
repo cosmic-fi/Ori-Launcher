@@ -193,6 +193,9 @@ const setupIpcHandlers = () => {
     });
 
     // SYSTEM & UTILITY HANDLERS
+    ipcMain.handle('get-app-version', () => {
+        return app.getVersion();
+    });
     ipcMain.handle("open-folder-dialog", async () => {
         const result = await dialog.showOpenDialog(getAppWindow(), {
             properties: ["openDirectory", "dontAddToRecent"],
@@ -488,8 +491,27 @@ const setupIpcHandlers = () => {
         return { permission: 'granted' };
     });
 
-    // AUTO-UPDATER HANDLERS - Now handled by AppUpdater class
-    // The updater IPC handlers are set up automatically in the AppUpdater constructor
+    // AUTO-UPDATER HANDLERS
+    let updaterInstance = null;
+    
+    ipcMain.handle('check-for-updates', async () => {
+        try {
+            if (!app.isPackaged) {
+                return { success: false, message: 'Updates not available in development mode' };
+            }
+            
+            if (!updaterInstance) {
+                const AppUpdater = require('./updater.js');
+                updaterInstance = new AppUpdater();
+            }
+            
+            updaterInstance.checkForUpdates();
+            return { success: true, message: 'Checking for updates...' };
+        } catch (error) {
+            console.error('Error checking for updates:', error);
+            return { success: false, error: error.message };
+        }
+    });
     
     ipcMain.handle('get-app-version', async () => {
         return {
@@ -498,35 +520,24 @@ const setupIpcHandlers = () => {
         };
     });
     
-    // Additional updater handlers for manual control
-    ipcMain.handle('check-for-updates-manual', async () => {
-        try {
-            if (!app.isPackaged) {
-                return { success: false, message: 'Updates not available in development mode' };
-            }
-            
-            // The AppUpdater instance will handle this via the 'update-app' handler
-            return { success: true, message: 'Use update-app IPC handler instead' };
-        } catch (error) {
-            console.error('Error with manual update check:', error);
-            return { success: false, error: error.message };
-        }
-    });
-    
     ipcMain.handle('set-update-channel', async (event, channel) => {
         try {
             if (!app.isPackaged) {
                 return { success: false, message: 'Update channel not available in development mode' };
             }
             
-            // This would need to be handled by the AppUpdater instance
-            // For now, return success but note that channel setting should be done via AppUpdater
-            return { success: true, message: `Update channel functionality available via AppUpdater class` };
+            if (!updaterInstance) {
+                const AppUpdater = require('./updater.js');
+                updaterInstance = new AppUpdater();
+            }
+            
+            updaterInstance.setChannel(channel);
+            return { success: true, message: `Update channel set to ${channel}` };
         } catch (error) {
             console.error('Error setting update channel:', error);
             return { success: false, error: error.message };
         }
-    })
+    });
 };
 
 // HELPER FUNCTIONS

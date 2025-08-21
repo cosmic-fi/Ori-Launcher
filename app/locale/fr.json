@@ -1,0 +1,474 @@
+{
+  "settings": {
+    "title": "Paramètres",
+    "tabs":{
+      "general": "Général", 
+      "game": "Jeu",
+      "mods": "Mods",
+      "launcher": "Lanceur", 
+      "storage": "Stockage",
+      "developer": "Développeur",
+      "about": "À propos"
+    },
+    "general":{
+      "appearance": {
+        "label": "Apparence",
+        "theme": {
+          "label": "Thème",
+          "description": "Choisissez le thème du lanceur.",
+          "themes": {
+            "light": "Clair",
+            "dark": "Sombre",
+            "minimal": "Minimal",
+            "after-glow": "After Glow",
+            "retro-80s": "Rétro années 80",
+            "oceanic": "Océanique",
+            "pastel": "Pastel",
+            "classic": "Classique"
+          }
+        },
+        "language": {
+          "label": "Langue",
+          "description": "Sélectionnez la langue pour le lanceur.",
+          "languages": {
+            "english": "English",
+            "bahasa": "Bahasa Indonesia",
+            "turkish": "Türkçe",
+            "french": "Français",
+            "russian": "Русский",
+            "spanish": "Español"
+          }
+        }
+      },
+      "startup": {
+        "label": "Démarrage",
+        "autoStart": "Démarrage automatique",
+        "autoStartDescription": "Lance automatiquement l'application au démarrage du système.",
+        "minimizeToTray": "Réduire dans la zone de notification à la fermeture",
+        "minimizeToTrayDescription": "Démarre l'application réduite dans la barre système."
+      }
+    },
+    "game": {
+      "versions": "Versions",
+      "showSnapshots": "Afficher les versions Snapshot de Minecraft",
+      "showSnapshotsDescription": "Afficher les versions snapshot (bêta/expérimentales) de Minecraft dans le lanceur.",
+      "performance": {
+        "label": "Performance",
+        "ramAllocation": "Allocation de RAM",
+        "ramAllocationDescription": "Définissez la quantité de RAM allouée au jeu. Minimum recommandé : au moins 2 Go pour les machines lentes."
+      },
+      "runtime": {
+        "label": "Exécution",
+        "javaPath": "Chemin Java",
+        "javaPathDescription": "Spécifiez le chemin vers l'exécutable Java.",
+        "gameArgs": "Arguments du Jeu",
+        "gameArgsDescription": "Spécifiez les arguments du jeu pour lancer le jeu (utilisateurs avancés uniquement).",
+        "gameArgsPlaceholder": "ex: java -Xmx4G -jar minecraft.jar",
+        "jvmArguments": "Arguments JVM",
+        "jvmArgumentsDescription": "Définissez des arguments JVM supplémentaires pour un réglage avancé des performances.",
+        "jvmArgumentsPlaceholder": "ex: -Xmx4G -XX:+UseG1GC",
+        "environmentVariables": "Variables d'environnement",
+        "environmentVariablesDescription": "Définissez les variables d'environnement pour le processus d'exécution.",
+        "environmentVariablesPlaceholder": "ex: JAVA_HOME=/usr/lib/jvm/java-17",
+        "runDetached": "Exécution Détachée",
+        "runDetachedDescription": "Exécuter le jeu en mode détaché, permettant de fermer le lanceur pendant que le jeu fonctionne encore.",
+        "verifyGameFiles": "Vérifier les Fichiers du Jeu",
+        "verifyGameFilesDescription": "Vérifier l'intégrité des fichiers du jeu avant le lancement.",
+        "verifyGameFilesWarning": "Attention : Activer cette option peut augmenter considérablement le temps de lancement et supprimera tous les progrès de jeu précédents.",
+        "intelEnabledMac": "Activer Intel Graphics sur macOS",
+        "intelEnabledMacDescription": "Activer l'accélération graphique Intel sur les machines macOS.",
+        "runAsAdmin": "Exécuter en tant qu'administrateur",
+        "runAsAdminDescription": "Lance le jeu avec des privilèges administrateur.",
+        "ignored": "Fichiers Ignorés",
+        "ignoredDescription": "Spécifiez les fichiers ou répertoires à ignorer lors de la vérification des fichiers du jeu."
+      },
+      "display":{
+        "label": "Affichage",
+        "resolution": "Résolution",
+        "fullscreen": "Plein Écran",
+        "resolutionDescription": "Définir la résolution de la fenêtre de jeu.",
+        "resolutions": {
+          "fullHD": "1920x1080 (Full HD)",
+          "quadHD": "2560x1440 (Quad HD)",
+          "ultraHD": "3840x2160 (4K UHD)",
+          "hd": "1366x768 (HD)",
+          "hdReady": "1280x720 (HD)",
+          "hdPlus": "1600x900 (HD+)",
+          "wxgaPlus": "1440x900 (WXGA+)",
+          "xga": "1024×768 (XGA)"
+        }
+      }
+    },
+    "launcher": {
+      "updates": "Mises à jour",
+      "checkForUpdates": "Vérifier les mises à jour",
+      "checkForUpdatesDescription": "Vérifie les mises à jour du lanceur au démarrage.",
+      "integration": {
+        "label": "Intégration",
+        "discordRPC": "Discord Rich Presence",
+        "discordRPCDescription": "Activer ou désactiver l'intégration Discord Rich Presence."
+      },
+      "notification": {
+        "label": "Notifications",
+        "systemNotifications": "Notifications Système",
+        "systemNotificationsDescription": "Afficher les notifications système natives.",
+        "showUpdateNotification": "Afficher les notifications de mises à jour",
+        "showUpdateNotificationDescription": "Afficher les notifications de mise à jour.",
+        "playSound": "Jouer un son",
+        "playSoundDescription": "Jouer un son lorsque les notifications apparaissent.",
+        "categories": {
+          "label": "Catégories de Notifications",
+          "description": "Choisissez les types de notifications à afficher.",
+          "updates": "Mises à jour",
+          "launches": "Lancements de Jeu",
+          "downloads": "Téléchargements",
+          "errors": "Erreurs",
+          "general": "Général"
+        }
+      }
+    },
+    "storage": {
+      "folders": "Dossiers",
+      "launcherFolder": "Dossier du lanceur",
+      "launcherFolderDescription": "Définir le répertoire où le lanceur est installé.",
+      "minecraftFolder": "Dossier Minecraft",
+      "minecraftFolderDescription": "Définir le répertoire où Minecraft est installé."
+    },
+    "developer": {
+      "debug": "Débogage",
+      "enableDevTools": "Activer DevTools",
+      "enableDevToolsDescription": "Activer les outils développeur pour le débogage.",
+      "experimental": "Expérimental",
+      "allowBetaFeatures": "Autoriser les fonctionnalités bêta",
+      "allowBetaFeaturesDescription": "Activer les fonctionnalités expérimentales du lanceur."
+    },
+    "about": {
+      "version": "Version",
+      "checkForUpdates": "Vérifier les mises à jour",
+      "credits": "Crédits",
+      "developedBy": "Développé et créé avec 💖 par",
+      "specialThanks": "Remerciements spéciaux à tous les contributeurs et testeurs.",
+      "openSourceLibraries": "Bibliothèques Open Source",
+      "extraOpenSourceLibrariesDescription": "Autres bibliothèques open source utilisées dans ce projet.",
+      "apisUsed": "APIs utilisées",
+      "sourceCode": "Code Source",
+      "donate": "Faire un don !",
+      "donateDescription": "Si vous aimez ce projet, pensez à faire un don pour soutenir le développement !",
+      "contributors": "Contributeurs",
+      "disclaimer": "Clause de non-responsabilité",
+      "disclaimerDescription": "Ce lanceur est un projet indépendant et n'est affilié ni à Mojang, ni à Microsoft, ni à aucune entité officielle de Minecraft. Toutes les marques et droits d'auteur appartiennent à leurs propriétaires respectifs.",
+      "devUnlockedMessage": "Mode développeur activé ! 😹",
+      "alreadyADevMessage": "Vous êtes déjà un développeur ! 😹"
+    },
+    "buttons": {
+      "resetToDefault": "Réinitialiser par défaut",
+      "close": "Fermer",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "browse": "Parcourir",
+      "select": "Sélectionner"
+    }
+  },
+  "invoker": {
+    "loading": "CHARGEMENT",
+    "description": "Veuillez patienter pendant le processus.",
+    "closeNote": "Vous pouvez fermer la fenêtre active pour arrêter ce processus"
+  },
+  "mainContent": {
+    "playersOnline": "Joueurs en ligne maintenant",
+    "supportProject": "Soutenir le projet",
+    "console": "Console",
+    "minimize": "Réduire",
+    "closeApp": "Fermer l'application",
+    "manageAccounts": "Gérer les comptes",
+    "addAccount": "Ajouter un compte",
+    "adCredit": "Propulsé par Beam-i",
+    "social": {
+      "github": "Github",
+      "discord": "Discord",
+      "twitter": "Twitter"
+    },
+    "launch": {
+      "label": "Lancer",
+      "launching": "Lancement",
+      "cancel": "Annuler",
+      "closeGame": "Fermer le Jeu",
+      "launchStatus": {
+        "preparing": "Préparation",
+        "downloading": "Téléchargement",
+        "launching": "Lancement",
+        "patching": "Application du patch",
+        "libraries": "Bibliothèques",
+        "assets": "Ressources",
+        "waiting": "En attente",
+        "retrying": "Nouvel essai",
+        "extracting": "Extraction des Fichiers",
+        "verifying": "Vérification des Fichiers",
+        "ready": "Jeu prêt",
+        "running": "Jeu en Cours",
+        "launchFailed": "Échec du lancement, veuillez réessayer plus tard !",
+        "error": "Échec du Lancement",
+        "cancelled": "Lancement annulé"
+      },
+      "changeVersion": "Changer la Version",
+      "gameTypes": {
+        "vanilla": "Vanilla",
+        "forge": "Forge",
+        "fabric": "Fabric"
+      },
+      "versionTypes": {
+        "release": "Release",
+        "stable": "Stable",
+        "mc": "MC"
+      }
+    }
+  },
+  "sidebar": {
+    "buttons": {
+      "play": "Jouer",
+      "home": "Accueil",
+      "instanceManager": "Gestionnaire d'Instances",
+      "mods": "Mods (Bientôt disponible)",
+      "quickServers": "Serveurs rapides (Bientôt disponible)"
+    },
+    "settings": "Paramètres"
+  },
+  "accountAdder": {
+    "selectAccountType": "Sélectionnez le type de compte",
+    "close": "Fermer",
+    "addMinecraftAccount": "Compte Microsoft",
+    "addMinecraftAccountDescription": "Ajoutez votre compte Minecraft officiel pour jouer en ligne. (Nécessite un compte Mojang ou Microsoft valide.)",
+    "addOfflineAccount": "Compte hors ligne",
+    "addOfflineAccountDescription": "Jouez sur des serveurs non officiels ou piratés sans compte Minecraft. (La progression et les skins ne seront pas synchronisés entre les appareils.)",
+    "offlineAccountForm": {
+      "enterUsername": "Entrez un nom d'utilisateur pour créer un compte hors ligne. Ce compte fonctionnera uniquement sur des serveurs non officiels.",
+      "usernamePlaceholder": "Entrez le nom d'utilisateur (3-16 caractères, a-z, 0-9, _)",
+      "usernameRequired": "Le nom d'utilisateur est requis",
+      "usernameTooShort": "Le nom d'utilisateur doit contenir au moins 3 caractères",
+      "usernameTooLong": "Le nom d'utilisateur doit contenir 16 caractères ou moins",
+      "usernameInvalidCharacters": "Le nom d'utilisateur ne peut contenir que des lettres, des chiffres et des traits de soulignement",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "saving": "Enregistrement..."
+    },
+    "accountAdded": "Compte ajouté !",
+    "failedToAddAccount": "Échec de l'ajout du compte. Veuillez réessayer."
+  },
+  "dialog": {
+    "defaultTitle": "Titre de la boîte de dialogue",
+    "defaultMessage": "Le message de la boîte de dialogue apparaît ici.",
+    "ok": "OK",
+    "no": "Non",
+    "nevermind": "Peu importe",
+    "yes": "Oui",
+    "cancel": "Annuler",
+    "continue": "Continuer",
+    "confirm": "Confirmer",
+    "retry": "Réessayer",
+    "titles": {
+      "deleteAccount": "Supprimer le compte ?",
+      "apiError": "Erreur API",
+      "apiUnreachable": "API inaccessible",
+      "selectFolder": "Sélectionner un Dossier",
+      "gamePreparing": "Le jeu se prépare à se lancer. Veuillez patienter.",
+      "addMinecraftAccount": "Ajouter un Compte Minecraft",
+      "saveSkin": "Enregistrer le Skin"
+    },
+    "messages": {
+      "deleteAccount": "Êtes-vous sûr de vouloir supprimer ce compte ?",
+      "apiError": "Une erreur s'est produite lors de la connexion à l'API. Veuillez réessayer plus tard.",
+      "apiUnreachable": "Le serveur API est inaccessible. Veuillez vérifier votre connexion Internet et réessayer.",
+      "gamePreparingCancelMessage": "Le jeu est actuellement en cours de préparation pour le lancement. Vous devez annuler le processus de lancement actuel avant de sélectionner une instance différente. Souhaitez-vous annuler le lancement ?"
+    },
+    "fileTypes": {
+      "pngImages": "Images PNG",
+      "allFiles": "Tous les Fichiers"
+    }
+  },
+  "splash": {
+    "loading": "Chargement",
+    "description": "Veuillez patienter pendant le processus.",
+    "closeNote": "Vous pouvez fermer la fenêtre active pour arrêter ce processus"
+  },
+  "toast": {
+    "defaultMessage": "Quelque chose vient de se passer !",
+    "launchError": "Une erreur s'est produite lors du lancement du jeu. Veuillez réessayer plus tard.",
+    "noSkinAvailable": "Aucun skin disponible au téléchargement",
+    "skinSaved": "Skin enregistré avec succès !",
+    "skinSaveFailed": "Échec de l'enregistrement du skin"
+  },
+  "accountManager": {
+    "title": "Gestionnaire de comptes",
+    "description": "Gérez vos comptes Minecraft ici. Changez de profil et supprimez des comptes pour personnaliser votre expérience de jeu.",
+    "deleteAccountTitle": "Supprimer le compte ?",
+    "deleteAccountMessage": "Êtes-vous sûr de vouloir supprimer ce compte ?",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "removeAccount": "Supprimer le compte",
+    "removeAccountAriaLabel": "Supprimer le compte",
+    "minecraft": "Minecraft",
+    "cracked": "Pirate",
+    "playtime": "Temps de jeu"
+  },
+  "versionSelector": {
+    "minecraftVersion": "Minecraft",
+    "versionSummary": "Sélectionnez votre version et variante Minecraft préférée.",
+    "closeButton": "Bouton Fermer",
+    "closeButtonAriaLabel": "Bouton Fermer"
+  },
+  "console": {
+    "clearLogs": "Effacer",
+    "welcome": "Bienvenue dans la Console OriLauncher",
+    "description": "Cette console affichera les activités du lanceur et les journaux du jeu",
+    "ready": "Console prête à l'utilisation",
+    "levels": {
+      "debug": "Debug (Tout)",
+      "info": "Info",
+      "warning": "Avertissement",
+      "error": "Erreur"
+    },
+    "loggerTestMessage": "Message de test du journal",
+    "levelChanged": "Niveau changé en {level}",
+    "somethingWentWrong": "Une erreur est survenue"
+  },
+  "customOptions": {
+    "selectPlaceholder": "Sélectionner",
+    "levels": {
+      "debug": "Debug (Tout)",
+      "info": "Info",
+      "warning": "Avertissement",
+      "error": "Erreur"
+    },
+    "clear": "Effacer"
+  },
+  "folderPicker": {
+    "browse": "Parcourir",
+    "pick": "Sélectionner un Dossier",
+    "noFolderSelected": "Aucun dossier sélectionné"
+  },
+  "skinViewer": {
+    "defaultUsername": "MHF_Steve",
+    "animations": {
+      "idle": "Inactif",
+      "walking": "Marche",
+      "running": "Course",
+      "crouch": "Accroupi",
+      "waving": "Saluer"
+    },
+    "viewModes": {
+      "2d": "Vue 2D",
+      "3d": "Vue 3D"
+    },
+    "playPause": "Lecture/Pause",
+    "saveSkin": "Enregistrer le skin",
+    "toggleView": "Basculer Vue 2D/3D",
+    "playAnimation": "jouer-animation",
+    "saveSkinAriaLabel": "enregistrer-skin"
+  },
+  "logs": {
+    "languageSet": "Langue définie sur : {language}",
+    "discordRPCEnabled": "Discord RPC activé.",
+    "notificationSoundsEnabled": "Sons de notification activés.",
+    "loadingSettings": "Chargement des paramètres...",
+    "buildingVersions": "Construction des versions...",
+    "checkingForUpdates": "Vérification des mises à jour...",
+    "skippingUpdateCheck": "Ignorer la vérification des mises à jour...",
+    "initializingServices": "Initialisation des services...",
+    "refreshingAccounts": "Actualisation des comptes...",
+    "accountsValidated": "Comptes validés",
+    "fetchingServerList": "Récupération de la liste des serveurs...",
+    "preparingLauncher": "Préparation du lanceur...",
+    "checkingAPIStatus": "Vérification du statut de l'API...",
+    "apiFetch": {
+      "wakingUpServer": "Réveil du serveur API...",
+      "wakeup1": "Piquer le serveur avec un bâton pour le réveiller...",
+      "wakeup2": "Demander poliment au serveur de se lever et briller...",
+      "wakeup3": "Soudoyer le serveur avec du café virtuel...",
+      "wakeup4": "Envoyer un réveil au serveur...",
+      "wakeup5": "Chuchoter 'bonjour' au serveur...",
+      "wakeup6": "Chatouiller les circuits du serveur...",
+      "wakeup7": "Jouer de la musique forte pour faire bouger le serveur..."
+    },
+    "debugger":{
+      "addingEventListeners": "[MAIN CONTENT] Ajout de nouveaux écouteurs d'événements",
+      "eventSetupComplete": "[MAIN CONTENT] Configuration des événements terminée. Total des fonctions de nettoyage"
+    },
+    "apiUnreachable": "API inaccessible. Certaines fonctionnalités peuvent ne pas fonctionner correctement.",
+    "ready": "Prêt !"
+  },
+  "connection": {
+    "connectionLost": "Connexion perdue !",
+    "connectionRestored": "Connexion rétablie"
+  },
+  "tray": {
+    "oriLauncher": "Ori Launcher",
+    "retrieve": "Récupérer",
+    "checkForUpdates": "Vérifier les Mises à Jour",
+    "quit": "Quitter",
+    "tooltip": "Ori Launcher"
+  },
+  "discordRPC": {
+    "inLauncher": "Dans le Lanceur",
+    "browsing": "Navigation",
+    "idle": "Inactif",
+    "minecraft": "Minecraft",
+    "downloading": "Téléchargement",
+    "downloadOriLauncher": "Télécharger Ori Launcher"
+  },
+  "notifications": {
+    "updateAvailable": "Mise à Jour Disponible",
+    "updateAvailableMessage": "OriLauncher est maintenant disponible !",
+    "updateNow": "Mettre à Jour Maintenant",
+    "later": "Plus Tard",
+    "gameLaunched": "Jeu Lancé",
+    "gameLaunchedMessage": "Minecraft a démarré avec succès !",
+    "launchFailed": "Échec du Lancement",
+    "launchFailedMessage": "Échec du démarrage de Minecraft, veuillez réessayer plus tard.",
+    "downloadComplete": "Téléchargement Terminé",
+    "downloadCompleteMessage": "Téléchargement terminé avec succès !",
+    "connectionLost": "Connexion Perdue",
+    "connectionLostMessage": "Connexion perdue avec les serveurs. Nouvelle tentative...",
+    "connectionRestored": "Connexion Rétablie",
+    "connectionRestoredMessage": "Connexion rétablie. Vous pouvez maintenant jouer à Minecraft à nouveau.",
+    "launcherRestartRequired": "Redémarrage du lanceur requis",
+    "launcherRestartRequiredMessage": "Un redémarrage du lanceur est requis pour que les modifications prennent effet."
+  },
+  "errors": {
+    "noAccountSelected": "Aucun compte sélectionné",
+    "invalidOnlineCredentials": "Identifiants de compte en ligne invalides",
+    "noVersionSelected": "Aucune version de Minecraft sélectionnée",
+    "noMinecraftDirectory": "Répertoire Minecraft non spécifié",
+    "memoryConfiguration": "La mémoire minimum doit être inférieure à la mémoire maximum",
+    "memoryExceedsSystem": "La mémoire maximum dépasse la mémoire système",
+    "launchInProgress": "Lancement déjà en cours",
+    "accountRefreshFailed": "Échec de l'actualisation du compte après nouvelle tentative",
+    "apiNotReachable": "Échec de la récupération des actualités"
+  },
+  "ariaLabels": {
+    "minimizeApp": "réduire-app",
+    "closeApp": "fermer-app",
+    "changeVersion": "Changer la version",
+    "rssBtn": "bouton-rss",
+    "patreon": "patreon",
+    "settings": "Paramètres"
+  },
+  "placeholders": {
+    "enterName": "Entrez le nom ici mon bon monsieur..."
+  },
+  "version": {
+    "versionTypes": {
+      "vanilla": {
+        "name": "Vanilla",
+        "description": "Découvrez Minecraft vanilla avec des performances améliorées, des mécaniques de gameplay perfectionnées et de nouvelles fonctionnalités passionnantes. Jouez à la version pure et non modifiée du jeu comme prévu par Mojang."
+      },
+      "forge": {
+        "name": "Forge",
+        "description": "Jouez avec les mods Forge pour un gameplay amélioré, de nouveaux objets, blocs et mécaniques. Accédez à des milliers de modifications créées par la communauté pour transformer votre expérience Minecraft."
+      },
+      "fabric": {
+        "name": "Fabric",
+        "description": "Découvrez le modding léger et rapide avec Fabric. Profitez d'optimisations de performance, de mods modernes et de mises à jour rapides vers les dernières versions de Minecraft."
+      }
+    }
+  }
+}
