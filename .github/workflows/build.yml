@@ -1,51 +1,33 @@
-# module du helios launcher
-name: Launcher Build
+name: Build and Release
 on:
   push:
-    branches: [ master ]
+    branches: [ main, master, dev, develop ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Get version
-        run: echo "version=$(jq -r .version package.json)" >> $GITHUB_ENV
-      
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.version }}
-          release_name: release ${{ env.version }}
-          draft: false
-          prerelease: ${{ contains(env.version, 'beta') || contains(env.version, 'alpha') }}
-
-  build-launcher:
-    needs: create-release
+  build:
     runs-on: ${{ matrix.os }}
+    if: contains(fromJson('["main", "master"]'), github.ref_name)
 
     strategy:
       matrix:
-        os: [macos-14, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
-      - name: Set up Node
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: '20'
+          cache: 'npm'
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.x
+          python-version: '3.x'
 
       - name: Install dependencies
         run: npm ci
@@ -55,4 +37,39 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run release
+        shell: bash
+
+  build-beta:
+    runs-on: ${{ matrix.os }}
+    if: contains(fromJson('["dev", "develop"]'), github.ref_name)
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: npm ci
+        shell: bash
+
+      - name: Build and Publish Beta
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm version prerelease --preid=beta --no-git-tag-version
+          npm run release
         shell: bash
