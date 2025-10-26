@@ -16,6 +16,12 @@
         "theme": {
           "label": "Tema",
           "description": "Başlatıcının temasını seçin.",
+          "launcherStyle": {
+            "label": "Başlatıcı Stili",
+            "description": "Başlatıcının stilini seçin. <br><strong>Standart stil</strong> birden fazla tema seçeneği ile modern bir görünüm sunarken, <strong>Klasik stil</strong> bloklu Minecraft tarzı bir tasarım sunar.",
+            "standard": "Standart",
+            "minecraft": "Klasik"
+          },
           "themes": {
             "light": "Açık",
             "dark": "Koyu",
@@ -132,7 +138,9 @@
       "launcherFolder": "Başlatıcı klasörü",
       "launcherFolderDescription": "Başlatıcının kurulu olduğu dizini ayarlayın.",
       "minecraftFolder": "Minecraft klasörü",
-      "minecraftFolderDescription": "Minecraft'ın kurulu olduğu dizini ayarlayın."
+      "minecraftFolderDescription": "Minecraft'ın kurulu olduğu dizini ayarlayın.",
+      "modFolder": "Mod klasörü",
+      "modFolderDescription": "Modların kurulu olduğu dizini ayarlayın."
     },
     "developer": {
       "debug": "Hata ayıklama",
@@ -146,13 +154,14 @@
       "version": "Sürüm",
       "checkForUpdates": "Güncellemeleri Kontrol Et",
       "credits": "Katkıda Bulunanlar",
-      "developedBy": "💖 ile geliştirildi ve yapıldı:",
+      "developedBy": "<b class=\"credit-owner-text\">Cosmic</b>&nbsp;&&nbsp;<b class=\"credit-owner-text\">Olly</b> tarafından 💖 ile geliştirildi ve yapıldı",
       "specialThanks": "Tüm katkıda bulunanlara ve testçilere özel teşekkürler.",
       "openSourceLibraries": "Açık Kaynak Kütüphaneler",
       "extraOpenSourceLibrariesDescription": "Bu projede kullanılan diğer açık kaynak kütüphaneler.",
       "apisUsed": "Kullanılan API'ler",
       "sourceCode": "Kaynak Kodu",
       "donate": "Bağış Yap!",
+      "donateButton": "Bana bir kahve ısmarla",
       "donateDescription": "Bu projeyi beğendiyseniz, geliştirmeyi desteklemek için bağış yapmayı düşünün!",
       "contributors": "Katkıda Bulunanlar",
       "disclaimer": "Feragatname",
@@ -227,6 +236,7 @@
     "buttons": {
       "play": "Oyna",
       "home": "Ana Sayfa",
+      "accountManager": "Hesap Yöneticisi",
       "instanceManager": "Örnek Yöneticisi",
       "mods": "Modlar (Yakında)",
       "quickServers": "Hızlı Sunucular (Yakında)"
@@ -345,6 +355,43 @@
     "browse": "Gözat",
     "pick": "Klasör Seç",
     "noFolderSelected": "Klasör seçilmedi"
+  },
+  "instanceManager":{
+    "title": "Örnek Yöneticisi",
+    "home": "Ana Sayfa",
+    "description": "Minecraft örneklerinizi burada yönetin. Oyun deneyiminizi kişiselleştirmek için örnekler oluşturun, düzenleyin ve silin.",
+    "createInstance": "Örnek Oluştur",
+    "createInstanceAriaLabel": "Örnek Oluştur",
+    "editInstance": "Örneği Düzenle",
+    "editInstanceAriaLabel": "Örneği Düzenle",
+    "deleteInstance": "Örneği Sil",
+    "deleteInstanceAriaLabel": "Örneği Sil",
+    "instanceName": "Örnek Adı",
+    "instanceNamePlaceholder": "Örnek adını girin",
+    "instanceNameRequired": "Örnek adı gereklidir",
+    "instanceNameTooShort": "Örnek adı en az 3 karakter uzunluğunda olmalıdır",
+    "instanceNameTooLong": "Örnek adı en fazla 16 karakter uzunluğunda olmalıdır",
+    "instanceNameInvalidCharacters": "Örnek adı yalnızca harf, rakam ve alt çizgi içerebilir",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "version": {
+      "label": "Kullanılabilir sürüm",
+      "description": "Bu örnek için kullanılacak Minecraft sürümünü seçin.",
+      "versionTypes": {
+        "vanilla": {
+          "name": "Vanilla",
+          "description": "Geliştirilmiş performans, iyileştirilmiş oyun mekanikleri ve heyecan verici yeni özelliklerle vanilla Minecraft'ı deneyimleyin. Oyunun Mojang tarafından amaçlandığı gibi saf, değiştirilmemiş versiyonunu oynayın."
+        },
+        "forge": {
+          "name": "Forge",
+          "description": "Geliştirilmiş oyun deneyimi, yeni öğeler, bloklar ve mekanikler için Forge modları ile oynayın. Minecraft deneyiminizi dönüştürmek için topluluk tarafından oluşturulan binlerce modifikasyona erişin."
+        },
+        "fabric": {
+          "name": "Fabric",
+          "description": "Fabric ile hafif ve hızlı modlama deneyimleyin. Performans optimizasyonları, modern modlar ve en son Minecraft sürümlerine hızlı güncellemelerden yararlanın."
+        }
+      }
+    }
   },
   "skinViewer": {
     "defaultUsername": "MHF_Steve",

@@ -56,8 +56,7 @@
 
 <div class="side-bar">
     <div class="brand">
-        <img class="logo-light" src="./images/logo/logo-light.svg" alt="Ori Launcher" />
-        <img class="logo-dark" src="./images/logo/logo-dark.svg" alt="Ori Launcher" />
+        <img class="logo-light-primary" src="./images/logo/logo-primary.svg" alt="Ori Launcher" />
     </div>
     <div class="nav-btn-container">
         <div class="btn-group">

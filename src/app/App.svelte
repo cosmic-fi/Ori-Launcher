@@ -1,6 +1,11 @@
 <script>
   // @ts-nocheck
-  import ToastList from './components/model/ToastList.svelte';
+  /**
+   * @author Cosmic-fi
+   * @description Main entry point for the Ori Launcher Front-End application.
+   */
+
+   import ToastList from './components/model/ToastList.svelte';
   import Home from './pages/Home.svelte';
   import Splash from './pages/Splash.svelte';
   import { closeDialog, dialogStore, showToast, uiState } from './stores/ui';

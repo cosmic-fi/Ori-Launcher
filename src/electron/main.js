@@ -1,9 +1,8 @@
 // @ts-nocheck
 /**
- * @author Cosmic-fi
- * Main entry point for the Ori Launcher application.
- */
-"use strict";
+ * @author Cosmic-f
+ * @description Main entry point for the Ori Launcher application.
+*/
 
 import{ app, ipcMain, dialog, Notification, shell } from "electron";
 import msmc, { Auth } from 'msmc';
@@ -14,20 +13,44 @@ import http from 'http';
 import https from 'https';
 import { fileURLToPath } from 'url';
 
-// import autoUpdater from "electron-updater";
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Simple file watcher for development auto-reload
+if (process.env.NODE_ENV === 'development') {
+  // Use dynamic import to avoid top-level await issues
+  import('chokidar').then(chokidar => {
+    const watcher = chokidar.default.watch([
+      path.join(__dirname, '**/*.js'),
+      path.join(__dirname, '**/*.mjs'),
+      path.join(__dirname, '**/*.json')
+    ], {
+      ignored: /node_modules/,
+      ignoreInitial: true
+    });
+
+    watcher.on('change', (filePath) => {
+      console.log(`File changed: ${filePath}. Reloading app...`);
+      // Soft reload - just restart the app
+      app.relaunch();
+      app.exit();
+    });
+
+    watcher.on('error', (error) => {
+      console.error('File watcher error:', error);
+    });
+  }).catch(error => {
+    console.error('Failed to load chokidar for auto-reload:', error);
+  });
+}
 
 import { setAppWindow, getAppWindow, closeAppWindow } from './window/appWindow.js';
 import { Launch } from "ori-mcc";
 import { execSync } from "child_process";
 import { discordRPC } from './utils/discordRPC.js';
-import AppUpdater from './updater.js';
-
+import AutoStartManager from './autoStartManager.js';
 
 const rootDirectory = process.env.APPDATA || (process.platform === 'darwin' ? `${process.env.APPDATA}/Library/Application Support`: process.env.HOME);
-
 const LOG_DIR = `${rootDirectory}/.OriLauncher/logs`
 
 /**
@@ -487,10 +510,6 @@ const setupIpcHandlers = () => {
         // On macOS, we might need to check system preferences
         return { permission: 'granted' };
     });
-
-    // AUTO-UPDATER HANDLERS - Now handled by AppUpdater class
-    // The updater IPC handlers are set up automatically in the AppUpdater constructor
-    
     ipcMain.handle('get-app-version', async () => {
         return {
             version: app.getVersion(),
@@ -526,7 +545,56 @@ const setupIpcHandlers = () => {
             console.error('Error setting update channel:', error);
             return { success: false, error: error.message };
         }
-    })
+    });
+
+    // AUTO-START HANDLERS
+    ipcMain.handle('auto-start-enable', async () => {
+        try {
+            const autoStartManager = new AutoStartManager();
+            const success = await autoStartManager.enable();
+            return { success, message: success ? 'Auto-start enabled' : 'Failed to enable auto-start' };
+        } catch (error) {
+            console.error('Error enabling auto-start:', error);
+            return { success: false, error: error.message };
+        }
+    });
+
+    ipcMain.handle('auto-start-disable', async () => {
+        try {
+            const autoStartManager = new AutoStartManager();
+            const success = await autoStartManager.disable();
+            return { success, message: success ? 'Auto-start disabled' : 'Failed to disable auto-start' };
+        } catch (error) {
+            console.error('Error disabling auto-start:', error);
+            return { success: false, error: error.message };
+        }
+    });
+
+    ipcMain.handle('auto-start-status', async () => {
+        try {
+            const autoStartManager = new AutoStartManager();
+            const isEnabled = await autoStartManager.isEnabled();
+            return { success: true, enabled: isEnabled };
+        } catch (error) {
+            console.error('Error checking auto-start status:', error);
+            return { success: false, error: error.message };
+        }
+    });
+
+    ipcMain.handle('auto-start-sync', async (event, shouldBeEnabled) => {
+        try {
+            const autoStartManager = new AutoStartManager();
+            const success = await autoStartManager.sync(shouldBeEnabled);
+            return { 
+                success, 
+                message: success ? 'Auto-start synced successfully' : 'Failed to sync auto-start',
+                enabled: shouldBeEnabled
+            };
+        } catch (error) {
+            console.error('Error syncing auto-start:', error);
+            return { success: false, error: error.message };
+        }
+    });
 };
 
 // HELPER FUNCTIONS
@@ -588,14 +656,6 @@ const initializeApp = async () => {
         await app.whenReady();
         setupIpcHandlers();
         setAppWindow();
-        
-        // Initialize auto-updater (only in production)
-        if (!app.isPackaged) {
-            console.log('Development mode - auto-updater disabled');
-        } else {
-            console.log('Initializing auto-updater...');
-            new AppUpdater();
-        }
     } catch (error) {
         console.error("Error during app initialization:", error);
         app.quit();

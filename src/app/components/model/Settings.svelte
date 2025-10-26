@@ -15,6 +15,7 @@
     import ResolutionPicker from "../ui/ResolutionPicker.svelte";
     import { discordRPCManager } from '../../utils/discordRPCManager.js';
     import { notificationService } from "../../services/notificationService";
+    import { checkForUpdate, showUpdateNotification } from "../../utils/updateChecker.js";
 
     let totalRam = null;
     let ramSize;
@@ -31,6 +32,10 @@
     let bannerClickCount = 0;
     const REQUIRED_CLICKS = 9;
     const WARNING_THRESHOLD = 4;
+    
+    // Update check variables
+    let checkingForUpdates = false;
+    let updateCheckResult = null;
 
     $: currentLauncherStyle = $settings?.general?.appearance?.launcherStyle?.value;
     $: themesOptions = [
@@ -149,6 +154,59 @@
                 bannerClickCount = 0;
             }
         }, 10000); // Reset after 10 seconds of inactivity
+    }
+    
+    // Manual update check function
+    async function handleCheckForUpdates() {
+        if (checkingForUpdates) return;
+        
+        checkingForUpdates = true;
+        updateCheckResult = null;
+        
+        try {
+            // Use our shared manual version check
+            const updateInfo = await checkForUpdate();
+            
+            if (updateInfo?.available) {
+                // Update available
+                updateCheckResult = { 
+                    type: 'success', 
+                    message: 'Update available!', 
+                    updateInfo: updateInfo 
+                };
+                
+                // Show update notification if enabled
+                if ($settings.launcher?.notification?.updateNotification?.value) {
+                    notificationService.showUpdateAvailable(updateInfo.latest);
+                }
+                
+                // Show the update dialog
+                await showUpdateNotification(updateInfo);
+            } else if (updateInfo) {
+                // No update available
+                updateCheckResult = { 
+                    type: 'info', 
+                    message: 'Your launcher is up to date!' 
+                };
+                showToast('Your launcher is up to date!', 'info', 3000);
+            } else {
+                // Error checking for updates
+                updateCheckResult = { 
+                    type: 'error', 
+                    message: 'Failed to check for updates (GitHub API unavailable)' 
+                };
+                showToast('Failed to check for updates', 'error', 3000);
+            }
+        } catch (error) {
+            console.error('Error checking for updates:', error);
+            updateCheckResult = { 
+                type: 'error', 
+                message: error.message || 'An unexpected error occurred' 
+            };
+            showToast('Error checking for updates', 'error', 3000);
+        } finally {
+            checkingForUpdates = false;
+        }
     }
 </script>
 
@@ -611,13 +669,23 @@
                                     <span class="toggle-label">{$t('settings.about.version')}</span>
                                     <span class="group-description">v{$appVersion}</span>
                                 </div>
-                                <button class="check-update-btn">{$t('settings.about.checkForUpdates')}</button>
+                                <button 
+                                    class="check-update-btn {checkingForUpdates ? 'loading' : ''}"
+                                    onclick={handleCheckForUpdates}
+                                    disabled={checkingForUpdates}
+                                >
+                                    {#if checkingForUpdates}
+                                        <i class="fa fa-spinner fa-spin"></i> Checking...
+                                    {:else}
+                                        {$t('settings.about.checkForUpdates')}
+                                    {/if}
+                                </button>
                             </div>
                             <div class="sub-item-group">
                                 <div class="toggle-label-group">
                                     <span class="toggle-label">{$t('settings.about.credits')}</span>
                                     <span class="group-description">
-                                        {@html $t('settings.about.developedBy')} <b class="credit-owner-text">Cosmic</b>&nbsp;&&nbsp;<b class="credit-owner-text">Olly</b>.<br>
+                                        {@html $t('settings.about.developedBy')}.<br>
 
                                         {$t('settings.about.specialThanks')}
                                     </span>
@@ -630,12 +698,17 @@
                                         <ul>
                                             <li>
                                                 <a href="https://svelte.dev/" target="_blank" rel="noopener noreferrer">
-                                                    Svelte
+                                                    Svelte - Reactive UI Framework
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="https://fontawesome.com/" target="_blank" rel="noopener noreferrer">
-                                                    Font Awesome
+                                                    Font Awesome - Icon Library
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://skin3d.vercel.app/" target="_blank" rel="noopener noreferrer">
+                                                    Skin3d - 3d skin rendering
                                                 </a>
                                             </li>
                                             <li>
@@ -651,13 +724,18 @@
                                     <span class="group-description">
                                         <ul>
                                             <li>
-                                                <a href="https://wiki.vg/Minecraft_Forge_API" target="_blank" rel="noopener noreferrer">
-                                                    Minecraft API
+                                                <a href="https://github.com/cosmic-fi/ori-mcc" target="_blank" rel="noopener noreferrer">
+                                                    Ori MCC - Game launching & version management
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="https://discord.com/developers/docs/rich-presence/how-to" target="_blank" rel="noopener noreferrer">
-                                                    Discord Rich Presence
+                                                <a href="https://www.npmjs.com/package/msmc" target="_blank" rel="noopener noreferrer">
+                                                    MSMC - Authentication & Account refreshing
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://lunareclipse.studio/creations/starlight-skinapi" target="_blank" rel="noopener noreferrer">
+                                                    Starlight Skins - Skin API
                                                 </a>
                                             </li>
                                         </ul>

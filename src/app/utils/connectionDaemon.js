@@ -16,7 +16,13 @@ export function startConnectionDaemon(onLost, onRestored, pingUrl = `${baseURL}/
             const res = await fetch(pingUrl, {
                 method: 'GET',
                 cache: 'no-store',
-                signal: controller.signal
+                signal: controller.signal,
+                headers: {
+                    'User-Agent': 'OriLauncher/2.0.0 (Electron)',
+                    'Accept': '*/*',
+                    'Cache-Control': 'no-cache'
+                },
+                mode: 'cors'
             });
             clearTimeout(timeout);
 

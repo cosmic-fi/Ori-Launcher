@@ -83,6 +83,8 @@ const buildApp = async () => {
                     "app/electron/**/*",    // Copied Electron files
                     "app/locale/**/*",      // Copied locale files
                     "node_modules/**/*",    // Dependencies
+                    "!node_modules/**/{test,__tests__,tests,powered-test,example,examples}/**",
+                    "!node_modules/**/*.{d.ts,o,hprof,rc,bin,log,sh,md,txt}",
                     "package.json",         // Package info
                     "LICENSE.md",           // License
                     "public/**/*"           // Public assets
@@ -93,6 +95,11 @@ const buildApp = async () => {
                 },
                 compression: 'normal',
                 asar: true,
+                asarUnpack: [
+                    '**/*.node',
+                    '**/discord-rpc/**/*',
+                    '**/discord-rpc/**/.*'
+                ],
                 win: {
                     target: {
                         target: 'nsis',

@@ -16,6 +16,12 @@
         "theme": {
           "label": "Tema",
           "description": "Pilih tema peluncur.",
+          "launcherStyle": {
+            "label": "Gaya Peluncur",
+            "description": "Pilih gaya peluncur. <br><strong>Gaya Standar</strong> menawarkan tampilan modern dengan beberapa opsi tema, sementara <strong>Gaya Klasik</strong> menyediakan desain bergaya Minecraft yang berbentuk kotak.",
+            "standard": "Standar",
+            "minecraft": "Klasik"
+          },
           "themes": {
             "light": "Terang",
             "dark": "Gelap",
@@ -132,7 +138,9 @@
       "launcherFolder": "Folder Peluncur",
       "launcherFolderDescription": "Atur direktori tempat peluncur diinstal.",
       "minecraftFolder": "Folder Minecraft",
-      "minecraftFolderDescription": "Atur direktori tempat Minecraft diinstal."
+      "minecraftFolderDescription": "Atur direktori tempat Minecraft diinstal.",
+      "modFolder": "Folder Mod",
+      "modFolderDescription": "Direktori tempat mod diinstal."
     },
     "developer": {
       "debug": "Debug",
@@ -146,13 +154,14 @@
       "version": "Versi",
       "checkForUpdates": "Periksa Pembaruan",
       "credits": "Kredit",
-      "developedBy": "Dikembangkan dan dibuat dengan 💖 oleh",
+      "developedBy": "Dikembangkan dan dibuat dengan 💖 oleh <b class=\"credit-owner-text\">Cosmic</b>&nbsp;&&nbsp;<b class=\"credit-owner-text\">Olly</b>",
       "specialThanks": "Terima kasih khusus untuk semua kontributor dan penguji.",
       "openSourceLibraries": "Perpustakaan Open Source",
       "extraOpenSourceLibrariesDescription": "Perpustakaan open source lain yang digunakan dalam proyek ini.",
       "apisUsed": "API yang Digunakan",
       "sourceCode": "Kode Sumber",
       "donate": "Donasi!",
+      "donateButton": "Belikan saya kopi",
       "donateDescription": "Jika Anda menyukai proyek ini, pertimbangkan untuk berdonasi guna mendukung pengembangan!",
       "contributors": "Kontributor",
       "disclaimer": "Penafian",
@@ -227,11 +236,49 @@
     "buttons": {
       "play": "Main",
       "home": "Beranda",
+      "accountManager": "Manajer Akun",
       "instanceManager": "Manajer Instance",
       "mods": "Mod (Segera hadir)",
       "quickServers": "Server Cepat (Segera hadir)"
     },
     "settings": "Pengaturan"
+  },
+  "instanceManager":{
+    "title": "Manajer Instance",
+    "home": "Beranda",
+    "description": "Kelola instance Minecraft Anda di sini. Buat, edit, dan hapus instance untuk mempersonalisasi pengalaman bermain Anda.",
+    "createInstance": "Buat Instance",
+    "createInstanceAriaLabel": "Buat Instance",
+    "editInstance": "Edit Instance",
+    "editInstanceAriaLabel": "Edit Instance",
+    "deleteInstance": "Hapus Instance",
+    "deleteInstanceAriaLabel": "Hapus Instance",
+    "instanceName": "Nama Instance",
+    "instanceNamePlaceholder": "Masukkan nama instance",
+    "instanceNameRequired": "Nama instance diperlukan",
+    "instanceNameTooShort": "Nama instance harus minimal 3 karakter",
+    "instanceNameTooLong": "Nama instance harus 16 karakter atau kurang",
+    "instanceNameInvalidCharacters": "Nama instance hanya boleh berisi huruf, angka, dan garis bawah",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "version": {
+      "label": "Versi tersedia",
+      "description": "Pilih versi Minecraft untuk digunakan pada instance ini.",
+      "versionTypes": {
+        "vanilla": {
+          "name": "Vanilla",
+          "description": "Rasakan Minecraft vanilla dengan performa yang ditingkatkan, mekanik gameplay yang lebih baik, dan fitur baru yang menarik. Mainkan versi murni, tidak dimodifikasi dari game seperti yang dimaksudkan oleh Mojang."
+        },
+        "forge": {
+          "name": "Forge",
+          "description": "Bermain dengan mod Forge untuk gameplay yang ditingkatkan, item baru, blok, dan mekanik. Akses ribuan modifikasi yang dibuat komunitas untuk mengubah pengalaman Minecraft Anda."
+        },
+        "fabric": {
+          "name": "Fabric",
+          "description": "Rasakan modding yang ringan dan cepat dengan Fabric. Nikmati optimasi performa, mod modern, dan pembaruan cepat ke versi Minecraft terbaru."
+        }
+      }
+    }
   },
   "accountAdder": {
     "selectAccountType": "Pilih Jenis Akun",

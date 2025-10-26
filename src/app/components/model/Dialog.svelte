@@ -29,7 +29,9 @@
     <div class="d-wrapper scale-in-center">
       <div class="d-title-description-container">
         <span class="d-title">{title}</span>
-        <p class="d-description">{message}</p>
+        <p class="d-description">
+          {@html message}
+        </p>
       </div>
       <div class="d-btn-container">
         {#each buttons as btn}

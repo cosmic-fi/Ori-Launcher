@@ -1,3 +1,8 @@
+/**
+ * @author Cosmic-fi
+ * @description Preload script for the Ori Launcher application.
+*/
+
 const { contextBridge, shell, ipcRenderer } = require('electron');
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -130,57 +135,12 @@ contextBridge.exposeInMainWorld('electron', {
   showSystemNotification: (options) => ipcRenderer.invoke('show-system-notification', options),
   checkNotificationPermission: () => ipcRenderer.invoke('check-notification-permission'),
   
-  // Auto-updater methods
-  updater: {
-    checkForUpdates: () => ipcRenderer.invoke('update-app'),
-    startDownload: () => ipcRenderer.send('start-update'),
-    quitAndInstall: () => ipcRenderer.send('quit-and-install'),
-    
-    // Update event listeners
-    onCheckingForUpdate: (callback) => {
-      const wrappedCallback = (event, data) => callback(data);
-      ipcRenderer.on('checking-for-update', wrappedCallback);
-      return () => ipcRenderer.removeListener('checking-for-update', wrappedCallback);
-    },
-    onUpdateAvailable: (callback) => {
-      const wrappedCallback = (event, data) => callback(data);
-      ipcRenderer.on('update-available', wrappedCallback);
-      return () => ipcRenderer.removeListener('update-available', wrappedCallback);
-    },
-    onUpdateNotAvailable: (callback) => {
-      const wrappedCallback = (event, data) => callback(data);
-      ipcRenderer.on('update-not-available', wrappedCallback);
-      return () => ipcRenderer.removeListener('update-not-available', wrappedCallback);
-    },
-    onDownloadProgress: (callback) => {
-      const wrappedCallback = (event, data) => callback(data);
-      ipcRenderer.on('download-progress', wrappedCallback);
-      return () => ipcRenderer.removeListener('download-progress', wrappedCallback);
-    },
-    onUpdateDownloaded: (callback) => {
-      const wrappedCallback = (event, data) => callback(data);
-      ipcRenderer.on('update-downloaded', wrappedCallback);
-      return () => ipcRenderer.removeListener('update-downloaded', wrappedCallback);
-    },
-    onUpdateError: (callback) => {
-      const wrappedCallback = (event, data) => callback(data);
-      ipcRenderer.on('update-error', wrappedCallback);
-      return () => ipcRenderer.removeListener('update-error', wrappedCallback);
-    },
-    
-    // Cleanup method for update listeners
-    removeAllUpdateListeners: () => {
-      const events = ['checking-for-update', 'update-available', 'update-not-available', 'download-progress', 'update-downloaded', 'update-error'];
-      
-      events.forEach(event => {
-        const count = ipcRenderer.listenerCount(event);
-        if (count > 0) {
-          console.log(`[CLEANUP] Removing ${count} listeners for ${event}`);
-          ipcRenderer.removeAllListeners(event);
-        }
-      });
-      
-      console.log('[CLEANUP] All update listeners removed');
-    }
+  
+  // Auto-start methods
+  autoStart: {
+    enable: () => ipcRenderer.invoke('auto-start-enable'),
+    disable: () => ipcRenderer.invoke('auto-start-disable'),
+    getStatus: () => ipcRenderer.invoke('auto-start-status'),
+    sync: () => ipcRenderer.invoke('auto-start-sync')
   }
 });

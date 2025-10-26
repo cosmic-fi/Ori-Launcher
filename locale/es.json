@@ -16,6 +16,12 @@
         "theme": {
           "label": "Tema",
           "description": "Elige el tema del lanzador.",
+          "launcherStyle": {
+            "label": "Estilo del Lanzador",
+            "description": "Elige el estilo del lanzador. <br><strong>Estilo estándar</strong> ofrece un aspecto moderno con múltiples opciones de tema, mientras que <strong>Estilo clásico</strong> proporciona un diseño inspirado en Minecraft.",
+            "standard": "Estándar",
+            "minecraft": "Clásico"
+          },
           "themes": {
             "light": "Claro",
             "dark": "Oscuro",
@@ -132,7 +138,9 @@
       "launcherFolder": "Carpeta del lanzador",
       "launcherFolderDescription": "Establece el directorio de instalación del lanzador.",
       "minecraftFolder": "Carpeta de Minecraft",
-      "minecraftFolderDescription": "Establece el directorio de instalación de Minecraft."
+      "minecraftFolderDescription": "Establece el directorio de instalación de Minecraft.",
+      "modFolder": "Carpeta de mods",
+      "modFolderDescription": "Establece el directorio donde se instalan los mods."
     },
     "developer": {
       "debug": "Depuración",
@@ -146,7 +154,7 @@
       "version": "Versión",
       "checkForUpdates": "Buscar actualizaciones",
       "credits": "Créditos",
-      "developedBy": "Desarrollado y creado con 💖 por",
+      "developedBy": "Desarrollado y creado con 💖 por <b class=\"credit-owner-text\">Cosmic</b>&nbsp;&&nbsp;<b class=\"credit-owner-text\">Olly</b>",
       "specialThanks": "Muchas gracias a todos los contribuyentes y probadores.",
       "openSourceLibraries": "Bibliotecas de código abierto",
       "extraOpenSourceLibrariesDescription": "Otras bibliotecas de código abierto usadas en este proyecto.",
@@ -158,7 +166,8 @@
       "disclaimer": "Descargo de responsabilidad",
       "disclaimerDescription": "Este lanzador es un proyecto independiente y no está afiliado con Mojang, Microsoft ni ninguna entidad oficial de Minecraft. Todas las marcas y derechos de autor pertenecen a sus respectivos propietarios.",
       "devUnlockedMessage": "¡Modo desarrollador activado! 😹",
-      "alreadyADevMessage": "¡Ya eres un desarrollador! 😹"
+      "alreadyADevMessage": "¡Ya eres un desarrollador! 😹",
+      "donateButton": "Invítame a un café"
     },
     "buttons": {
       "resetToDefault": "Restablecer a valores predeterminados",
@@ -227,11 +236,49 @@
     "buttons": {
       "play": "Jugar",
       "home": "Inicio",
+      "accountManager": "Gestor de Cuentas",
       "instanceManager": "Gestor de Instancias",
       "mods": "Mods (Próximamente)",
       "quickServers": "Servidores rápidos (Próximamente)"
     },
     "settings": "Ajustes"
+  },
+  "instanceManager":{
+    "title": "Gestor de Instancias",
+    "home": "Inicio",
+    "description": "Gestiona tus instancias de Minecraft aquí. Crea, edita y elimina instancias para personalizar tu experiencia de juego.",
+    "createInstance": "Crear Instancia",
+    "createInstanceAriaLabel": "Crear Instancia",
+    "editInstance": "Editar Instancia",
+    "editInstanceAriaLabel": "Editar Instancia",
+    "deleteInstance": "Eliminar Instancia",
+    "deleteInstanceAriaLabel": "Eliminar Instancia",
+    "instanceName": "Nombre de la Instancia",
+    "instanceNamePlaceholder": "Introduce el nombre de la instancia",
+    "instanceNameRequired": "El nombre de la instancia es obligatorio",
+    "instanceNameTooShort": "El nombre de la instancia debe tener al menos 3 caracteres",
+    "instanceNameTooLong": "El nombre de la instancia debe tener 16 caracteres o menos",
+    "instanceNameInvalidCharacters": "El nombre de la instancia solo puede contener letras, números y guiones bajos",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "version": {
+      "label": "Versión disponible",
+      "description": "Selecciona la versión de Minecraft para esta instancia.",
+      "versionTypes": {
+        "vanilla": {
+          "name": "Vanilla",
+          "description": "Experimenta Minecraft vanilla con rendimiento mejorado, mecánicas de juego optimizadas y nuevas características emocionantes. Juega la versión pura y sin modificar del juego como fue diseñada por Mojang."
+        },
+        "forge": {
+          "name": "Forge",
+          "description": "Juega con mods de Forge para mejorar la jugabilidad, nuevos objetos, bloques y mecánicas. Accede a miles de modificaciones creadas por la comunidad para transformar tu experiencia de Minecraft."
+        },
+        "fabric": {
+          "name": "Fabric",
+          "description": "Experimenta modding ligero y rápido con Fabric. Disfruta de optimizaciones de rendimiento, mods modernos y actualizaciones rápidas a las últimas versiones de Minecraft."
+        }
+      }
+    }
   },
   "accountAdder": {
     "selectAccountType": "Seleccionar tipo de cuenta",

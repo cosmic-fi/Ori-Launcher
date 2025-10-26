@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { versionMetaURL } from '../utils/helper';
 
 // --- Stores ---
 export const versions = writable([]); // All grouped versions
@@ -19,7 +20,7 @@ function persistStore(store, key) {
 
 // --- Bootup: Fetch versions and set defaults if needed ---
 export async function initVersionManager() {
-    const res = await fetch('https://piston-meta.mojang.com/mc/game/version_manifest.json');
+    const res = await fetch(versionMetaURL);
     const data = await res.json();
 
     // Only keep releases for now (we'll handle modded versions separately)

@@ -1,4 +1,9 @@
 // @ts-nocheck
+/**
+ * @author Cosmic-fi
+ * @description Version utility for the Ori Launcher Front-End application.
+ */
+
 import { writable } from 'svelte/store';
 
 export const appVersion = writable('1.0.0');

@@ -154,6 +154,7 @@ async function submitOffline(e) {
         name = '';
         showOfflineForm = false;
         showToast($t('accountAdder.accountAdded'), 'info');
+        uiState.toggleModel.set('none');
         console.log(_oAccount)
     } catch (error) {
         console.error('Error adding offline account:', error);

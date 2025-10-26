@@ -48,4 +48,15 @@ export async function applySystemSettings() {
   if (playSound) {
     console.log("Notification sounds enabled.");
   }
+
+  // === Auto-Start ===
+  const autoStart = currentSettings?.general?.startup?.autoStart?.value;
+  if (autoStart !== undefined && window.electron?.autoStartSync) {
+    try {
+      await window.electron.autoStartSync(autoStart);
+      console.log("Auto-start setting applied:", autoStart);
+    } catch (error) {
+      console.error("Failed to apply auto-start setting:", error);
+    }
+  }
 }

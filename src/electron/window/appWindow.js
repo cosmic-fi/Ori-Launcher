@@ -1,6 +1,6 @@
 /**
  * @author Cosmic-fi
- * Handles the main application window for Ori Launcher.
+ * @description Handles the main application window for Ori Launcher.
  */
 
 import * as remoteMain from '@electron/remote/main/index.js';
@@ -38,13 +38,14 @@ const setAppWindow = () => {
             nodeIntegration: true,
             contextIsolation: true,
             devTools: true,
+            webSecurity: false,
             preload: path.join(__dirname, '../preload.js')
         },
         backgroundColor: '#2F2F37',
     });
     
     // Load the main HTML file
-    if (!isDev) {
+    if (isDev) {
         window.loadURL('http://localhost:5173');
     } else {
         window.loadFile(path.join(__dirname, '../../../dist/index.html'));
@@ -53,8 +54,8 @@ const setAppWindow = () => {
     // Show the window once it's ready
     window.once('ready-to-show', () => {
         window.show();
-        window.webContents.openDevTools({ mode: "detach" });
     });
+    window.webContents.openDevTools({ mode: "detach" });
 
     // Remove the default menu
     window.removeMenu();

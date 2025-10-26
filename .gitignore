@@ -45,6 +45,6 @@ build/
 *.exe
 *.dll
 *.pak
-
+app/
 # Electron builder cache
 node_modules/.cache/

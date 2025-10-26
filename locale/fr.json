@@ -16,6 +16,12 @@
         "theme": {
           "label": "Thème",
           "description": "Choisissez le thème du lanceur.",
+          "launcherStyle": {
+            "label": "Style du Lanceur",
+            "description": "Choisissez le style du lanceur. <br><strong>Style standard</strong> offre un look moderne avec plusieurs options de thème, tandis que <strong>Style classique</strong> fournit un design inspiré de Minecraft.",
+            "standard": "Standard",
+            "minecraft": "Classique"
+          },
           "themes": {
             "light": "Clair",
             "dark": "Sombre",
@@ -132,7 +138,9 @@
       "launcherFolder": "Dossier du lanceur",
       "launcherFolderDescription": "Définir le répertoire où le lanceur est installé.",
       "minecraftFolder": "Dossier Minecraft",
-      "minecraftFolderDescription": "Définir le répertoire où Minecraft est installé."
+      "minecraftFolderDescription": "Définir le répertoire où Minecraft est installé.",
+      "modFolder": "Dossier des mods",
+      "modFolderDescription": "Définir le répertoire où les mods sont installés."
     },
     "developer": {
       "debug": "Débogage",
@@ -146,13 +154,14 @@
       "version": "Version",
       "checkForUpdates": "Vérifier les mises à jour",
       "credits": "Crédits",
-      "developedBy": "Développé et créé avec 💖 par",
+      "developedBy": "Développé et créé avec 💖 par <b class=\"credit-owner-text\">Cosmic</b>&nbsp;&&nbsp;<b class=\"credit-owner-text\">Olly</b>",
       "specialThanks": "Remerciements spéciaux à tous les contributeurs et testeurs.",
       "openSourceLibraries": "Bibliothèques Open Source",
       "extraOpenSourceLibrariesDescription": "Autres bibliothèques open source utilisées dans ce projet.",
       "apisUsed": "APIs utilisées",
       "sourceCode": "Code Source",
       "donate": "Faire un don !",
+      "donateButton": "M'offrir un café",
       "donateDescription": "Si vous aimez ce projet, pensez à faire un don pour soutenir le développement !",
       "contributors": "Contributeurs",
       "disclaimer": "Clause de non-responsabilité",
@@ -227,6 +236,7 @@
     "buttons": {
       "play": "Jouer",
       "home": "Accueil",
+      "accountManager": "Gestionnaire de Comptes",
       "instanceManager": "Gestionnaire d'Instances",
       "mods": "Mods (Bientôt disponible)",
       "quickServers": "Serveurs rapides (Bientôt disponible)"
@@ -340,6 +350,43 @@
       "error": "Erreur"
     },
     "clear": "Effacer"
+  },
+  "instanceManager":{
+    "title": "Gestionnaire d'Instances",
+    "home": "Accueil",
+    "description": "Gérez vos instances Minecraft ici. Créez, modifiez et supprimez des instances pour personnaliser votre expérience de jeu.",
+    "createInstance": "Créer une Instance",
+    "createInstanceAriaLabel": "Créer une Instance",
+    "editInstance": "Modifier l'Instance",
+    "editInstanceAriaLabel": "Modifier l'Instance",
+    "deleteInstance": "Supprimer l'Instance",
+    "deleteInstanceAriaLabel": "Supprimer l'Instance",
+    "instanceName": "Nom de l'Instance",
+    "instanceNamePlaceholder": "Entrez le nom de l'instance",
+    "instanceNameRequired": "Le nom de l'instance est requis",
+    "instanceNameTooShort": "Le nom de l'instance doit comporter au moins 3 caractères",
+    "instanceNameTooLong": "Le nom de l'instance ne doit pas dépasser 16 caractères",
+    "instanceNameInvalidCharacters": "Le nom de l'instance ne peut contenir que des lettres, des chiffres et des tirets bas",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "version": {
+      "label": "Version disponible",
+      "description": "Sélectionnez la version de Minecraft à utiliser pour cette instance.",
+      "versionTypes": {
+        "vanilla": {
+          "name": "Vanilla",
+          "description": "Découvrez Minecraft vanilla avec des performances améliorées, des mécaniques de gameplay perfectionnées et de nouvelles fonctionnalités passionnantes. Jouez à la version pure et non modifiée du jeu comme prévu par Mojang."
+        },
+        "forge": {
+          "name": "Forge",
+          "description": "Jouez avec les mods Forge pour un gameplay amélioré, de nouveaux objets, blocs et mécaniques. Accédez à des milliers de modifications créées par la communauté pour transformer votre expérience Minecraft."
+        },
+        "fabric": {
+          "name": "Fabric",
+          "description": "Profitez d'un modding léger et rapide avec Fabric. Bénéficiez d'optimisations de performances, de mods modernes et de mises à jour rapides vers les dernières versions de Minecraft."
+        }
+      }
+    }
   },
   "folderPicker": {
     "browse": "Parcourir",

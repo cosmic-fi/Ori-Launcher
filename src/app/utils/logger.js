@@ -1,4 +1,9 @@
 // @ts-nocheck
+/**
+ * @author Cosmic-fi
+ * @description Logger utility for the Ori Launcher Front-End application.
+ */
+
 import { writable } from 'svelte/store';
 
 export const logLevels = {

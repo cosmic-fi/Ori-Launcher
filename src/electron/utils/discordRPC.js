@@ -1,16 +1,45 @@
+/**
+ * @author Cosmic-fi
+ * @description Discord RPC service for the Ori Launcher application.
+*/
+
 import DiscordRPC from 'discord-rpc';
 import { app } from 'electron';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 
 dotenv.config();
+const gitUrl = 'https://github.com/cosmic-fi/ori-launcher';
 
 class DiscordRPCService {
     constructor() {
         this.client = null;
         this.isConnected = false;
-        this.clientId = process.env.DISCORD_CLIENT_ID;
+        this.clientId = this.getDiscordClientId();
         this.startTime = null;
         this.currentActivity = null;
+    }
+
+    getDiscordClientId() {
+        // Try to get from environment variable first
+        if (process.env.DISCORD_CLIENT_ID) {
+            return process.env.DISCORD_CLIENT_ID;
+        }
+        
+        // Fallback for development - try to read from .env file
+        try {
+            const envPath = path.join(process.cwd(), '.env');
+            if (fs.existsSync(envPath)) {
+                const envContent = fs.readFileSync(envPath, 'utf8');
+                const clientIdMatch = envContent.match(/DISCORD_CLIENT_ID=(.+)/);
+                if (clientIdMatch && clientIdMatch[1]) {
+                    return clientIdMatch[1].trim();
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to read .env file:', error);
+        }
     }
 
     async initialize() {
@@ -19,6 +48,7 @@ class DiscordRPCService {
         }
 
         try {
+            console.log(`Initializing Discord RPC with client ID: ${this.clientId}`);
             this.client = new DiscordRPC.Client({ transport: 'ipc' });
             
             this.client.on('ready', () => {
@@ -33,9 +63,18 @@ class DiscordRPCService {
                 this.isConnected = false;
             });
 
+            this.client.on('error', (error) => {
+                console.error('Discord RPC error:', error);
+            });
+
             await this.client.login({ clientId: this.clientId });
+            console.log('Discord RPC login successful');
         } catch (error) {
             console.error('Failed to initialize Discord RPC:', error);
+            console.error('This might be due to:');
+            console.error('- Missing Discord client ID');
+            console.error('- Discord client not running');
+            console.error('- Native module issues in packaged app');
             this.client = null;
             this.isConnected = false;
         }
@@ -65,13 +104,12 @@ class DiscordRPCService {
             startTimestamp: this.startTime,
             largeImageKey: 'ori_launcher_logo',
             largeImageText: `Ori Launcher v${app.getVersion()}`,
-            smallImageKey: 'orilauncher_idle',
             smallImageText: 'Idle',
             instance: false,
             buttons: [
                 {
                     label: 'Download Ori Launcher',
-                    url: 'https://github.com/cosmic-fi/ori-launcher'
+                    url: gitUrl
                 }
             ]
         };
@@ -94,7 +132,7 @@ class DiscordRPCService {
             buttons: [
                 {
                     label: 'Download Ori Launcher',
-                    url: 'https://github.com/cosmic-fi/ori-launcher'
+                    url: gitUrl
                 }
             ]
         };
@@ -117,7 +155,7 @@ class DiscordRPCService {
             buttons: [
                 {
                     label: 'Download Ori Launcher',
-                    url: 'https://github.com/cosmic-fi/ori-launcher'
+                    url: gitUrl
                 }
             ]
         };

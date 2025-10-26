@@ -1,6 +1,13 @@
 // @ts-nocheck
+/**
+ * @author Cosmic-fi
+ * @description Helper utility for the Ori Launcher Front-End application.
+*/
 
 export const rssURL = 'https://orilauncher.cosmicfi.online/';
+export const starlightBaseURL = 'https://starlightskins.lunareclipse.studio/render/ultimate';
+export const apiBase = 'http://212.227.65.132:11216/api';
+export const versionMetaURL = 'https://piston-meta.mojang.com/mc/game/version_manifest.json';
 
 export function scrollHorizontal(node) {
   const handler = (e) => {

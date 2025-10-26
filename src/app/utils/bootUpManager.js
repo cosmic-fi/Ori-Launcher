@@ -4,6 +4,7 @@ import { get } from 'svelte/store';
 import { ensureSettingsInitialized } from '../shared/configurations.js';
 import { showDialog, uiState } from '../stores/ui.js';
 import { initVersionManager } from '../shared/versionManager.js';
+import { checkForUpdate, showUpdateNotification } from './updateChecker.js';
 import { baseURL } from '../services/api.js';
 import { t } from '../stores/i18n.js';
 import { getAccounts, updateAccount, removeAccount } from '../shared/user.js';
@@ -34,11 +35,22 @@ async function checkForUpdatesStep() {
     const currentSettings = get(settings);
     if (currentSettings.launcher?.updates?.checkForUpdates?.value) {
         bootStatus.set({ step: 2, message: translate('logs.checkingForUpdates'), progress: 25 });
-        // await checkForUpdates();
+        
+        // Use our manual version check instead of electron-updater
+        const updateInfo = await checkForUpdate();
+        
+        if (updateInfo?.available) {
+          console.log(`Update available: ${updateInfo.latest} (current: ${updateInfo.current})`);
+          
+          // Pause boot sequence and wait for user decision
+          await showUpdateNotification(updateInfo);
+        } else if (updateInfo) {
+          console.log('Launcher is up to date');
+        }
     } else {
         bootStatus.set({ step: 2, message: translate('logs.skippingUpdateCheck'), progress: 25 });
     }
-  await new Promise(res => setTimeout(res, 500));
+    await new Promise(res => setTimeout(res, 500));
 }
 
 async function checkForVersions() {
@@ -157,7 +169,13 @@ async function checkApiStatusStep() {
       const res = await fetch(`${baseURL}/ping`, {
         method: 'GET',
         cache: 'no-store',
-        signal: controller.signal
+        signal: controller.signal,
+        headers: {
+          'User-Agent': 'OriLauncher/2.0.0 (Electron)',
+          'Accept': 'application/json',
+          'Cache-Control': 'no-cache'
+        },
+        mode: 'cors'
       });
       clearTimeout(timeout);
 

@@ -1,8 +1,11 @@
 // @ts-nocheck
 import axios from 'axios';
+import { apiBase, starlightBaseURL } from '../utils/helper';
 
-export const baseURL = 'https://api.cosmicfi.online/api';
+export const baseURL = apiBase;
 export const fabricMetaURL = 'https://meta.fabricmc.net/v1/versions';
+
+const starlightBaseUrl = starlightBaseURL;
 
 /**
  * Fetch all Minecraft servers.
@@ -29,7 +32,14 @@ export async function fetchPlayerCounts() {
  * @returns {Promise<Object>} The RSS feed object, or {} on error.
  */
 export async function fetchNews() {
-  const res = await fetch(`${baseURL}/news`);
+  const res = await fetch(`${baseURL}/news`, {
+    headers: {
+      'User-Agent': 'OriLauncher/2.0.0 (Electron)',
+      'Accept': 'application/json',
+      'Cache-Control': 'no-cache'
+    },
+    mode: 'cors'
+  });
   if (!res.ok) {
     throw new Error('Failed to fetch news');
   }
@@ -45,7 +55,15 @@ function delay(ms) {
 async function validateImageUrl(url, retries = 2) {
     for (let attempt = 0; attempt <= retries; attempt++) {
         try {
-            const response = await fetch(url, { method: 'HEAD' });
+            const response = await fetch(url, { 
+                method: 'HEAD',
+                headers: {
+                    'User-Agent': 'OriLauncher/2.0.0 (Electron)',
+                    'Accept': '*/*',
+                    'Cache-Control': 'no-cache'
+                },
+                mode: 'cors'
+            });
             if (response.ok) {
                 return url;
             }
@@ -65,7 +83,7 @@ async function validateImageUrl(url, retries = 2) {
 
 // Updated fetchStarlightSkins function - returns URLs instead of base64
 async function fetchStarlightSkins(username) {
-    const baseUrl = 'https://starlightskins.lunareclipse.studio/render/ultimate';
+    const baseUrl = starlightBaseURL;
     const skinTypes = [
         { key: 'face', path: '/face/512' },
         { key: 'rawSkin', path: '/skin' },
@@ -156,7 +174,7 @@ async function fetchFaceAndSkin(username, accountType = 'online') {
         }
         
         // Final hardcoded fallback URLs
-        const starlightBaseUrl = 'https://starlightskins.lunareclipse.studio/render/ultimate';
+        const starlightBaseUrl = starlightBaseURL;
         return {
             face: `${starlightBaseUrl}/face/512/MHF_Steve`,
             skin: `${starlightBaseUrl}/skin/MHF_Steve`,

@@ -79,19 +79,43 @@ class SkinService {
     }
 
     // Validate if a skin URL is accessible
-    async validateSkinUrl(url, timeout = 5000) {
+    async validateSkinUrl(url, timeout = 3000) {
+        // Skip validation for now and assume URLs are valid
+        // This prevents bad gateway errors while still allowing skin loading
+        try {
+            // Basic URL format validation
+            const urlObj = new URL(url);
+            if (!urlObj.hostname.includes('starlightskins.lunareclipse.studio')) {
+                return false;
+            }
+            return true;
+        } catch (error) {
+            console.warn(`Invalid skin URL format ${url}:`, error.message);
+            return false;
+        }
+    }
+
+    // Alternative validation method that actually tests the URL
+    async validateSkinUrlWithFetch(url, timeout = 3000) {
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), timeout);
             
             const response = await fetch(url, { 
                 method: 'HEAD', 
-                signal: controller.signal 
+                signal: controller.signal,
+                headers: {
+                    'User-Agent': 'OriLauncher/2.0.0 (Electron)',
+                    'Accept': '*/*',
+                    'Cache-Control': 'no-cache'
+                },
+                mode: 'no-cors' // Changed from 'cors' to 'no-cors' to avoid CORS issues
             });
             
             clearTimeout(timeoutId);
-            return response.ok;
+            return response.ok || response.type === 'opaque'; // Accept opaque responses from no-cors
         } catch (error) {
+            console.warn(`Failed to validate skin URL ${url}:`, error.message);
             return false;
         }
     }
@@ -110,10 +134,42 @@ class SkinService {
             // Generate URLs for the username
             const urls = this.generateSkinUrls(username);
             
-            // Validate critical URLs (face and rawSkin)
+            // For now, assume all generated URLs are valid to avoid network issues
+            // This prevents bad gateway errors while still providing skin functionality
+            const skinData = {
+                username,
+                hasCustomSkin: true,
+                urls,
+                timestamp: Date.now()
+            };
+            
+            this.cache.set(cacheKey, { data: skinData, timestamp: Date.now() });
+            return skinData;
+            
+        } catch (error) {
+            console.error(`Error generating skin data for ${username}:`, error);
+            return this.getSteveSkinData();
+        }
+    }
+
+    // Get skin data with network validation (use when network is stable)
+    async getSkinDataWithValidation(username) {
+        // Check cache first
+        const cacheKey = username.toLowerCase();
+        const cached = this.cache.get(cacheKey);
+        
+        if (cached && Date.now() - cached.timestamp < this.cacheExpiry) {
+            return cached.data;
+        }
+
+        try {
+            // Generate URLs for the username
+            const urls = this.generateSkinUrls(username);
+            
+            // Validate critical URLs (face and rawSkin) using the fetch method
             const [faceValid, rawSkinValid] = await Promise.all([
-                this.validateSkinUrl(urls.face),
-                this.validateSkinUrl(urls.rawSkin)
+                this.validateSkinUrlWithFetch(urls.face),
+                this.validateSkinUrlWithFetch(urls.rawSkin)
             ]);
 
             // If user has valid skin, return their URLs

@@ -17,8 +17,8 @@
   "include": [
     "global.d.ts",
     "src/**/*.js",
-    "src/**/*.ts",
     "src/**/*.svelte",
+    "src/**/*.ts",
     "svelte.config.js",
     "vite.config.mjs"
   ],
