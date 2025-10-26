@@ -1,40 +1,180 @@
 # Ori Launcher
 
-**Ori Launcher** is a modern, cross-platform Minecraft launcher built with Svelte, Electron, and Vite. It features a beautiful UI, multi-account support, mod management, localization, and more. Ori Launcher is open source and designed for speed, flexibility, and ease of use.
+Ori Launcher is a modern, cross‑platform Minecraft launcher built with Svelte, Electron, and Vite. It focuses on speed, a clean user experience, and practical features such as multi‑account support, instance management, and localization. The project is fully open source and welcomes community contributions.
+
+---
+
+## Table of Contents
+- Features
+- Tech Stack
+- Screenshots
+- Quick Start
+- Build & Release
+- Project Structure
+- Architecture Overview
+- Localization
+- Troubleshooting
+- Contributing
+- Credits
 
 ---
 
 ## 🚀 Features
-
-- **Multi-account support** (Microsoft, Mojang, and offline)
-- **Mod and resource pack management**
-- **Customizable RAM and Java settings**
-- **Automatic updates and news feed**
-- **Localization** (multi-language support)
-- **Discord Rich Presence integration**
-- **Backup and restore saves**
-- **Custom Minecraft directory support**
-- **Modern, responsive UI**
-- **Open source and community-driven**
+- Multi‑account support (Microsoft via `msmc`, offline profiles)
+- Instance Manager: create, edit, delete instances, choose Vanilla/Forge/Fabric
+- Mod & resource pack support (with incremental improvements planned)
+- Customizable RAM/Java settings and Minecraft directory
+- Auto‑update integration for packaged builds
+- Localization with multiple languages (`locale/*.json`)
+- Discord Rich Presence integration
+- Modern, responsive UI powered by Svelte + Vite
 
 ---
 
-## 🖥️ Screenshots
-
-> _Add screenshots here if available_
+## 🧰 Tech Stack
+- Electron (Main & Preload)
+- Svelte (Renderer)
+- Vite (dev server & production bundling)
+- Electron Builder (packaging & distribution)
 
 ---
 
-## 🛠️ Getting Started
+## 🖼️ Screenshots
+> Add screenshots in `public/images/` and reference them here.
+
+---
+
+## ⚡ Quick Start
 
 ### Prerequisites
+- Node.js v18+
+- Git
+- npm (or yarn)
 
-- [Node.js](https://nodejs.org/) (v18+ recommended)
-- [Git](https://git-scm.com/)
-- [Yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)
-
-### Clone the Repository
-
+### Install
 ```bash
-git clone https://github.com/cosmic-fi/ori-launcher.git
-cd ori-launcher
+npm install
+```
+
+### Run in Development
+Starts Vite on `http://localhost:5173` and launches Electron after the dev server becomes ready.
+```bash
+npm run dev
+```
+
+### Build UI (Renderer)
+```bash
+npm run build
+```
+
+### Preview Built UI
+```bash
+npm run preview
+```
+
+---
+
+## 📦 Build & Release
+For full, detailed build and publishing instructions (including GitHub releases and auto‑updates), see:
+
+- BUILD_AND_RELEASE.md
+
+Common commands:
+```bash
+# Package for current platform
+npm run dist
+
+# Platform‑specific builds
+npm run dist:win
+npm run dist:mac
+npm run dist:linux
+npm run dist:all
+
+# Publish release to GitHub
+npm run release
+```
+
+Environment for publishing:
+- Create `.env` with `GH_TOKEN=your_github_personal_access_token`
+- Do not commit `.env` to the repository
+
+---
+
+## 📁 Project Structure
+```
+ori-launcher/
+├── .github/workflows/build.yml
+├── BUILD_AND_RELEASE.md
+├── README.md
+├── index.html
+├── jsconfig.json
+├── locale/
+│   ├── en.json
+│   ├── es.json
+│   ├── fr.json
+│   ├── id.json
+│   └── tr.json
+├── public/
+│   ├── icon.*
+│   ├── images/
+│   └── sfx/
+├── src/
+│   └── electron/
+│       ├── main.js
+│       ├── preload.js
+│       ├── autoStartManager.js
+│       ├── utils/
+│       └── window/
+├── svelte.config.js
+├── vite.config.mjs
+└── package.json
+```
+
+---
+
+## 🧠 Architecture Overview
+- Electron Main (`src/electron/main.js`): application lifecycle, windows, packaging integration, updater hooks
+- Electron Preload (`src/electron/preload.js`): secure bridging to renderer via context‑isolated APIs
+- Renderer (Svelte + Vite): UI logic, settings, instance management, localization
+- Packaging (Electron Builder): distributables for Windows/macOS/Linux; release flows via scripts and GitHub Actions
+
+TypeScript/JS language services are configured via `jsconfig.json`. The project uses ESM (`"type": "module"` in `package.json`).
+
+---
+
+## 🌍 Localization
+Localization keys live under `locale/*.json`. Each language file mirrors `en.json`.
+
+Guidelines:
+- Keep keys and structure consistent with `en.json`
+- When adding UI features, first add strings to `en.json`, then update other locales
+- Use clear, concise phrasing and avoid hard‑coding HTML unless necessary for styling
+
+Contributions:
+- Submit PRs that add or fix translations
+- Ensure new keys are present across all languages
+
+---
+
+## 🧪 Troubleshooting
+- Electron Builder missing: `npm install --save-dev electron-builder`
+- GH_TOKEN not set: create `.env` with a valid token
+- Auto‑updates only work in packaged builds: use `npm run dist` to test
+- Editor warnings about deleted Svelte files: restart TS/Svelte language servers, or adjust `jsconfig.json` includes
+
+For more, see BUILD_AND_RELEASE.md (Troubleshooting section).
+
+---
+
+## 🤝 Contributing
+1. Fork the repo and create a feature branch
+2. Run `npm run dev` and develop against the dev server
+3. Add/adjust localization strings in all language files when introducing UI changes
+4. Write clear commit messages and open a PR
+
+---
+
+## 🙏 Credits
+Developed and crafted with 💖 by **Cosmic** & **Olly**.
+
+---
