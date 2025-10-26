@@ -1,13 +1,12 @@
 # Ori Launcher <a id="ori-launcher"></a>
 
-Ori Launcher is a modern, cross-platform Minecraft launcher built with Svelte, Electron, and Vite. It focuses on speed, a clean user experience, and practical features such as multi-account support, instance management, and localization. The project is fully open source and welcomes community contributions.
+Ori Launcher is a modern, cross-platform Minecraft launcher built with Svelte, Electron, and Vite. It focuses on speed, a clean user experience, and practical features such as multi-account support, version management, and localization. The project is fully open source and welcomes community contributions.
 
 ---
 
 ## Table of Contents <a id="table-of-contents"></a>
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Screenshots](#screenshots)
 - [Quick Start](#quick-start)
 - [Build](#build)
 - [Project Structure](#project-structure)
@@ -20,7 +19,7 @@ Ori Launcher is a modern, cross-platform Minecraft launcher built with Svelte, E
 
 ---
 
-## 🚀 Features <a id="features"></a>
+## Features <a id="features"></a>
 - Multi-account support (Microsoft via `msmc`, offline profiles)
 - Instance Manager: create, edit, delete instances, choose Vanilla/Forge/Fabric
 - Mod & resource pack support (with incremental improvements planned)
@@ -32,7 +31,7 @@ Ori Launcher is a modern, cross-platform Minecraft launcher built with Svelte, E
 
 ---
 
-## 🧰 Tech Stack <a id="tech-stack"></a>
+## Tech Stack <a id="tech-stack"></a>
 - Electron (Main & Preload)
 - Svelte (Renderer)
 - Vite (dev server & production bundling)
@@ -40,12 +39,7 @@ Ori Launcher is a modern, cross-platform Minecraft launcher built with Svelte, E
 
 ---
 
-## 🖼️ Screenshots <a id="screenshots"></a>
-> Add screenshots in `public/images/` and reference them here.
-
----
-
-## ⚡ Quick Start <a id="quick-start"></a>
+## Quick Start <a id="quick-start"></a>
 
 ### Prerequisites
 - Node.js v18+
@@ -75,22 +69,14 @@ npm run preview
 
 ---
 
-<<<<<<< HEAD
-## 📦 Build
-For local development and personal builds only. Do not distribute or publish artifacts.
-=======
-## 📦 Build<a id="build"></a>
-For full, detailed build instructions, see:
-
-- BUILD.md
->>>>>>> 3d8d8516e68e56e163f7b61a142671e5179f71f1
+## Build <a id="build"></a>
+For full, detailed build instructions, see `BUILD.md`.
 
 Common commands:
 ```bash
 # Install dependencies
 npm install
 
-<<<<<<< HEAD
 # Run in development (Vite + Electron)
 npm run dev
 
@@ -100,11 +86,10 @@ npm run build
 # Preview built UI
 npm run preview
 
-# Optional: package locally (personal use only — do not distribute)
+# Package for distribution
 npm run dist
-=======
+
 # Platform-specific builds
->>>>>>> 3d8d8516e68e56e163f7b61a142671e5179f71f1
 npm run dist:win
 npm run dist:mac
 npm run dist:linux
@@ -120,7 +105,7 @@ Environment for publishing:
 
 ---
 
-## 📁 Project Structure <a id="project-structure"></a>
+## Project Structure <a id="project-structure"></a>
 ```
 ori-launcher/
 ├── .github/workflows/build.yml
@@ -152,17 +137,17 @@ ori-launcher/
 
 ---
 
-## 🧠 Architecture Overview <a id="architecture-overview"></a>
-- Electron Main (`src/electron/main.js`): application lifecycle, windows, packaging integration, updater hooks
-- Electron Preload (`src/electron/preload.js`): secure bridging to renderer via context-isolated APIs
-- Renderer (Svelte + Vite): UI logic, settings, instance management, localization
-- Packaging (Electron Builder): distributables for Windows/macOS/Linux; release flows via scripts and GitHub Actions
+## Architecture Overview <a id="architecture-overview"></a>
+- Electron Main (`src/electron/main.js`): application lifecycle, windows, packaging integration, updater hooks  
+- Electron Preload (`src/electron/preload.js`): secure bridging to renderer via context-isolated APIs  
+- Renderer (Svelte + Vite): UI logic, settings, instance management, localization  
+- Packaging (Electron Builder): distributables for Windows/macOS/Linux; release flows via scripts and GitHub Actions  
 
 TypeScript/JS language services are configured via `jsconfig.json`. The project uses ESM (`"type": "module"` in `package.json`).
 
 ---
 
-## 🌍 Localization <a id="localization"></a>
+## Localization <a id="localization"></a>
 Localization keys live under `locale/*.json`. Each language file mirrors `en.json`.
 
 Guidelines:
@@ -176,42 +161,38 @@ Contributions:
 
 ---
 
-## 🧪 Troubleshooting <a id="troubleshooting"></a>
+## Troubleshooting <a id="troubleshooting"></a>
 - Electron Builder missing: `npm install --save-dev electron-builder`
-<<<<<<< HEAD
-- Auto‑updates only work in packaged builds: use `npm run dist` to test locally
-=======
 - GH_TOKEN not set: create `.env` with a valid token
 - Auto-updates only work in packaged builds: use `npm run dist` to test
->>>>>>> 3d8d8516e68e56e163f7b61a142671e5179f71f1
 - Editor warnings about deleted Svelte files: restart TS/Svelte language servers, or adjust `jsconfig.json` includes
 
 For more, see BUILD.md (Troubleshooting section).
 
 ---
 
-## 🤝 Contributing <a id="contributing"></a>
-1. Fork the repo and create a feature branch
-2. Run `npm run dev` and develop against the dev server
-3. Add/adjust localization strings in all language files when introducing UI changes
-4. Write clear commit messages and open a PR
+## Contributing <a id="contributing"></a>
+1. Fork the repo and create a feature branch  
+2. Run `npm run dev` and develop against the dev server  
+3. Add/adjust localization strings in all language files when introducing UI changes  
+4. Write clear commit messages and open a PR  
 
 ---
 
-## 🙏 Credits <a id="credits"></a>
-Developed and crafted with 💖 by **Cosmic** & **Olly**.
-
----
-<<<<<<< HEAD
-
-<a id="license-usage"></a>
-## 📄 License & Usage
-- Contributions are welcome: open issues and submit pull requests.
-- Personal builds are permitted for local testing and evaluation.
-- Redistribution, repackaging, or publishing of binaries or modified sources is NOT permitted without explicit written permission from the maintainers.
-- Do not upload builds to stores, mirrors, or release pages.
-- Forks should remain private unless you have permission to publish.
+## License & Usage <a id="license-usage"></a>
+- Contributions are welcome: open issues and submit pull requests.  
+- Personal builds are permitted for local testing and evaluation.  
+- Redistribution, repackaging, or publishing of binaries or modified sources is **not permitted** without explicit written permission from the maintainers.  
+- Do not upload builds to stores, mirrors, or release pages.  
+- Forks should remain private unless you have permission to publish.  
 
 For exceptions or partnership inquiries, please contact the maintainers.
-=======
->>>>>>> 3d8d8516e68e56e163f7b61a142671e5179f71f1
+
+## Credits <a id="credits"></a>
+Developed and crafted with 💖 by **Cosmic** & **Olly**.
+
+## Buy me a coffee!
+If you like this project and would like to see it grow consider buying a coffee ☕ <br><br>
+<a href="https://buymeacoffee.com/cosmic_fi" target="_blank">
+  <img src="https://cdn.buymeacoffee.com/buttons/v2/arial-orange.png" style="width: 120px;margin-top:30px"/>
+</a>
