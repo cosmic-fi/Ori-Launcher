@@ -9,7 +9,7 @@ Ori Launcher is a modern, cross-platform Minecraft launcher built with Svelte, E
 - [Tech Stack](#tech-stack)
 - [Screenshots](#screenshots)
 - [Quick Start](#quick-start)
-- [Build & Release](#build--release)
+- [Build](#build)
 - [Project Structure](#project-structure)
 - [Architecture Overview](#architecture-overview)
 - [Localization](#localization)
@@ -74,10 +74,10 @@ npm run preview
 
 ---
 
-## 📦 Build & Release <a id="build--release"></a>
-For full, detailed build and publishing instructions (including GitHub releases and auto-updates), see:
+## 📦 Build<a id="build"></a>
+For full, detailed build instructions, see:
 
-- BUILD_AND_RELEASE.md
+- BUILD.md
 
 Common commands:
 ```bash
