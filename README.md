@@ -1,10 +1,10 @@
-# Ori Launcher
+# Ori Launcher <a id="ori-launcher"></a>
 
-Ori Launcher is a modern, cross‑platform Minecraft launcher built with Svelte, Electron, and Vite. It focuses on speed, a clean user experience, and practical features such as multi‑account support, instance management, and localization. The project is fully open source and welcomes community contributions.
+Ori Launcher is a modern, cross-platform Minecraft launcher built with Svelte, Electron, and Vite. It focuses on speed, a clean user experience, and practical features such as multi-account support, instance management, and localization. The project is fully open source and welcomes community contributions.
 
 ---
 
-## Table of Contents
+## Table of Contents <a id="table-of-contents"></a>
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Screenshots](#screenshots)
@@ -20,19 +20,19 @@ Ori Launcher is a modern, cross‑platform Minecraft launcher built with Svelte,
 
 ---
 
-## 🚀 Features
-- Multi‑account support (Microsoft via `msmc`, offline profiles)
+## 🚀 Features <a id="features"></a>
+- Multi-account support (Microsoft via `msmc`, offline profiles)
 - Instance Manager: create, edit, delete instances, choose Vanilla/Forge/Fabric
 - Mod & resource pack support (with incremental improvements planned)
 - Customizable RAM/Java settings and Minecraft directory
-- Auto‑update integration for packaged builds
+- Auto-update integration for packaged builds
 - Localization with multiple languages (`locale/*.json`)
 - Discord Rich Presence integration
 - Modern, responsive UI powered by Svelte + Vite
 
 ---
 
-## 🧰 Tech Stack
+## 🧰 Tech Stack <a id="tech-stack"></a>
 - Electron (Main & Preload)
 - Svelte (Renderer)
 - Vite (dev server & production bundling)
@@ -40,12 +40,12 @@ Ori Launcher is a modern, cross‑platform Minecraft launcher built with Svelte,
 
 ---
 
-## 🖼️ Screenshots
+## 🖼️ Screenshots <a id="screenshots"></a>
 > Add screenshots in `public/images/` and reference them here.
 
 ---
 
-## ⚡ Quick Start
+## ⚡ Quick Start <a id="quick-start"></a>
 
 ### Prerequisites
 - Node.js v18+
@@ -75,14 +75,22 @@ npm run preview
 
 ---
 
+<<<<<<< HEAD
 ## 📦 Build
 For local development and personal builds only. Do not distribute or publish artifacts.
+=======
+## 📦 Build<a id="build"></a>
+For full, detailed build instructions, see:
+
+- BUILD.md
+>>>>>>> 3d8d8516e68e56e163f7b61a142671e5179f71f1
 
 Common commands:
 ```bash
 # Install dependencies
 npm install
 
+<<<<<<< HEAD
 # Run in development (Vite + Electron)
 npm run dev
 
@@ -94,6 +102,9 @@ npm run preview
 
 # Optional: package locally (personal use only — do not distribute)
 npm run dist
+=======
+# Platform-specific builds
+>>>>>>> 3d8d8516e68e56e163f7b61a142671e5179f71f1
 npm run dist:win
 npm run dist:mac
 npm run dist:linux
@@ -109,7 +120,7 @@ Environment for publishing:
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Structure <a id="project-structure"></a>
 ```
 ori-launcher/
 ├── .github/workflows/build.yml
@@ -141,9 +152,9 @@ ori-launcher/
 
 ---
 
-## 🧠 Architecture Overview
+## 🧠 Architecture Overview <a id="architecture-overview"></a>
 - Electron Main (`src/electron/main.js`): application lifecycle, windows, packaging integration, updater hooks
-- Electron Preload (`src/electron/preload.js`): secure bridging to renderer via context‑isolated APIs
+- Electron Preload (`src/electron/preload.js`): secure bridging to renderer via context-isolated APIs
 - Renderer (Svelte + Vite): UI logic, settings, instance management, localization
 - Packaging (Electron Builder): distributables for Windows/macOS/Linux; release flows via scripts and GitHub Actions
 
@@ -151,13 +162,13 @@ TypeScript/JS language services are configured via `jsconfig.json`. The project 
 
 ---
 
-## 🌍 Localization
+## 🌍 Localization <a id="localization"></a>
 Localization keys live under `locale/*.json`. Each language file mirrors `en.json`.
 
 Guidelines:
 - Keep keys and structure consistent with `en.json`
 - When adding UI features, first add strings to `en.json`, then update other locales
-- Use clear, concise phrasing and avoid hard‑coding HTML unless necessary for styling
+- Use clear, concise phrasing and avoid hard-coding HTML unless necessary for styling
 
 Contributions:
 - Submit PRs that add or fix translations
@@ -165,16 +176,21 @@ Contributions:
 
 ---
 
-## 🧪 Troubleshooting
+## 🧪 Troubleshooting <a id="troubleshooting"></a>
 - Electron Builder missing: `npm install --save-dev electron-builder`
+<<<<<<< HEAD
 - Auto‑updates only work in packaged builds: use `npm run dist` to test locally
+=======
+- GH_TOKEN not set: create `.env` with a valid token
+- Auto-updates only work in packaged builds: use `npm run dist` to test
+>>>>>>> 3d8d8516e68e56e163f7b61a142671e5179f71f1
 - Editor warnings about deleted Svelte files: restart TS/Svelte language servers, or adjust `jsconfig.json` includes
 
 For more, see BUILD.md (Troubleshooting section).
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contributing <a id="contributing"></a>
 1. Fork the repo and create a feature branch
 2. Run `npm run dev` and develop against the dev server
 3. Add/adjust localization strings in all language files when introducing UI changes
@@ -182,10 +198,11 @@ For more, see BUILD.md (Troubleshooting section).
 
 ---
 
-## 🙏 Credits
+## 🙏 Credits <a id="credits"></a>
 Developed and crafted with 💖 by **Cosmic** & **Olly**.
 
 ---
+<<<<<<< HEAD
 
 <a id="license-usage"></a>
 ## 📄 License & Usage
@@ -196,3 +213,5 @@ Developed and crafted with 💖 by **Cosmic** & **Olly**.
 - Forks should remain private unless you have permission to publish.
 
 For exceptions or partnership inquiries, please contact the maintainers.
+=======
+>>>>>>> 3d8d8516e68e56e163f7b61a142671e5179f71f1
