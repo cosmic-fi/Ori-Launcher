@@ -9,12 +9,13 @@ Ori Launcher is a modern, cross‑platform Minecraft launcher built with Svelte,
 - [Tech Stack](#tech-stack)
 - [Screenshots](#screenshots)
 - [Quick Start](#quick-start)
-- [Build & Release](#build--release)
+- [Build](#build)
 - [Project Structure](#project-structure)
 - [Architecture Overview](#architecture-overview)
 - [Localization](#localization)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+- [License & Usage](#license-usage)
 - [Credits](#credits)
 
 ---
@@ -74,17 +75,25 @@ npm run preview
 
 ---
 
-## 📦 Build & Release
-For full, detailed build and publishing instructions (including GitHub releases and auto‑updates), see:
-
-- BUILD_AND_RELEASE.md
+## 📦 Build
+For local development and personal builds only. Do not distribute or publish artifacts.
 
 Common commands:
 ```bash
-# Package for current platform
-npm run dist
+# Install dependencies
+npm install
 
-# Platform‑specific builds
+# Run in development (Vite + Electron)
+npm run dev
+
+# Build renderer (Svelte)
+npm run build
+
+# Preview built UI
+npm run preview
+
+# Optional: package locally (personal use only — do not distribute)
+npm run dist
 npm run dist:win
 npm run dist:mac
 npm run dist:linux
@@ -158,11 +167,10 @@ Contributions:
 
 ## 🧪 Troubleshooting
 - Electron Builder missing: `npm install --save-dev electron-builder`
-- GH_TOKEN not set: create `.env` with a valid token
-- Auto‑updates only work in packaged builds: use `npm run dist` to test
+- Auto‑updates only work in packaged builds: use `npm run dist` to test locally
 - Editor warnings about deleted Svelte files: restart TS/Svelte language servers, or adjust `jsconfig.json` includes
 
-For more, see BUILD_AND_RELEASE.md (Troubleshooting section).
+For more, see BUILD.md (Troubleshooting section).
 
 ---
 
@@ -178,3 +186,13 @@ For more, see BUILD_AND_RELEASE.md (Troubleshooting section).
 Developed and crafted with 💖 by **Cosmic** & **Olly**.
 
 ---
+
+<a id="license-usage"></a>
+## 📄 License & Usage
+- Contributions are welcome: open issues and submit pull requests.
+- Personal builds are permitted for local testing and evaluation.
+- Redistribution, repackaging, or publishing of binaries or modified sources is NOT permitted without explicit written permission from the maintainers.
+- Do not upload builds to stores, mirrors, or release pages.
+- Forks should remain private unless you have permission to publish.
+
+For exceptions or partnership inquiries, please contact the maintainers.
