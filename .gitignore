@@ -39,8 +39,8 @@ coverage/
 TODO.md
 # Build outputs
 release/
-dist/
 build/
+src/app/
 *.exe
 *.dll
 *.pak
