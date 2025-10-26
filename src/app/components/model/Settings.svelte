@@ -1062,7 +1062,7 @@
         background-repeat: no-repeat;
         border-bottom: 5px var(--accent-color-dark) solid;
     }
-    .credit-owner-text{
+    :global(.credit-owner-text){
         opacity: 1 !important;
         color: var(--accent-color) !important;
     }

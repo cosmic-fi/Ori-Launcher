@@ -69,15 +69,16 @@ const buildApp = async () => {
         console.log('Building application...');
         await build({
             config: {
-                appId: 'online.cosmicfi.orilauncher',
+                appId: 'dev.cosmicfi.orilauncher',
                 productName: 'Ori Launcher',
-                copyright: 'Copyright © 2025 Ori Launcher',
+                copyright: `Copyright © ${new Date().getFullYear()} Cosmic-fi (Cosmic Boucher)`,
                 forceCodeSigning: false,
                 afterSign: null,
                 artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
                 extraMetadata: {
                     main: 'app/electron/main.js'
                 },
+                license: 'LICENSE',
                 files: [
                     "dist/**/*",           // Frontend built by Vite
                     "app/electron/**/*",    // Copied Electron files
@@ -101,6 +102,7 @@ const buildApp = async () => {
                     '**/discord-rpc/**/.*'
                 ],
                 win: {
+                    publisherName: 'Cosmic-fi (Cosmic Boucher)',
                     target: {
                         target: 'nsis',
                         arch: ['x64']
@@ -114,7 +116,10 @@ const buildApp = async () => {
                     createStartMenuShortcut: true,
                     allowElevation: false,
                     artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
-                    deleteAppDataOnUninstall: false
+                    deleteAppDataOnUninstall: true,
+                    license: 'LICENSE',
+                    installerSidebar: 'public/inInstallerSidebar.bmp',
+                    uninstallerSidebar: 'public/uninstallerSidebar.bmp'
                 },
                 mac: {
                     target: [
@@ -141,8 +146,8 @@ const buildApp = async () => {
                     ],
                     icon: 'public/icon.png',
                     category: 'Game',
-                    synopsis: 'Ori Launcher - Game Launcher',
-                    description: 'A modern game launcher for Ori games'
+                    synopsis: 'Ori Launcher - Custom Minecraft Launcher',
+                    description: 'A modern custom Minecraft launcher'
                 },
                 publish: [
                     {

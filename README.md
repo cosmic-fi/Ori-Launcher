@@ -70,7 +70,10 @@ npm run preview
 ---
 
 ## Build <a id="build"></a>
-For full, detailed build instructions, see `BUILD.md`.
+## 📦 Build
+For local development and personal builds only. Do not distribute or publish artifacts.
+
+- Full local build guide: [BUILD.md](./BUILD.md)
 
 Common commands:
 ```bash
@@ -86,10 +89,8 @@ npm run build
 # Preview built UI
 npm run preview
 
-# Package for distribution
+# Optional: package locally (personal use only — do not distribute)
 npm run dist
-
-# Platform-specific builds
 npm run dist:win
 npm run dist:mac
 npm run dist:linux
@@ -172,19 +173,23 @@ For more, see BUILD.md (Troubleshooting section).
 ---
 
 ## Contributing <a id="contributing"></a>
-1. Fork the repo and create a feature branch  
-2. Run `npm run dev` and develop against the dev server  
-3. Add/adjust localization strings in all language files when introducing UI changes  
-4. Write clear commit messages and open a PR  
+1. Fork the repo and create a feature branch
+2. Run `npm run dev` and develop against the dev server
+3. Add/adjust localization strings in all language files when introducing UI changes
+4. Write clear commit messages and open a PR
+
+- Full contribution guide: [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ---
 
 ## License & Usage <a id="license-usage"></a>
-- Contributions are welcome: open issues and submit pull requests.  
-- Personal builds are permitted for local testing and evaluation.  
-- Redistribution, repackaging, or publishing of binaries or modified sources is **not permitted** without explicit written permission from the maintainers.  
-- Do not upload builds to stores, mirrors, or release pages.  
-- Forks should remain private unless you have permission to publish.  
+- Contributions are welcome: open issues and submit pull requests.
+- Personal builds are permitted for local testing and evaluation.
+- Redistribution, repackaging, or publishing of binaries or modified sources is NOT permitted without explicit written permission from the maintainers.
+- Do not upload builds to stores, mirrors, or release pages.
+- Forks should remain private unless you have permission to publish.
+
+Full terms: see [LICENSE](./LICENSE).
 
 For exceptions or partnership inquiries, please contact the maintainers.
 
