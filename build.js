@@ -1,5 +1,4 @@
 import { build } from 'electron-builder';
-import fs from 'fs';
 import { promises as fsPromises } from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
@@ -29,7 +28,7 @@ const copyFiles = async () => {
     const electronFiles = await getFiles('src/electron');
     for (const file of electronFiles) {
         const content = await fsPromises.readFile(file, 'utf8');
-        const outputPath = file.replace('src/', 'app/');
+        const outputPath = file.replace('src/', 'appsrc/');
         const outputDir = path.dirname(outputPath);
         
         try {
@@ -47,7 +46,7 @@ const copyFiles = async () => {
         const localeFiles = await getFiles('locale');
         for (const file of localeFiles) {
             const content = await fsPromises.readFile(file, 'utf8');
-            const outputPath = `app/locale/${path.basename(file)}`;
+            const outputPath = `appsrc/locale/${path.basename(file)}`;
             const outputDir = path.dirname(outputPath);
             
             try {
@@ -76,13 +75,12 @@ const buildApp = async () => {
                 afterSign: null,
                 artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
                 extraMetadata: {
-                    main: 'app/electron/main.js'
+                    main: 'appsrc/electron/main.js'
                 },
-                license: 'LICENSE',
                 files: [
                     "dist/**/*",           // Frontend built by Vite
-                    "app/electron/**/*",    // Copied Electron files
-                    "app/locale/**/*",      // Copied locale files
+                    "appsrc/electron/**/*",    // Copied Electron files
+                    "appsrc/locale/**/*",      // Copied locale files
                     "node_modules/**/*",    // Dependencies
                     "!node_modules/**/{test,__tests__,tests,powered-test,example,examples}/**",
                     "!node_modules/**/*.{d.ts,o,hprof,rc,bin,log,sh,md,txt}",
@@ -102,7 +100,6 @@ const buildApp = async () => {
                     '**/discord-rpc/**/.*'
                 ],
                 win: {
-                    publisherName: 'Cosmic-fi (Cosmic Boucher)',
                     target: {
                         target: 'nsis',
                         arch: ['x64']

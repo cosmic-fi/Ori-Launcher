@@ -40,10 +40,10 @@ TODO.md
 # Build outputs
 release/
 build/
-src/app
 *.exe
 *.dll
 *.pak
+appsrc/
 app/
 # Electron builder cache
 node_modules/.cache/
