@@ -115,7 +115,7 @@ const buildApp = async () => {
                     artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
                     deleteAppDataOnUninstall: true,
                     license: 'LICENSE',
-                    installerSidebar: 'public/inInstallerSidebar.bmp',
+                    installerSidebar: 'public/installerSidebar.bmp',
                     uninstallerSidebar: 'public/uninstallerSidebar.bmp'
                 },
                 mac: {
