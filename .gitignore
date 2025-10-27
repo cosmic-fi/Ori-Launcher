@@ -40,7 +40,7 @@ TODO.md
 # Build outputs
 release/
 build/
-src/app/
+src/app
 *.exe
 *.dll
 *.pak
