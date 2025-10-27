@@ -45,5 +45,6 @@ build/
 *.pak
 appsrc/
 app/
+dist/
 # Electron builder cache
 node_modules/.cache/
