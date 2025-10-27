@@ -2,7 +2,7 @@
 
 ---
 
-Ori Launcher is a modern, cross-platform custom Minecraft launcher built with Svelte, Electron, and Vite. It focuses on speed, a clean user experience, and practical features such as multi-account support, version management, and localization. The project is fully open source and welcomes community contributions.
+Ori Launcher is a cross-platform custom Minecraft launcher built with Svelte, Electron, and Vite. It focuses on speed, a clean user experience, and practical features such as multi-account support, version management, and localization. The project is fully open source and welcomes community contributions.
 <br>
 
 ## ⥄ Table of Contents <a id="table-of-contents"></a>
