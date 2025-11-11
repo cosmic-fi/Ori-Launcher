@@ -1,4 +1,4 @@
-<img width="1580" height="791" alt="Frame 108" src="https://github.com/user-attachments/assets/97648670-5dcb-45ef-a2b3-8f32692f7893" />
+<img width="1580" height="791" alt="Frame 108" src="https://github.com/user-attachments/assets/40d0224a-7a02-4bbb-b213-93311dfef334" />
 
 ---
 
@@ -186,5 +186,5 @@ If you like this project and would like to see it grow consider buying a coffee 
 
 ---
 <a href="https://discord.gg/2sPdCcuwm5">
-<img width="1534" height="575" alt="Frame 109" src="https://github.com/user-attachments/assets/97f4e0e4-ec1e-42e3-a4d4-427526b198f5" />
+<img width="1534" height="575" alt="Frame 109" src="https://github.com/user-attachments/assets/ea6d22bb-a962-4f7f-9891-a118f46d1264" />
 </a>
