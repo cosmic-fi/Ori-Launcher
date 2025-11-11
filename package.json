@@ -1,0 +1,51 @@
+{
+  "name": "ori-launcher",
+  "version": "2.0.0",
+  "description": "Modern Custom Minecraft launcher",
+  "author": {
+    "name": "Cosmic-fi (Cosmic Boucher)",
+    "email": "hello@cosmicfi.dev",
+    "url": "https://github.com/cosmic-fi"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cosmic-fi/Ori-Launcher"
+  },
+  "main": "src/electron/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "build:ui": "vite build",
+    "build": "npm run build:ui",
+    "preview": "vite preview",
+    "dist": "node build.js --build=platform",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:linux": "npm run build && electron-builder --linux",
+    "dist:all": "npm run build && electron-builder --win --mac --linux",
+    "release": "npm run build && electron-builder --publish=always",
+    "postinstall": "electron-builder install-app-deps",
+    "rebuild": "electron-builder install-app-deps && npm rebuild --runtime=electron --target=$(electron -v | sed 's/v//') --disturl=https://electronjs.org/headers --abi=$(electron --abi)"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "concurrently": "^9.2.0",
+    "electron": "^37.0.0",
+    "electron-builder": "^26.0.12",
+    "svelte": "^5.34.7",
+    "vite": "^6.3.5",
+    "wait-on": "^8.0.3"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.1.2",
+    "axios": "^1.10.0",
+    "cors": "^2.8.5",
+    "discord-rpc": "^4.0.1",
+    "dotenv": "^17.2.1",
+    "electron-log": "^5.4.3",
+    "msmc": "^5.0.5",
+    "node-fetch": "^3.3.2",
+    "ori-mcc": "^1.0.11",
+    "skin3d": "^0.0.12"
+  }
+}

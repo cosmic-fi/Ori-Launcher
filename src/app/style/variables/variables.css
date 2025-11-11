@@ -1,0 +1,20 @@
+:root {
+    --font-family: 'Afacad-Regular', sans-serif;
+
+    --font-size-base: 16px;
+    --font-size-sm: 14px;
+    --font-size-md: var(--font-size-base);
+    --font-size-lg: 18px;
+    --font-size-xl: 24px;
+
+    --font-size-fluid-sm: clamp(12px, 0.875rem + 0.5vw, 14px);
+    --font-size-fluid-base: clamp(14px, 1rem + 0.5vw, 16px);
+    --font-size-fluid-lg: clamp(16px, 1.125rem + 0.5vw, 18px);
+    --font-size-fluid-xl: clamp(20px, 1.5rem + 0.5vw, 26px);
+
+    --border-radius-20: 20px;
+    --border-radius-10: 10px;
+    --border-radius-8: 8px;
+    --border-radius-5: 5px;
+    --border-radius-4: 4px;
+}

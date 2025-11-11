@@ -1,0 +1,519 @@
+{
+  "settings": {
+    "title": "Pengaturan",
+    "tabs":{
+      "general": "Umum", 
+      "game": "Game",
+      "mods": "Mod",
+      "launcher": "Peluncur", 
+      "storage": "Penyimpanan",
+      "developer": "Pengembang",
+      "about": "Tentang"
+    },
+    "general":{
+      "appearance": {
+        "label": "Tampilan",
+        "theme": {
+          "label": "Tema",
+          "description": "Pilih tema peluncur.",
+          "launcherStyle": {
+            "label": "Gaya Peluncur",
+            "description": "Pilih gaya peluncur. <br><strong>Gaya Standar</strong> menawarkan tampilan modern dengan beberapa opsi tema, sementara <strong>Gaya Klasik</strong> menyediakan desain bergaya Minecraft yang berbentuk kotak.",
+            "standard": "Standar",
+            "minecraft": "Klasik"
+          },
+          "themes": {
+            "light": "Terang",
+            "dark": "Gelap",
+            "minimal": "Minimal",
+            "after-glow": "After Glow",
+            "retro-80s": "Retro 80-an",
+            "oceanic": "Oseanik",
+            "pastel": "Pastel",
+            "classic": "Klasik"
+          }
+        },
+        "language": {
+          "label": "Bahasa",
+          "description": "Pilih bahasa untuk peluncur.",
+          "languages": {
+            "english": "English",
+            "bahasa": "Bahasa Indonesia",
+            "turkish": "Türkçe",
+            "french": "Français",
+            "russian": "Русский",
+            "spanish": "Español"
+          }
+        }
+      },
+      "startup": {
+        "label": "Startup",
+        "minimizeToTray": "Perkecil ke Tray saat Ditutup",
+        "minimizeToTrayDescription": "Mulai aplikasi dalam keadaan diminimalkan ke baki sistem."
+      }
+    },
+    "game": {
+      "versions": "Versi",
+      "showSnapshots": "Tampilkan versi Snapshot Minecraft",
+      "showSnapshotsDescription": "Tampilkan versi snapshot (beta/eksperimental) Minecraft di peluncur.",
+      "performance": {
+        "label": "Performa",
+        "ramAllocation": "Alokasi RAM",
+        "ramAllocationDescription": "Atur jumlah RAM yang dialokasikan untuk game. Minimum RAM yang direkomendasikan adalah setidaknya 2GB untuk mesin lambat."
+      },
+      "runtime": {
+        "label": "Runtime",
+        "javaPath": "Path Java",
+        "javaPathDescription": "Tentukan path ke executable Java.",
+        "gameArgs": "Argumen Game",
+        "gameArgsDescription": "Tentukan argumen game untuk menjalankan game (hanya untuk pengguna tingkat lanjut).",
+        "gameArgsPlaceholder": "misal: java -Xmx4G -jar minecraft.jar",
+        "jvmArguments": "Argumen JVM",
+        "jvmArgumentsDescription": "Atur argumen JVM tambahan untuk tuning performa tingkat lanjut.",
+        "jvmArgumentsPlaceholder": "misal: -Xmx4G -XX:+UseG1GC",
+        "environmentVariables": "Variabel Lingkungan",
+        "environmentVariablesDescription": "Atur variabel lingkungan untuk proses runtime.",
+        "environmentVariablesPlaceholder": "misal: JAVA_HOME=/usr/lib/jvm/java-17",
+        "runDetached": "Jalankan Terpisah",
+        "runDetachedDescription": "Jalankan game dalam mode terpisah, memungkinkan peluncur ditutup sementara game masih berjalan.",
+        "verifyGameFiles": "Verifikasi File Game",
+        "verifyGameFilesDescription": "Verifikasi integritas file game sebelum meluncurkan.",
+        "verifyGameFilesWarning": "Peringatan: Mengaktifkan opsi ini dapat meningkatkan waktu peluncuran secara signifikan dan akan menghapus semua progres game sebelumnya.",
+        "intelEnabledMac": "Aktifkan Intel Graphics di macOS",
+        "intelEnabledMacDescription": "Aktifkan akselerasi grafis Intel pada mesin macOS.",
+        "runAsAdmin": "Jalankan sebagai Administrator",
+        "runAsAdminDescription": "Jalankan game dengan hak administrator.",
+        "ignored": "File yang Diabaikan",
+        "ignoredDescription": "Tentukan file atau direktori yang diabaikan saat memverifikasi file game."
+      },
+      "display":{
+        "label": "Tampilan",
+        "resolution": "Resolusi",
+        "fullscreen": "Layar Penuh",
+        "resolutionDescription": "Atur resolusi jendela game.",
+        "resolutions": {
+          "fullHD": "1920x1080 (Full HD)",
+          "quadHD": "2560x1440 (Quad HD)",
+          "ultraHD": "3840x2160 (4K UHD)",
+          "hd": "1366x768 (HD)",
+          "hdReady": "1280x720 (HD)",
+          "hdPlus": "1600x900 (HD+)",
+          "wxgaPlus": "1440x900 (WXGA+)",
+          "xga": "1024×768 (XGA)"
+        }
+      }
+    },
+    "launcher": {
+      "updates": "Pembaruan",
+      "checkForUpdates": "Periksa pembaruan",
+      "checkForUpdatesDescription": "Periksa pembaruan peluncur saat startup.",
+      "integration": {
+        "label": "Integrasi",
+        "discordRPC": "Discord Rich Presence",
+        "discordRPCDescription": "Aktifkan atau nonaktifkan integrasi Discord Rich Presence."
+      },
+      "notification": {
+        "label": "Notifikasi",
+        "systemNotifications": "Notifikasi Sistem",
+        "systemNotificationsDescription": "Tampilkan notifikasi sistem asli.",
+        "showUpdateNotification": "Tampilkan Notifikasi Pembaruan",
+        "showUpdateNotificationDescription": "Tampilkan notifikasi pembaruan.",
+        "playSound": "Mainkan suara",
+        "playSoundDescription": "Mainkan suara saat notifikasi muncul.",
+        "categories": {
+          "label": "Kategori Notifikasi",
+          "description": "Pilih jenis notifikasi yang akan ditampilkan.",
+          "updates": "Pembaruan",
+          "launches": "Peluncuran Game",
+          "downloads": "Unduhan",
+          "errors": "Error",
+          "general": "Umum"
+        }
+      }
+    },
+    "storage": {
+      "folders": "Folder",
+      "launcherFolder": "Folder Peluncur",
+      "launcherFolderDescription": "Atur direktori tempat peluncur diinstal.",
+      "minecraftFolder": "Folder Minecraft",
+      "minecraftFolderDescription": "Atur direktori tempat Minecraft diinstal.",
+      "modFolder": "Folder Mod",
+      "modFolderDescription": "Direktori tempat mod diinstal."
+    },
+    "developer": {
+      "debug": "Debug",
+      "enableDevTools": "Aktifkan DevTools",
+      "enableDevToolsDescription": "Aktifkan alat pengembang untuk debugging.",
+      "experimental": "Eksperimental",
+      "allowBetaFeatures": "Izinkan fitur Beta",
+      "allowBetaFeaturesDescription": "Aktifkan fitur peluncur eksperimental."
+    },
+    "about": {
+      "version": "Versi",
+      "checkForUpdates": "Periksa Pembaruan",
+      "credits": "Kredit",
+      "developedBy": "Dikembangkan dan dibuat dengan 💖 oleh <b class=\"credit-owner-text\">Cosmic</b>&nbsp;&&nbsp;<b class=\"credit-owner-text\">Olly</b>",
+      "specialThanks": "Terima kasih khusus untuk semua kontributor dan penguji.",
+      "openSourceLibraries": "Perpustakaan Open Source",
+      "extraOpenSourceLibrariesDescription": "Perpustakaan open source lain yang digunakan dalam proyek ini.",
+      "apisUsed": "API yang Digunakan",
+      "sourceCode": "Kode Sumber",
+      "donate": "Donasi!",
+      "donateButton": "Belikan saya kopi",
+      "donateDescription": "Jika Anda menyukai proyek ini, pertimbangkan untuk berdonasi guna mendukung pengembangan!",
+      "contributors": "Kontributor",
+      "disclaimer": "Penafian",
+      "disclaimerDescription": "Peluncur ini adalah proyek independen dan tidak berafiliasi dengan Mojang, Microsoft, atau entitas resmi Minecraft mana pun. Semua merek dagang dan hak cipta adalah milik pemiliknya masing-masing.",
+      "devUnlockedMessage": "Mode pengembang diaktifkan! 😹",
+      "alreadyADevMessage": "Anda sudah menjadi pengembang! 😹"
+    },
+    "buttons": {
+      "resetToDefault": "Atur ulang ke default",
+      "close": "Tutup",
+      "save": "Simpan",
+      "cancel": "Batal",
+      "browse": "Telusuri",
+      "select": "Pilih"
+    }
+  },
+  "invoker": {
+    "loading": "MEMUAT",
+    "description": "Harap tunggu sementara proses selesai.",
+    "closeNote": "Anda dapat menutup jendela aktif untuk menghentikan proses ini"
+  },
+  "mainContent": {
+    "playersOnline": "Pemain online sekarang",
+    "supportProject": "Dukung Proyek",
+    "console": "Konsol",
+    "minimize": "Perkecil",
+    "closeApp": "Tutup Aplikasi",
+    "manageAccounts": "Kelola Akun",
+    "addAccount": "Tambah Akun",
+    "adCredit": "Didukung oleh Beam-i",
+    "social": {
+      "github": "Github",
+      "discord": "Discord",
+      "twitter": "Twitter"
+    },
+    "launch": {
+      "label": "Mulai",
+      "launching": "Meluncurkan",
+      "cancel": "Batal",
+      "closeGame": "Tutup Game",
+      "launchStatus": {
+        "preparing": "Menyiapkan",
+        "downloading": "Mengunduh",
+        "launching": "Meluncurkan",
+        "patching": "Menambal",
+        "libraries": "Perpustakaan",
+        "assets": "Aset",
+        "waiting": "Menunggu",
+        "retrying": "Mencoba ulang",
+        "extracting": "Mengekstrak File",
+        "verifying": "Memverifikasi File",
+        "ready": "Game siap",
+        "running": "Game Berjalan",
+        "launchFailed": "Peluncuran gagal, silakan coba lagi nanti!",
+        "error": "Peluncuran Gagal",
+        "cancelled": "Peluncuran dibatalkan"
+      },
+      "changeVersion": "Ganti Versi",
+      "gameTypes": {
+        "vanilla": "Vanilla",
+        "forge": "Forge",
+        "fabric": "Fabric"
+      },
+      "versionTypes": {
+        "release": "Release",
+        "stable": "Stabil",
+        "mc": "MC"
+      }
+    }
+  },
+  "sidebar": {
+    "buttons": {
+      "play": "Main",
+      "home": "Beranda",
+      "accountManager": "Manajer Akun",
+      "instanceManager": "Manajer Instance",
+      "mods": "Mod (Segera hadir)",
+      "quickServers": "Server Cepat (Segera hadir)"
+    },
+    "settings": "Pengaturan"
+  },
+  "instanceManager":{
+    "title": "Manajer Instance",
+    "home": "Beranda",
+    "description": "Kelola instance Minecraft Anda di sini. Buat, edit, dan hapus instance untuk mempersonalisasi pengalaman bermain Anda.",
+    "createInstance": "Buat Instance",
+    "createInstanceAriaLabel": "Buat Instance",
+    "editInstance": "Edit Instance",
+    "editInstanceAriaLabel": "Edit Instance",
+    "deleteInstance": "Hapus Instance",
+    "deleteInstanceAriaLabel": "Hapus Instance",
+    "instanceName": "Nama Instance",
+    "instanceNamePlaceholder": "Masukkan nama instance",
+    "instanceNameRequired": "Nama instance diperlukan",
+    "instanceNameTooShort": "Nama instance harus minimal 3 karakter",
+    "instanceNameTooLong": "Nama instance harus 16 karakter atau kurang",
+    "instanceNameInvalidCharacters": "Nama instance hanya boleh berisi huruf, angka, dan garis bawah",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "version": {
+      "label": "Versi tersedia",
+      "description": "Pilih versi Minecraft untuk digunakan pada instance ini.",
+      "versionTypes": {
+        "vanilla": {
+          "name": "Vanilla",
+          "description": "Rasakan Minecraft vanilla dengan performa yang ditingkatkan, mekanik gameplay yang lebih baik, dan fitur baru yang menarik. Mainkan versi murni, tidak dimodifikasi dari game seperti yang dimaksudkan oleh Mojang."
+        },
+        "forge": {
+          "name": "Forge",
+          "description": "Bermain dengan mod Forge untuk gameplay yang ditingkatkan, item baru, blok, dan mekanik. Akses ribuan modifikasi yang dibuat komunitas untuk mengubah pengalaman Minecraft Anda."
+        },
+        "fabric": {
+          "name": "Fabric",
+          "description": "Rasakan modding yang ringan dan cepat dengan Fabric. Nikmati optimasi performa, mod modern, dan pembaruan cepat ke versi Minecraft terbaru."
+        }
+      }
+    }
+  },
+  "accountAdder": {
+    "selectAccountType": "Pilih Jenis Akun",
+    "close": "Tutup",
+    "addMinecraftAccount": "Akun Microsoft",
+    "addMinecraftAccountDescription": "Tambahkan akun Minecraft resmi Anda untuk bermain online. (Membutuhkan akun Mojang atau Microsoft yang valid.)",
+    "addOfflineAccount": "Akun Offline",
+    "addOfflineAccountDescription": "Mainkan di server tidak resmi atau bajakan tanpa akun Minecraft. (Progress dan skin tidak akan sinkron antar perangkat.)",
+    "offlineAccountForm": {
+      "enterUsername": "Masukkan nama pengguna untuk membuat akun Minecraft offline. Akun ini hanya akan bekerja di server tidak resmi.",
+      "usernamePlaceholder": "Masukkan nama pengguna (3-16 karakter, a-z, 0-9, _)",
+      "usernameRequired": "Nama pengguna diperlukan",
+      "usernameTooShort": "Nama pengguna harus minimal 3 karakter",
+      "usernameTooLong": "Nama pengguna harus maksimal 16 karakter",
+      "usernameInvalidCharacters": "Nama pengguna hanya boleh berisi huruf, angka, dan garis bawah",
+      "cancel": "Batal",
+      "save": "Simpan",
+      "saving": "Menyimpan..."
+    },
+    "accountAdded": "Akun ditambahkan!",
+    "failedToAddAccount": "Gagal menambahkan akun. Silakan coba lagi."
+  },
+  "dialog": {
+    "defaultTitle": "Judul Dialog",
+    "defaultMessage": "Pesan dialog muncul di sini.",
+    "ok": "OK",
+    "no": "Tidak",
+    "nevermind": "Tidak jadi",
+    "yes": "Ya",
+    "cancel": "Batal",
+    "continue": "Lanjutkan",
+    "confirm": "Konfirmasi",
+    "retry": "Coba Lagi",
+    "titles": {
+      "deleteAccount": "Hapus Akun?",
+      "apiError": "Kesalahan API",
+      "apiUnreachable": "API Tidak Dapat Dihubungi",
+      "selectFolder": "Pilih Folder",
+      "gamePreparing": "Game sedang bersiap untuk diluncurkan. Harap tunggu.",
+      "addMinecraftAccount": "Tambah Akun Minecraft",
+      "saveSkin": "Simpan Skin"
+    },
+    "messages": {
+      "deleteAccount": "Anda yakin ingin menghapus akun ini?",
+      "apiError": "Terjadi kesalahan saat menghubungkan ke API. Silakan coba lagi nanti.",
+      "apiUnreachable": "Server API tidak dapat dihubungi. Periksa koneksi internet Anda dan coba lagi.",
+      "gamePreparingCancelMessage": "Game sedang dipersiapkan untuk diluncurkan. Anda harus membatalkan proses peluncuran saat ini sebelum memilih instance yang berbeda. Apakah Anda ingin membatalkan peluncuran?"
+    },
+    "fileTypes": {
+      "pngImages": "Gambar PNG",
+      "allFiles": "Semua File"
+    }
+  },
+  "splash": {
+    "loading": "Memuat",
+    "description": "Harap tunggu sementara proses selesai.",
+    "closeNote": "Anda dapat menutup jendela aktif untuk menghentikan proses ini"
+  },
+  "toast": {
+    "defaultMessage": "Ada sesuatu yang baru saja terjadi!",
+    "launchError": "Terjadi kesalahan saat meluncurkan game. Silakan coba lagi nanti.",
+    "noSkinAvailable": "Tidak ada skin yang tersedia untuk diunduh",
+    "skinSaved": "Skin berhasil disimpan!",
+    "skinSaveFailed": "Gagal menyimpan skin"
+  },
+  "accountManager": {
+    "title": "Manajer Akun",
+    "description": "Kelola akun Minecraft Anda di sini. Beralih antar profil dan hapus akun untuk mempersonalisasi pengalaman bermain.",
+    "deleteAccountTitle": "Hapus Akun?",
+    "deleteAccountMessage": "Anda yakin ingin menghapus akun ini?",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "removeAccount": "Hapus akun",
+    "removeAccountAriaLabel": "Hapus akun",
+    "minecraft": "Minecraft",
+    "cracked": "Bajakan",
+    "playtime": "Waktu Main"
+  },
+  "versionSelector": {
+    "minecraftVersion": "Minecraft",
+    "versionSummary": "Pilih versi dan varian Minecraft favorit Anda.",
+    "closeButton": "Tombol Tutup",
+    "closeButtonAriaLabel": "Tombol Tutup"
+  },
+  "console": {
+    "clearLogs": "Bersihkan",
+    "welcome": "Selamat datang di Konsol Ori Launcher",
+    "description": "Konsol ini akan menampilkan aktivitas peluncur dan log game",
+    "ready": "Konsol siap digunakan",
+    "levels": {
+      "debug": "Debug (Semua)",
+      "info": "Info",
+      "warning": "Peringatan",
+      "error": "Kesalahan"
+    },
+    "loggerTestMessage": "Pesan tes logger",
+    "levelChanged": "Level diubah ke {level}",
+    "somethingWentWrong": "Ada yang salah"
+  },
+  "customOptions": {
+    "selectPlaceholder": "Pilih",
+    "levels": {
+      "debug": "Debug (Semua)",
+      "info": "Info",
+      "warning": "Peringatan",
+      "error": "Kesalahan"
+    },
+    "clear": "Bersihkan"
+  },
+  "folderPicker": {
+    "browse": "Telusuri",
+    "pick": "Pilih Folder",
+    "noFolderSelected": "Tidak ada folder yang dipilih"
+  },
+  "skinViewer": {
+    "defaultUsername": "MHF_Steve",
+    "animations": {
+      "idle": "Diam",
+      "walking": "Berjalan",
+      "running": "Berlari",
+      "crouch": "Jongkok",
+      "waving": "Melambaikan"
+    },
+    "viewModes": {
+      "2d": "Tampilan 2D",
+      "3d": "Tampilan 3D"
+    },
+    "playPause": "Putar/Jeda",
+    "saveSkin": "Simpan skin",
+    "toggleView": "Beralih Tampilan 2D/3D",
+    "playAnimation": "putar-animasi",
+    "saveSkinAriaLabel": "simpan-skin"
+  },
+  "logs": {
+    "languageSet": "Bahasa diatur ke: {language}",
+    "discordRPCEnabled": "Discord RPC diaktifkan.",
+    "notificationSoundsEnabled": "Suara notifikasi diaktifkan.",
+    "loadingSettings": "Memuat pengaturan...",
+    "buildingVersions": "Membangun versi...",
+    "checkingForUpdates": "Memeriksa pembaruan...",
+    "skippingUpdateCheck": "Melewati pemeriksaan pembaruan...",
+    "initializingServices": "Menginisialisasi layanan...",
+    "refreshingAccounts": "Menyegarkan akun...",
+    "accountsValidated": "Akun tervalidasi",
+    "fetchingServerList": "Mengambil daftar server...",
+    "preparingLauncher": "Menyiapkan peluncur...",
+    "checkingAPIStatus": "Memeriksa status API...",
+    "apiFetch": {
+      "wakingUpServer": "Membangunkan server API...",
+      "wakeup1": "Menyodok server dengan tongkat untuk membangunkannya...",
+      "wakeup2": "Meminta server untuk bangun dengan sopan...",
+      "wakeup3": "Menyuap server dengan kopi virtual...",
+      "wakeup4": "Mengirim panggilan bangun ke server...",
+      "wakeup5": "Berbisik 'selamat pagi' ke server...",
+      "wakeup6": "Menggelitik sirkuit server...",
+      "wakeup7": "Memutar musik keras untuk membuat server bergerak..."
+    },
+    "debugger":{
+      "addingEventListeners": "[MAIN CONTENT] Menambahkan event listener baru",
+      "eventSetupComplete": "[MAIN CONTENT] Pengaturan event selesai. Total fungsi pembersihan"
+    },
+    "apiUnreachable": "API tidak dapat diakses. Beberapa fitur mungkin tidak berfungsi dengan baik.",
+    "ready": "Siap!"
+  },
+  "connection": {
+    "connectionLost": "Koneksi terputus!",
+    "connectionRestored": "Koneksi pulih"
+  },
+  "tray": {
+    "oriLauncher": "Ori Launcher",
+    "retrieve": "Ambil",
+    "checkForUpdates": "Periksa Pembaruan",
+    "quit": "Keluar",
+    "tooltip": "Ori Launcher"
+  },
+  "discordRPC": {
+    "inLauncher": "Di Peluncur",
+    "browsing": "Menjelajah",
+    "idle": "Menganggur",
+    "minecraft": "Minecraft",
+    "downloading": "Mengunduh",
+    "downloadOriLauncher": "Unduh Ori Launcher"
+  },
+  "notifications": {
+    "updateAvailable": "Pembaruan Tersedia",
+    "updateAvailableMessage": "Versi baru Ori Launcher sekarang tersedia!",
+    "updateNow": "Perbarui Sekarang",
+    "later": "Nanti",
+    "gameLaunched": "Game Diluncurkan",
+    "gameLaunchedMessage": "Minecraft berhasil dimulai!",
+    "launchFailed": "Peluncuran Gagal",
+    "launchFailedMessage": "Gagal memulai Minecraft, silakan coba lagi nanti.",
+    "downloadComplete": "Unduhan Selesai",
+    "downloadCompleteMessage": "Unduhan berhasil diselesaikan!",
+    "connectionLost": "Koneksi Terputus",
+    "connectionLostMessage": "Kehilangan koneksi ke server. Mencoba ulang...",
+    "connectionRestored": "Koneksi Pulih",
+    "connectionRestoredMessage": "Koneksi pulih. Anda dapat bermain Minecraft lagi.",
+    "launcherRestartRequired": "Restart peluncur diperlukan",
+    "launcherRestartRequiredMessage": "Restart peluncur diperlukan agar perubahan dapat diterapkan."
+  },
+  "errors": {
+    "noAccountSelected": "Tidak ada akun yang dipilih",
+    "invalidOnlineCredentials": "Kredensial akun online tidak valid",
+    "noVersionSelected": "Tidak ada versi Minecraft yang dipilih",
+    "noMinecraftDirectory": "Direktori Minecraft tidak ditentukan",
+    "memoryConfiguration": "Memori minimum harus kurang dari memori maksimum",
+    "memoryExceedsSystem": "Memori maksimum melebihi memori sistem",
+    "launchInProgress": "Peluncuran sudah dalam proses",
+    "accountRefreshFailed": "Gagal menyegarkan akun setelah percobaan ulang",
+    "apiNotReachable": "Gagal mengambil berita"
+  },
+  "ariaLabels": {
+    "minimizeApp": "perkecil-app",
+    "closeApp": "tutup-app",
+    "changeVersion": "Ganti versi",
+    "rssBtn": "tombol-rss",
+    "patreon": "patreon",
+    "settings": "Pengaturan"
+  },
+  "placeholders": {
+    "enterName": "Masukkan nama di sini pak..."
+  },
+  "version": {
+    "versionTypes": {
+      "vanilla": {
+        "name": "Vanilla",
+        "description": "Rasakan Minecraft vanilla dengan performa yang ditingkatkan, mekanik gameplay yang diperbaiki, dan fitur baru yang menarik. Mainkan versi murni dan tidak dimodifikasi dari game seperti yang dimaksudkan oleh Mojang."
+      },
+      "forge": {
+        "name": "Forge",
+        "description": "Bermain dengan mod Forge untuk gameplay yang ditingkatkan, item baru, blok, dan mekanik. Akses ribuan modifikasi yang dibuat komunitas untuk mengubah pengalaman Minecraft Anda."
+      },
+      "fabric": {
+        "name": "Fabric",
+        "description": "Rasakan modding yang ringan dan cepat dengan Fabric. Nikmati optimisasi performa, mod modern, dan pembaruan cepat ke versi Minecraft terbaru."
+      }
+    }
+  }
+}
