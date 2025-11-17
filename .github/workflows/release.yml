@@ -37,15 +37,16 @@ jobs:
         node-version: '22'
         cache: 'npm'
     
-    - name: Install dependencies
+    - name: Install dependencies (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
       run: |
-        # Windows-specific fix for file permission issues
-        if [ "${{ matrix.os }}" == "windows-latest" ]; then
-          npm cache clean --force
-          npm install --no-audit --no-fund
-        else
-          npm ci
-        fi
+        npm cache clean --force
+        npm install --no-audit --no-fund
+    
+    - name: Install dependencies (Linux/Mac)
+      if: matrix.os != 'windows-latest'
+      run: npm ci
       
     - name: Build frontend with Vite
       run: npm run build:ui
@@ -65,7 +66,13 @@ jobs:
         echo "✅ Source files copied to appsrc/"
       
     - name: Rebuild native modules
-      run: npm run rebuild
+      run: |
+        # Skip rebuild on Windows to avoid cancellation issues
+        if [ "${{ matrix.os }}" != "windows-latest" ]; then
+          npm run rebuild
+        else
+          echo "Skipping rebuild on Windows to avoid timeout issues"
+        fi
       
     - name: Build Electron app for platform
       env:
