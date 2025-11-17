@@ -23,8 +23,6 @@ const getFiles = async (dir, files = []) => {
 const copyFiles = async () => {
     console.log('Copying source files...');
     
-    // We don't need to copy src/app as it's built by Vite into dist/
-    // Only copy the electron files
     const electronFiles = await getFiles('src/electron');
     for (const file of electronFiles) {
         const content = await fsPromises.readFile(file, 'utf8');
@@ -40,7 +38,6 @@ const copyFiles = async () => {
         await fsPromises.writeFile(outputPath, content);
     }
     
-    // Copy locale files if they exist
     try {
         await fsPromises.access('locale');
         const localeFiles = await getFiles('locale');
@@ -63,6 +60,7 @@ const copyFiles = async () => {
     
     console.log('Files copied successfully!');
 };
+
 const buildApp = async () => {
     try {
         console.log('Building application...');
@@ -79,14 +77,20 @@ const buildApp = async () => {
                 },
                 files: [
                     "dist/**/*",           // Frontend built by Vite
-                    "appsrc/electron/**/*",    // Copied Electron files
-                    "appsrc/locale/**/*",      // Copied locale files
-                    "node_modules/**/*",    // Dependencies
+                    "appsrc/electron/**/*.js",    // Only JS files
+                    "appsrc/electron/**/*.json",  // Only JSON files
+                    "appsrc/electron/**/*.mjs",   // Only MJS files
+                    "appsrc/locale/**/*.json",    // Only JSON locale files
+                    "node_modules/**/*",
                     "!node_modules/**/{test,__tests__,tests,powered-test,example,examples}/**",
-                    "!node_modules/**/*.{d.ts,o,hprof,rc,bin,log,sh,md,txt}",
-                    "package.json",         // Package info
-                    "LICENSE.md",           // License
-                    "public/**/*"           // Public assets
+                    "!node_modules/**/*.{d.ts,o,hprof,rc,bin,log,sh,md,txt,map}",
+                    "package.json",
+                    "LICENSE.md",
+                    "public/icon.ico",
+                    "public/icon.icns",
+                    "public/icon.png",
+                    "public/installerSidebar.bmp",
+                    "public/uninstallerSidebar.bmp"
                 ],
                 directories: {
                     buildResources: "public",
