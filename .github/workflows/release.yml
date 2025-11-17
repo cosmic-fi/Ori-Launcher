@@ -51,19 +51,44 @@ jobs:
     - name: Build frontend with Vite
       run: npm run build:ui
       
-    - name: Copy Electron source files
+    - name: Copy Electron source files (Linux/Mac)
+      if: matrix.os != 'windows-latest'
       run: |
         # Create appsrc directory structure
         mkdir -p appsrc/electron
         mkdir -p appsrc/locale
         
-        # Copy electron files (mimicking your copyFiles function)
+        # Copy electron files
         cp -r src/electron/* appsrc/electron/ || echo "No electron files to copy"
         
         # Copy locale files if they exist
         cp -r locale/* appsrc/locale/ 2>/dev/null || echo "No locale files to copy"
         
         echo "✅ Source files copied to appsrc/"
+      
+    - name: Copy Electron source files (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        # Create appsrc directory structure
+        New-Item -ItemType Directory -Force -Path "appsrc\electron"
+        New-Item -ItemType Directory -Force -Path "appsrc\locale"
+        
+        # Copy electron files
+        if (Test-Path "src\electron") {
+            Copy-Item -Recurse -Path "src\electron\*" -Destination "appsrc\electron\" -Force
+            Write-Host "✅ Electron files copied"
+        } else {
+            Write-Host "No electron files to copy"
+        }
+        
+        # Copy locale files if they exist
+        if (Test-Path "locale") {
+            Copy-Item -Recurse -Path "locale\*" -Destination "appsrc\locale\" -Force
+            Write-Host "✅ Locale files copied"
+        } else {
+            Write-Host "No locale files to copy"
+        }
       
     - name: Rebuild native modules
       run: |
@@ -88,11 +113,21 @@ jobs:
           npx electron-builder --linux --x64 -c.linux.target=AppImage
         fi
     
+    - name: List build artifacts
+      run: |
+        echo "📁 Build directory contents:"
+        ls -la build/ 2>/dev/null || echo "No build directory found"
+        echo ""
+        echo "📁 Dist directory contents (electron-builder default):"
+        ls -la dist/ 2>/dev/null || echo "No dist directory found"
+    
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ori-launcher-${{ matrix.platform }}
-        path: build/*
+        path: |
+          build/*
+          dist/*
         retention-days: 30
 
   create-release:
@@ -109,10 +144,10 @@ jobs:
     - name: List downloaded artifacts
       run: |
         echo "📦 Downloaded artifacts:"
-        find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" | sort
+        find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -o -name "*.snap" | sort
         echo ""
         echo "📊 File sizes:"
-        find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -exec ls -lh {} \;
+        find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -o -name "*.snap" -exec ls -lh {} \;
       
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
@@ -122,6 +157,7 @@ jobs:
           ./artifacts/**/*.dmg
           ./artifacts/**/*.AppImage
           ./artifacts/**/*.zip
+          ./artifacts/**/*.snap
         generate_release_notes: true
         draft: false
         prerelease: false
