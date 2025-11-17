@@ -1,0 +1,112 @@
+name: Build and Release Ori Launcher
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch: # Allow manual triggers
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            platform: linux
+            electron_platform: linux
+          - os: windows-latest  
+            platform: win
+            electron_platform: win
+          - os: macos-12
+            platform: mac
+            electron_platform: mac
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build frontend with Vite
+      run: npm run build:ui
+      
+    - name: Copy Electron source files
+      run: |
+        # Create appsrc directory structure
+        mkdir -p appsrc/electron
+        mkdir -p appsrc/locale
+        
+        # Copy electron files (mimicking your copyFiles function)
+        cp -r src/electron/* appsrc/electron/ || echo "No electron files to copy"
+        
+        # Copy locale files if they exist
+        cp -r locale/* appsrc/locale/ 2>/dev/null || echo "No locale files to copy"
+        
+        echo "✅ Source files copied to appsrc/"
+      
+    - name: Rebuild native modules
+      run: npm run rebuild
+      
+    - name: Build Electron app for platform
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Use your exact build configuration for each platform
+        if [ "${{ matrix.electron_platform }}" == "win" ]; then
+          npx electron-builder --win --x64 --config .
+        elif [ "${{ matrix.electron_platform }}" == "mac" ]; then
+          npx electron-builder --mac --universal --config .
+        else
+          npx electron-builder --linux --x64 --config .
+        fi
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ori-launcher-${{ matrix.platform }}
+        path: build/*
+        retention-days: 30
+
+  create-release:
+    needs: build-and-release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./artifacts
+        
+    - name: List downloaded artifacts
+      run: |
+        echo "📦 Downloaded artifacts:"
+        find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" | sort
+        echo ""
+        echo "📊 File sizes:"
+        find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -exec ls -lh {} \;
+      
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./artifacts/**/*.exe
+          ./artifacts/**/*.dmg
+          ./artifacts/**/*.AppImage
+          ./artifacts/**/*.zip
+        generate_release_notes: true
+        draft: false
+        prerelease: false

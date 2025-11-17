@@ -16,34 +16,6 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Simple file watcher for development auto-reload
-if (process.env.NODE_ENV === 'development') {
-  // Use dynamic import to avoid top-level await issues
-  import('chokidar').then(chokidar => {
-    const watcher = chokidar.default.watch([
-      path.join(__dirname, '**/*.js'),
-      path.join(__dirname, '**/*.mjs'),
-      path.join(__dirname, '**/*.json')
-    ], {
-      ignored: /node_modules/,
-      ignoreInitial: true
-    });
-
-    watcher.on('change', (filePath) => {
-      console.log(`File changed: ${filePath}. Reloading app...`);
-      // Soft reload - just restart the app
-      app.relaunch();
-      app.exit();
-    });
-
-    watcher.on('error', (error) => {
-      console.error('File watcher error:', error);
-    });
-  }).catch(error => {
-    console.error('Failed to load chokidar for auto-reload:', error);
-  });
-}
-
 import { setAppWindow, getAppWindow, closeAppWindow } from './window/appWindow.js';
 import { Launch } from "ori-mcc";
 import { execSync } from "child_process";
@@ -552,7 +524,7 @@ const setupIpcHandlers = () => {
         const timeout = setTimeout(() => controller.abort(), 3000);
 
         try {
-            const res = await fetch('https://cosmicfiapi.mysrv.us/orilauncher', {
+            const res = await fetch('https://api.cosmicfi.dev/orilauncher', {
             method: 'GET',
             headers: {
                 'User-Agent': 'OriLauncher/2.0.0 (Electron)',

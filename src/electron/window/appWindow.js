@@ -37,8 +37,8 @@ const setAppWindow = () => {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: true,
-            devTools: true,
-            webSecurity: false,
+            devTools: false,
+            webSecurity: true,
             preload: path.join(__dirname, '../preload.js')
         },
         backgroundColor: '#2F2F37',
@@ -56,7 +56,6 @@ const setAppWindow = () => {
     window.once('ready-to-show', () => {
         window.show();
     });
-    window.webContents.openDevTools({ mode: "detach" });
 
     // Remove the default menu
     window.removeMenu();
