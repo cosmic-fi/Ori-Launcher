@@ -66,11 +66,11 @@ jobs:
       run: |
         # Use your exact build configuration for each platform
         if [ "${{ matrix.electron_platform }}" == "win" ]; then
-          npx electron-builder --win --x64 --config .
+          npx electron-builder --win --x64
         elif [ "${{ matrix.electron_platform }}" == "mac" ]; then
-          npx electron-builder --mac --universal --config .
+          npx electron-builder --mac --universal
         else
-          npx electron-builder --linux --x64 --config .
+          npx electron-builder --linux --x64
         fi
     
     - name: Upload build artifacts
