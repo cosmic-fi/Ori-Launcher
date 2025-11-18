@@ -6,7 +6,7 @@ on:
       - main
     tags:
       - 'v*'
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   build:
@@ -48,6 +48,21 @@ jobs:
             gcc \
             make
 
+      # Auto increment version using GitHub's Release tag (for example, "v1.2.3")
+      - name: Increment version for release
+        run: |
+          # Only increment if on the main branch
+          if [[ $GITHUB_REF == "refs/heads/main" ]]; then
+            VERSION_TAG=$(git describe --tags --abbrev=0)
+            VERSION_MAJOR=$(echo $VERSION_TAG | cut -d'.' -f1)
+            VERSION_MINOR=$(echo $VERSION_TAG | cut -d'.' -f2)
+            VERSION_PATCH=$(echo $VERSION_TAG | cut -d'.' -f3)
+            NEW_VERSION_PATCH=$((VERSION_PATCH + 1))
+            NEW_VERSION="${VERSION_MAJOR}.${VERSION_MINOR}.${NEW_VERSION_PATCH}"
+            git tag $NEW_VERSION
+            git push origin $NEW_VERSION
+          fi
+
       - name: Build Electron app
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,23 +70,11 @@ jobs:
         run: |
           echo "Running custom build script..."
           node build.js --build=platform
-          
-      # Publish release to GitHub
+
+      # Publish release to GitHub (Only when there's a tag push)
       - name: Publish Release
-        if: github.event_name == 'push'
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
           files: |
             build/**/*
-
-      # Auto increment version using GitHub's Release tag (for example, "v1.2.3")
-      - name: Increment version for release
-        run: |
-          VERSION_TAG=$(git describe --tags --abbrev=0)
-          VERSION_MAJOR=$(echo $VERSION_TAG | cut -d'.' -f1)
-          VERSION_MINOR=$(echo $VERSION_TAG | cut -d'.' -f2)
-          VERSION_PATCH=$(echo $VERSION_TAG | cut -d'.' -f3)
-          NEW_VERSION_PATCH=$((VERSION_PATCH + 1))
-          NEW_VERSION="${VERSION_MAJOR}.${VERSION_MINOR}.${NEW_VERSION_PATCH}"
-          git tag $NEW_VERSION
-          git push origin $NEW_VERSION
