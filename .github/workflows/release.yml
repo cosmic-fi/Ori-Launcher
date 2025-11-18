@@ -192,53 +192,65 @@ jobs:
         echo "📊 File sizes:"
         find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -exec ls -lh {} \;
     
-    - name: Check if release exists and delete it
+    - name: Install GitHub CLI
+      run: |
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+        sudo apt update && sudo apt install gh -y
+    
+    - name: Delete existing release (if any)
+      run: |
+        # Silently delete if exists, ignore if doesn't
+        gh release delete "${{ github.ref_name }}" --yes 2>/dev/null || true
+        echo "✅ Cleaned up any existing release"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        echo "🔍 Checking for release with tag: ${{ github.ref_name }}"
-        
-        # Check if release exists for the CURRENT tag
-        response=$(curl -s -o /dev/null -w "%{http_code}" \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          -H "Accept: application/vnd.github.v3+json" \
-          "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}")
-        
-        echo "Release check HTTP status: $response"
-        
-        # If release exists (200), delete it
-        if [ "$response" = "200" ]; then
-          echo "🗑️ Deleting existing release for tag: ${{ github.ref_name }}..."
-          curl -X DELETE \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}"
-          echo "✅ Release deleted"
-          
-          # Wait a bit longer for GitHub to process
-          sleep 10
-        else
-          echo "✅ No existing release found for tag: ${{ github.ref_name }} (status: $response)"
-        fi
-    
-    - name: Prepare clean artifact paths
-      run: |
-        # Create a clean directory with only the main distributables
-        mkdir -p release-files
-        
-        # Copy only the main installer files, not unpacked contents
-        find ./artifacts -name "*.exe" -not -path "*/win-unpacked/*" -exec cp {} release-files/ \;
-        find ./artifacts -name "*.dmg" -exec cp {} release-files/ \;
-        find ./artifacts -name "*.AppImage" -exec cp {} release-files/ \;
-        find ./artifacts -name "*.zip" -exec cp {} release-files/ \;
-        
-        echo "🎯 Release files prepared:"
-        ls -la release-files/
     
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: release-files/*
-        generate_release_notes: true
-        draft: false
-        prerelease: false
+      run: |
+        # Create the release first
+        gh release create "${{ github.ref_name }}" \
+          --title "Ori Launcher ${{ github.ref_name }}" \
+          --notes-file <(echo "Automated release of Ori Launcher ${{ github.ref_name }}") \
+          --generate-notes
+        
+        echo "✅ Release created successfully"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Upload release assets
+      run: |
+        # Upload each main installer file individually
+        echo "📤 Uploading release assets..."
+        
+        # Windows installer
+        WINDOWS_EXE=$(find ./artifacts -name "*.exe" -not -path "*/win-unpacked/*" | head -1)
+        if [ -f "$WINDOWS_EXE" ]; then
+          echo "⬆️ Uploading Windows installer..."
+          gh release upload "${{ github.ref_name }}" "$WINDOWS_EXE" --clobber
+        fi
+        
+        # macOS .dmg
+        MAC_DMG=$(find ./artifacts -name "*.dmg" | head -1)
+        if [ -f "$MAC_DMG" ]; then
+          echo "⬆️ Uploading macOS .dmg..."
+          gh release upload "${{ github.ref_name }}" "$MAC_DMG" --clobber
+        fi
+        
+        # macOS .zip (optional - skip if problematic)
+        MAC_ZIP=$(find ./artifacts -name "*.zip" | head -1)
+        if [ -f "$MAC_ZIP" ]; then
+          echo "⬆️ Uploading macOS .zip..."
+          gh release upload "${{ github.ref_name }}" "$MAC_ZIP" --clobber || echo "⚠️ Skipped .zip upload"
+        fi
+        
+        # Linux AppImage
+        LINUX_APPIMAGE=$(find ./artifacts -name "*.AppImage" | head -1)
+        if [ -f "$LINUX_APPIMAGE" ]; then
+          echo "⬆️ Uploading Linux AppImage..."
+          gh release upload "${{ github.ref_name }}" "$LINUX_APPIMAGE" --clobber
+        fi
+        
+        echo "✅ All assets uploaded successfully!"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
