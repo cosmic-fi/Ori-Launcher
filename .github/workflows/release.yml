@@ -184,67 +184,47 @@ jobs:
       with:
         path: ./artifacts
         
-    - name: List downloaded artifacts
+    - name: Debug - Show artifact structure
       run: |
-        echo "📦 Downloaded artifacts:"
-        find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" | sort
-        
-    - name: Nuclear option - Delete release via API
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        echo "🔍 Full artifact structure:"
+        find ./artifacts -type f | sort
+        echo ""
+        echo "📁 Artifact directories:"
+        ls -la ./artifacts/
+        echo ""
+        echo "📁 Each platform directory:"
+        ls -la ./artifacts/*/
+    
+    - name: Prepare release files
       run: |
-        # Get the release ID first
-        response=$(curl -s \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          -H "Accept: application/vnd.github.v3+json" \
-          "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}")
+        # Create clean release directory
+        mkdir -p release-files
         
-        release_id=$(echo "$response" | jq -r '.id // empty')
+        # Find and copy all main installer files
+        echo "🔍 Searching for Windows installer..."
+        find ./artifacts -name "*.exe" -not -path "*/win-unpacked/*" -exec cp -v {} release-files/ \;
         
-        if [ -n "$release_id" ] && [ "$release_id" != "null" ]; then
-          echo "🗑️ Deleting release ID: $release_id"
-          curl -X DELETE \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/releases/$release_id"
-          echo "✅ Release deleted"
-          sleep 5
-        else
-          echo "✅ No release found to delete"
-        fi
+        echo "🔍 Searching for macOS files..."
+        find ./artifacts -name "*.dmg" -exec cp -v {} release-files/ \;
+        find ./artifacts -name "*.zip" -exec cp -v {} release-files/ \;
         
-    - name: Create release via API
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        # Create release first
-        release_response=$(curl -s -X POST \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          -H "Accept: application/vnd.github.v3+json" \
-          -d "{\"tag_name\": \"${{ github.ref_name }}\", \"name\": \"Ori Launcher ${{ github.ref_name }}\", \"generate_release_notes\": true}" \
-          "https://api.github.com/repos/${{ github.repository }}/releases")
+        echo "🔍 Searching for Linux files..."
+        find ./artifacts -name "*.AppImage" -exec cp -v {} release-files/ \;
         
-        upload_url=$(echo "$release_response" | jq -r '.upload_url // empty' | sed 's/{.*}//')
-        
-        if [ -z "$upload_url" ]; then
-          echo "❌ Failed to create release"
-          exit 1
-        fi
-        
-        echo "✅ Release created, upload URL: $upload_url"
-        
-        # Upload assets
-        for file in $(find ./artifacts -name "*.exe" -not -path "*/win-unpacked/*" -o -name "*.dmg" -o -name "*.AppImage"); do
-          if [ -f "$file" ]; then
-            filename=$(basename "$file")
-            echo "⬆️ Uploading: $filename"
-            
-            curl -s -X POST \
-              -H "Authorization: token $GITHUB_TOKEN" \
-              -H "Content-Type: application/octet-stream" \
-              --data-binary @"$file" \
-              "$upload_url?name=$filename" || echo "⚠️ Failed to upload $filename"
-          fi
-        done
-        
-        echo "✅ Release process completed"
+        echo "🎯 Final release files:"
+        ls -la release-files/
+        echo ""
+        echo "📊 File sizes:"
+        ls -lh release-files/
+    
+    - name: Create GitHub Release with ncipollo action
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ github.ref_name }}
+        name: Ori Launcher ${{ github.ref_name }}
+        artifacts: "release-files/*"
+        body: "A release of Ori Launcher ${{ github.ref_name }}"
+        generateReleaseNotes: true
+        allowUpdates: true
+        replacesArtifacts: true
+        artifactErrorsFailBuild: false
