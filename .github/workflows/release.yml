@@ -164,7 +164,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # Check if release exists for this tag
+        echo "🔍 Checking for release with tag: ${{ github.ref_name }}"
+        
+        # Check if release exists for the CURRENT tag
         response=$(curl -s -o /dev/null -w "%{http_code}" \
           -H "Authorization: token $GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
@@ -174,18 +176,18 @@ jobs:
         
         # If release exists (200), delete it
         if [ "$response" = "200" ]; then
-          echo "🗑️ Deleting existing release..."
+          echo "🗑️ Deleting existing release for tag: ${{ github.ref_name }}..."
           curl -X DELETE \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}"
           echo "✅ Release deleted"
+          
+          # Wait a bit longer for GitHub to process
+          sleep 10
         else
-          echo "✅ No existing release found (status: $response)"
+          echo "✅ No existing release found for tag: ${{ github.ref_name }} (status: $response)"
         fi
-        
-        # Small delay to ensure deletion propagates
-        sleep 5
     
     - name: Prepare clean artifact paths
       run: |
