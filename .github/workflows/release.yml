@@ -178,6 +178,17 @@ jobs:
         Write-Host "📁 Dist directory contents:"
         if (Test-Path "dist") { Get-ChildItem dist/ } else { Write-Host "No dist directory" }
     
+    - name: Debug - List ALL files recursively
+      run: |
+        echo "=== FULL DIRECTORY STRUCTURE ==="
+        find . -type f -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -o -name "*.blockmap" -o -name "*.yml" | grep -v node_modules | sort
+        echo ""
+        echo "=== BUILD DIRECTORY ==="
+        ls -la build/ 2>/dev/null || echo "No build directory"
+        echo ""
+        echo "=== DIST DIRECTORY ==="
+        ls -la dist/ 2>/dev/null || echo "No dist directory"
+        
     - name: Upload ALL build artifacts
       uses: actions/upload-artifact@v4
       with:
