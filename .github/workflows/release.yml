@@ -148,7 +148,7 @@ jobs:
         } else {
           Write-Host "❌ No build directory found!"
           exit 1
-        fi
+        }
     
     - name: List final artifacts (Linux/Mac)
       if: matrix.os != 'windows-latest'
