@@ -71,7 +71,6 @@ const buildApp = async () => {
                 copyright: `Copyright © ${new Date().getFullYear()} Cosmic-fi (Cosmic Boucher)`,
                 forceCodeSigning: false,
                 afterSign: null,
-                publish: null,
                 artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
                 extraMetadata: {
                     main: 'appsrc/electron/main.js'
@@ -151,14 +150,7 @@ const buildApp = async () => {
                     synopsis: 'Ori Launcher - Custom Minecraft Launcher',
                     description: 'A modern custom Minecraft launcher'
                 },
-                publish: [
-                    {
-                        provider: 'github',
-                        owner: 'cosmic-fi',
-                        repo: 'Ori-Launcher',
-                        releaseType: 'release'
-                    }
-                ]
+                publish: null
             }
         });
         console.log('Build completed successfully!');
