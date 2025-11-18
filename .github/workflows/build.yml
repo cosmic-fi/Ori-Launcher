@@ -51,27 +51,27 @@ jobs:
         if: matrix.os == 'macos-latest' && matrix.notarization == true
         run: |
           echo "Notarizing macOS build..."
-          mkdir -p ~/Library/Keychains
-          security create-keychain -p "$KEYCHAIN_PASSWORD" login.keychain
-          security import ${{ secrets.APPLE_DEVELOPER_CERTIFICATE }} -k ~/Library/Keychains/login.keychain -P "$CERT_PASSWORD" -T /usr/bin/codesign
-          security set-keychain-settings -t 3600 -l ~/Library/Keychains/login.keychain
-          export CODESIGN_IDENTITY="Developer ID Application: Cosmicfi (Cosmic Boucher)"
-          export CODESIGN_KEYCHAIN=~/Library/Keychains/login.keychain
           
-      - name: Build app
-        run: node build.js --build=${{ matrix.buildFlag }}
+          # Path to the keychain
+          KEYCHAIN_PATH=~/Library/Keychains/login.keychain
 
-      - name: Upload Artifacts to GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: build/**/*   # Adjust this if the output directory is different
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided GitHub token
+          # Check if the keychain already exists
+          if [ ! -f "$KEYCHAIN_PATH" ]; then
+            # If the keychain does not exist, create it
+            security create-keychain -p "$KEYCHAIN_PASSWORD" login.keychain
+          fi
+          
+          # Unlock the keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
 
-      - name: Publish Release (draft)
-        run: |
-          curl -X POST \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d '{"tag_name": "v${{ steps.version.outputs.version }}", "name": "v${{ steps.version.outputs.version }}", "draft": true, "prerelease": false}' \
-            https://api.github.com/repos/${{ github.repository }}/releases
+          # Import the certificate (if it's not already in the keychain)
+          security import ${{ secrets.APPLE_DEVELOPER_CERTIFICATE }} -k "$KEYCHAIN_PATH" -P "$CERT_PASSWORD" -T /usr/bin/codesign
+          
+          # Set keychain settings (timeout 3600 seconds)
+          security set-keychain-settings -t 3600 -l "$KEYCHAIN_PATH"
+
+          # Set up codesigning identity
+          export CODESIGN_IDENTITY="Developer ID Application: Cosmicfi (Cosmic Boucher)"
+          export CODESIGN_KEYCHAIN="$KEYCHAIN_PATH"
+
+    
