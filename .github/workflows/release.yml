@@ -66,16 +66,19 @@ jobs:
         node-version: '22'
         cache: 'npm'
     
-    - name: Install dependencies
+    - name: Install dependencies (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
       run: |
-        if [ "${{ matrix.os }}" = "windows-latest" ]; then
-          npm cache clean --force
-          npm install --no-audit --no-fund
-        else
-          npm ci
-        fi
+        npm cache clean --force
+        npm install --no-audit --no-fund
     
-    - name: Verify build script exists
+    - name: Install dependencies (Linux/Mac)
+      if: matrix.os != 'windows-latest'
+      run: npm ci
+    
+    - name: Verify build script exists (Linux/Mac)
+      if: matrix.os != 'windows-latest'
       run: |
         echo "Checking if build.js exists..."
         if [ -f "build.js" ]; then
@@ -87,10 +90,31 @@ jobs:
           exit 1
         fi
     
-    - name: Test build script syntax
+    - name: Verify build script exists (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        Write-Host "Checking if build.js exists..."
+        if (Test-Path "build.js") {
+          Write-Host "✅ build.js found"
+          Write-Host "Script content preview:"
+          Get-Content build.js -Head 20
+        } else {
+          Write-Host "❌ build.js not found!"
+          exit 1
+        }
+    
+    - name: Test build script syntax (Linux/Mac)
+      if: matrix.os != 'windows-latest'
       run: node -c build.js
     
-    - name: Build Electron app with custom script
+    - name: Test build script syntax (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: node -c build.js
+    
+    - name: Build Electron app with custom script (Linux/Mac)
+      if: matrix.os != 'windows-latest'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -107,7 +131,27 @@ jobs:
           exit 1
         fi
     
-    - name: List final artifacts
+    - name: Build Electron app with custom script (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        Write-Host "Running custom build script for Windows..."
+        node build.js --build=platform
+        
+        # Verify build output
+        Write-Host "Build output verification:"
+        if (Test-Path "build") {
+          Write-Host "✅ Build directory created"
+          Get-ChildItem build/
+        } else {
+          Write-Host "❌ No build directory found!"
+          exit 1
+        fi
+    
+    - name: List final artifacts (Linux/Mac)
+      if: matrix.os != 'windows-latest'
       run: |
         echo "📦 Final artifacts:"
         find . -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" | grep -v node_modules || echo "No distributable files found"
@@ -117,6 +161,22 @@ jobs:
         echo ""
         echo "📁 Dist directory contents:"
         ls -la dist/ 2>/dev/null || echo "No dist directory"
+    
+    - name: List final artifacts (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        Write-Host "📦 Final artifacts:"
+        Get-ChildItem -Recurse -Include "*.exe", "*.dmg", "*.AppImage", "*.zip" -Path . | Where-Object { $_.FullName -notmatch "node_modules" } | ForEach-Object { Write-Host $_.Name }
+        if (-not (Get-ChildItem -Recurse -Include "*.exe", "*.dmg", "*.AppImage", "*.zip" -Path . | Where-Object { $_.FullName -notmatch "node_modules" })) {
+          Write-Host "No distributable files found"
+        }
+        Write-Host ""
+        Write-Host "📁 Build directory contents:"
+        if (Test-Path "build") { Get-ChildItem build/ } else { Write-Host "No build directory" }
+        Write-Host ""
+        Write-Host "📁 Dist directory contents:"
+        if (Test-Path "dist") { Get-ChildItem dist/ } else { Write-Host "No dist directory" }
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
