@@ -3,13 +3,41 @@ name: Build and Release Ori Launcher
 on:
   push:
     tags: ['v*']
-  workflow_dispatch: # Allow manual triggers
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
+  sync-version:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Sync package.json version with tag
+      run: |
+        # Extract version from tag (remove 'v' prefix)
+        TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+        echo "Syncing package.json version to: $TAG_VERSION"
+        
+        # Update package.json
+        npm version $TAG_VERSION --no-git-tag-version --allow-same-version
+        
+        # Verify the change
+        echo "Updated package.json version: $(node -p "require('./package.json').version")"
+    
+    - name: Upload updated package.json
+      uses: actions/upload-artifact@v4
+      with:
+        name: updated-package
+        path: package.json
+        retention-days: 1
+
   build-and-release:
+    needs: sync-version
     strategy:
       matrix:
         include:
@@ -28,8 +56,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      
+    - name: Download updated package.json
+      uses: actions/download-artifact@v4
       with:
-        fetch-depth: 0
+        name: updated-package
+        path: ./
         
     - name: Setup Node.js
       uses: actions/setup-node@v4
