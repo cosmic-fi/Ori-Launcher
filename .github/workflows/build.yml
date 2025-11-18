@@ -1,0 +1,55 @@
+name: Build Release
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            buildFlag: "platform"
+          - os: macos-latest
+            buildFlag: "platform"
+          - os: ubuntu-latest
+            buildFlag: "platform"
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      # Linux needs extra packages for AppImage
+      - name: Install Linux build deps
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libfuse2 \
+            g++ \
+            fakeroot \
+            rpm \
+            gcc \
+            make
+
+      - name: Build app
+        run: node build.js --build=${{ matrix.buildFlag }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.os }}
+          path: build/
