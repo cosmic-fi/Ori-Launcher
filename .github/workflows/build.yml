@@ -46,9 +46,14 @@ jobs:
             gcc \
             make
 
-      - name: Build App
-        run: npm run dist -- --build=${{ matrix.buildFlag }}  # Use the build.js script to build the app
-
+      - name: Build Electron app
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Running custom build script..."
+          node build.js --build=platform
+          
       # Publish release to GitHub
       - name: Publish Release
         if: github.event_name == 'push'
