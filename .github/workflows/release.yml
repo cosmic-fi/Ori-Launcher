@@ -43,13 +43,10 @@ jobs:
         include:
           - os: ubuntu-22.04
             platform: linux
-            electron_platform: linux
           - os: windows-latest  
             platform: win
-            electron_platform: win
           - os: macos-14
             platform: mac
-            electron_platform: mac
     
     runs-on: ${{ matrix.os }}
     
@@ -69,100 +66,57 @@ jobs:
         node-version: '22'
         cache: 'npm'
     
-    - name: Install dependencies (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: pwsh
+    - name: Install dependencies
       run: |
-        npm cache clean --force
-        npm install --no-audit --no-fund
+        if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          npm cache clean --force
+          npm install --no-audit --no-fund
+        else
+          npm ci
+        fi
     
-    - name: Install dependencies (Linux/Mac)
-      if: matrix.os != 'windows-latest'
-      run: npm ci
-      
-    - name: Build frontend with Vite (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: pwsh
-      run: npm run build:ui
-      
-    - name: Build frontend with Vite (Linux/Mac)
-      if: matrix.os != 'windows-latest'
-      run: npm run build:ui
-      
-    - name: Copy Electron source files (Linux/Mac)
-      if: matrix.os != 'windows-latest'
+    - name: Verify build script exists
       run: |
-        mkdir -p appsrc/electron
-        mkdir -p appsrc/locale
-        cp -r src/electron/* appsrc/electron/ || echo "No electron files to copy"
-        cp -r locale/* appsrc/locale/ 2>/dev/null || echo "No locale files to copy"
-        echo "✅ Source files copied to appsrc/"
-      
-    - name: Copy Electron source files (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: pwsh
-      run: |
-        New-Item -ItemType Directory -Force -Path "appsrc\electron"
-        New-Item -ItemType Directory -Force -Path "appsrc\locale"
-        if (Test-Path "src\electron") {
-            Copy-Item -Recurse -Path "src\electron\*" -Destination "appsrc\electron\" -Force
-            Write-Host "✅ Electron files copied"
-        } else {
-            Write-Host "No electron files to copy"
-        }
-        if (Test-Path "locale") {
-            Copy-Item -Recurse -Path "locale\*" -Destination "appsrc\locale\" -Force
-            Write-Host "✅ Locale files copied"
-        } else {
-            Write-Host "No locale files to copy"
-        }
-      
-    - name: Rebuild native modules (Linux/Mac)
-      if: matrix.os != 'windows-latest'
-      run: npm run rebuild
-      
-    - name: Skip rebuild (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: pwsh
-      run: Write-Host "Skipping rebuild on Windows to avoid timeout issues"
-      
-    - name: Build Electron app (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: pwsh
+        echo "Checking if build.js exists..."
+        if [ -f "build.js" ]; then
+          echo "✅ build.js found"
+          echo "Script content preview:"
+          head -20 build.js
+        else
+          echo "❌ build.js not found!"
+          exit 1
+        fi
+    
+    - name: Test build script syntax
+      run: node -c build.js
+    
+    - name: Build Electron app with custom script
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: npx electron-builder --win --x64
-      
-    - name: Build Electron app (Linux)
-      if: matrix.os == 'ubuntu-22.04'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: npx electron-builder --linux --x64 -c.linux.target=AppImage
-      
-    - name: Build Electron app (Mac)
-      if: matrix.os == 'macos-14'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: npx electron-builder --mac --universal
-    
-    - name: List build artifacts (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: pwsh
       run: |
-        Write-Host "📁 Build directory contents:"
-        Get-ChildItem -Path "build" -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_.Name }
-        Write-Host ""
-        Write-Host "📁 Dist directory contents:"
-        Get-ChildItem -Path "dist" -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_.Name }
+        echo "Running custom build script for ${{ matrix.platform }}..."
+        node build.js --build=platform
+        
+        # Verify build output
+        echo "Build output verification:"
+        if [ -d "build" ]; then
+          echo "✅ Build directory created"
+          ls -la build/
+        else
+          echo "❌ No build directory found!"
+          exit 1
+        fi
     
-    - name: List build artifacts (Linux/Mac)
-      if: matrix.os != 'windows-latest'
+    - name: List final artifacts
       run: |
+        echo "📦 Final artifacts:"
+        find . -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" | grep -v node_modules || echo "No distributable files found"
+        echo ""
         echo "📁 Build directory contents:"
-        ls -la build/ 2>/dev/null || echo "No build directory found"
+        ls -la build/ 2>/dev/null || echo "No build directory"
         echo ""
         echo "📁 Dist directory contents:"
-        ls -la dist/ 2>/dev/null || echo "No dist directory found"
+        ls -la dist/ 2>/dev/null || echo "No dist directory"
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
