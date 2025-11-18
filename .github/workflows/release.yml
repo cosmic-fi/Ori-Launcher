@@ -108,33 +108,37 @@ jobs:
       run: npx electron-builder --linux --x64 -c.linux.target=AppImage
       
     - name: Build Electron app (Mac)
-      if: matrix.os == 'macos-12'
+      if: matrix.os == 'macos-14'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: npx electron-builder --mac --universal
     
-    - name: List and prepare artifacts
+    - name: List build artifacts (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
       run: |
-        echo "📁 Current directory: $(pwd)"
-        echo "📁 All files in root:"
-        find . -maxdepth 2 -type f -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" | head -20
+        Write-Host "📁 Build directory contents:"
+        Get-ChildItem -Path "build" -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_.Name }
+        Write-Host ""
+        Write-Host "📁 Dist directory contents:"
+        Get-ChildItem -Path "dist" -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_.Name }
+    
+    - name: List build artifacts (Linux/Mac)
+      if: matrix.os != 'windows-latest'
+      run: |
+        echo "📁 Build directory contents:"
+        ls -la build/ 2>/dev/null || echo "No build directory found"
         echo ""
-        echo "📁 Build directory:"
-        ls -la build/ 2>/dev/null || echo "No build directory"
-        echo ""
-        echo "📁 Dist directory:"
-        ls -la dist/ 2>/dev/null || echo "No dist directory"
-        
-        # Copy all artifacts to a consistent location
-        mkdir -p release-artifacts
-        find . -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" | xargs -I {} cp {} release-artifacts/ 2>/dev/null || true
-        echo "✅ Artifacts copied to release-artifacts/"
+        echo "📁 Dist directory contents:"
+        ls -la dist/ 2>/dev/null || echo "No dist directory found"
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ori-launcher-${{ matrix.platform }}
-        path: release-artifacts/*
+        path: |
+          build/*
+          dist/*
         retention-days: 30
 
   create-release:
@@ -148,40 +152,31 @@ jobs:
       with:
         path: ./artifacts
         
-    - name: Find and prepare release assets
+    - name: List downloaded artifacts
       run: |
-        echo "🔍 Searching for artifacts..."
-        find ./artifacts -type f -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" > artifact-list.txt
-        echo "📦 Found artifacts:"
-        cat artifact-list.txt
+        echo "📦 Downloaded artifacts:"
+        find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" | sort
         echo ""
-        
-        # Create release directory with all assets
-        mkdir -p release-assets
-        while IFS= read -r file; do
-          if [ -f "$file" ]; then
-            filename=$(basename "$file")
-            cp "$file" "release-assets/$filename"
-            echo "✅ Copied: $filename"
-          fi
-        done < artifact-list.txt
-        
-        echo "🎯 Final release assets:"
-        ls -la release-assets/
+        echo "📊 File sizes:"
+        find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -exec ls -lh {} \;
     
-    - name: Delete existing release (if any)
+    - name: Delete existing release to avoid 422 error
       run: |
-        # Delete the release if it already exists to avoid 422 errors
+        # Delete release if it exists to prevent "immutable release" error
         curl -X DELETE \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
           "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}" \
-          || echo "No existing release to delete"
+          || echo "No existing release to delete (this is ok)"
     
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        files: release-assets/*
+        files: |
+          ./artifacts/**/*.exe
+          ./artifacts/**/*.dmg
+          ./artifacts/**/*.AppImage
+          ./artifacts/**/*.zip
         generate_release_notes: true
         draft: false
         prerelease: false
