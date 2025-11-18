@@ -2,10 +2,8 @@ name: Build Electron App and Publish Release
 
 on:
   push:
-    branches:
-      - main
     tags:
-      - 'v*'
+      - 'v*'  # Only triggers on tag pushes like v1.5.0, v1.6.0, etc.
   workflow_dispatch:
 
 jobs:
@@ -51,17 +49,14 @@ jobs:
       # Auto increment version using GitHub's Release tag (for example, "v1.2.3")
       - name: Increment version for release
         run: |
-          # Only increment if on the main branch
-          if [[ $GITHUB_REF == "refs/heads/main" ]]; then
-            VERSION_TAG=$(git describe --tags --abbrev=0)
-            VERSION_MAJOR=$(echo $VERSION_TAG | cut -d'.' -f1)
-            VERSION_MINOR=$(echo $VERSION_TAG | cut -d'.' -f2)
-            VERSION_PATCH=$(echo $VERSION_TAG | cut -d'.' -f3)
-            NEW_VERSION_PATCH=$((VERSION_PATCH + 1))
-            NEW_VERSION="${VERSION_MAJOR}.${VERSION_MINOR}.${NEW_VERSION_PATCH}"
-            git tag $NEW_VERSION
-            git push origin $NEW_VERSION
-          fi
+          VERSION_TAG=$(git describe --tags --abbrev=0)
+          VERSION_MAJOR=$(echo $VERSION_TAG | cut -d'.' -f1)
+          VERSION_MINOR=$(echo $VERSION_TAG | cut -d'.' -f2)
+          VERSION_PATCH=$(echo $VERSION_TAG | cut -d'.' -f3)
+          NEW_VERSION_PATCH=$((VERSION_PATCH + 1))
+          NEW_VERSION="${VERSION_MAJOR}.${VERSION_MINOR}.${NEW_VERSION_PATCH}"
+          git tag $NEW_VERSION
+          git push origin $NEW_VERSION
 
       - name: Build Electron app
         env:
