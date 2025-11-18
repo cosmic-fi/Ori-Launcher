@@ -178,11 +178,17 @@ jobs:
         Write-Host "📁 Dist directory contents:"
         if (Test-Path "dist") { Get-ChildItem dist/ } else { Write-Host "No dist directory" }
     
-    - name: Upload build artifacts
+    - name: Upload ALL build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ori-launcher-${{ matrix.platform }}
+        name: ori-launcher-${{ matrix.platform }}-full
         path: |
-          build/*
-          dist/*
+          build/
+          dist/
+          *.exe
+          *.dmg
+          *.AppImage
+          *.zip
+          *.blockmap
+          *.yml
         retention-days: 30
