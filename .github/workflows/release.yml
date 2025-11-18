@@ -184,47 +184,23 @@ jobs:
       with:
         path: ./artifacts
         
-    - name: Debug - Show artifact structure
-      run: |
-        echo "🔍 Full artifact structure:"
-        find ./artifacts -type f | sort
-        echo ""
-        echo "📁 Artifact directories:"
-        ls -la ./artifacts/
-        echo ""
-        echo "📁 Each platform directory:"
-        ls -la ./artifacts/*/
-    
     - name: Prepare release files
       run: |
-        # Create clean release directory
         mkdir -p release-files
-        
-        # Find and copy all main installer files
-        echo "🔍 Searching for Windows installer..."
-        find ./artifacts -name "*.exe" -not -path "*/win-unpacked/*" -exec cp -v {} release-files/ \;
-        
-        echo "🔍 Searching for macOS files..."
-        find ./artifacts -name "*.dmg" -exec cp -v {} release-files/ \;
-        find ./artifacts -name "*.zip" -exec cp -v {} release-files/ \;
-        
-        echo "🔍 Searching for Linux files..."
-        find ./artifacts -name "*.AppImage" -exec cp -v {} release-files/ \;
-        
-        echo "🎯 Final release files:"
-        ls -la release-files/
-        echo ""
-        echo "📊 File sizes:"
-        ls -lh release-files/
+        find ./artifacts -name "*.exe" -not -path "*/win-unpacked/*" -exec cp {} release-files/ \;
+        find ./artifacts -name "*.dmg" -exec cp {} release-files/ \;
+        find ./artifacts -name "*.AppImage" -exec cp {} release-files/ \;
+        find ./artifacts -name "*.zip" -exec cp {} release-files/ \;
     
-    - name: Create GitHub Release with ncipollo action
-      uses: ncipollo/release-action@v1
+    - name: Automatic Releases
+      uses: marvinpinto/action-automatic-releases@latest
       with:
-        tag: ${{ github.ref_name }}
-        name: Ori Launcher ${{ github.ref_name }}
-        artifacts: "release-files/*"
-        body: "A release of Ori Launcher ${{ github.ref_name }}"
-        generateReleaseNotes: true
-        allowUpdates: true
-        replacesArtifacts: true
-        artifactErrorsFailBuild: false
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        automatic_release_tag: ${{ github.ref_name }}
+        prerelease: false
+        title: Ori Launcher ${{ github.ref_name }}
+        files: |
+          release-files/*.exe
+          release-files/*.dmg
+          release-files/*.AppImage
+          release-files/*.zip
