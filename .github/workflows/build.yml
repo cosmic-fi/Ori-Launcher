@@ -1,9 +1,10 @@
-name: Build Release
+name: Build Electron App and Publish Release
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches:
+      - main  # Trigger the build when code is pushed to the main branch
+  workflow_dispatch:  # Allows for manual triggering
 
 jobs:
   build:
@@ -17,6 +18,7 @@ jobs:
             buildFlag: "platform"
           - os: macos-latest
             buildFlag: "platform"
+            notarization: true
           - os: ubuntu-latest
             buildFlag: "platform"
 
@@ -32,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Linux needs extra packages for AppImage
+      # Linux dependencies for AppImage
       - name: Install Linux build deps
         if: startsWith(matrix.os, 'ubuntu')
         run: |
@@ -45,11 +47,31 @@ jobs:
             gcc \
             make
 
+      - name: macOS Notarization Setup
+        if: matrix.os == 'macos-latest' && matrix.notarization == true
+        run: |
+          echo "Notarizing macOS build..."
+          mkdir -p ~/Library/Keychains
+          security create-keychain -p "$KEYCHAIN_PASSWORD" login.keychain
+          security import ${{ secrets.APPLE_DEVELOPER_CERTIFICATE }} -k ~/Library/Keychains/login.keychain -P "$CERT_PASSWORD" -T /usr/bin/codesign
+          security set-keychain-settings -t 3600 -l ~/Library/Keychains/login.keychain
+          export CODESIGN_IDENTITY="Developer ID Application: Cosmicfi (Cosmic Boucher)"
+          export CODESIGN_KEYCHAIN=~/Library/Keychains/login.keychain
+          
       - name: Build app
         run: node build.js --build=${{ matrix.buildFlag }}
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload Artifacts to GitHub Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: build-${{ matrix.os }}
-          path: build/
+          files: build/**/*   # Adjust this if the output directory is different
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided GitHub token
+
+      - name: Publish Release (draft)
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{"tag_name": "v${{ steps.version.outputs.version }}", "name": "v${{ steps.version.outputs.version }}", "draft": true, "prerelease": false}' \
+            https://api.github.com/repos/${{ github.repository }}/releases
