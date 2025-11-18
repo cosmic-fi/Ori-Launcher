@@ -18,7 +18,6 @@ jobs:
             buildFlag: "platform"
           - os: macos-latest
             buildFlag: "platform"
-            notarization: true
           - os: ubuntu-latest
             buildFlag: "platform"
 
@@ -26,7 +25,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -47,31 +46,25 @@ jobs:
             gcc \
             make
 
-      - name: macOS Notarization Setup
-        if: matrix.os == 'macos-latest' && matrix.notarization == true
+      - name: Build App
+        run: npm run dist -- --build=${{ matrix.buildFlag }}  # Use the build.js script to build the app
+
+      # Publish release to GitHub
+      - name: Publish Release
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/**/*
+
+      # Auto increment version using GitHub's Release tag (for example, "v1.2.3")
+      - name: Increment version for release
         run: |
-          echo "Notarizing macOS build..."
-          
-          # Path to the keychain
-          KEYCHAIN_PATH=~/Library/Keychains/login.keychain
-
-          # Check if the keychain already exists
-          if [ ! -f "$KEYCHAIN_PATH" ]; then
-            # If the keychain does not exist, create it
-            security create-keychain -p "$KEYCHAIN_PASSWORD" login.keychain
-          fi
-          
-          # Unlock the keychain
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-
-          # Import the certificate (if it's not already in the keychain)
-          security import ${{ secrets.APPLE_DEVELOPER_CERTIFICATE }} -k "$KEYCHAIN_PATH" -P "$CERT_PASSWORD" -T /usr/bin/codesign
-          
-          # Set keychain settings (timeout 3600 seconds)
-          security set-keychain-settings -t 3600 -l "$KEYCHAIN_PATH"
-
-          # Set up codesigning identity
-          export CODESIGN_IDENTITY="Developer ID Application: Cosmicfi (Cosmic Boucher)"
-          export CODESIGN_KEYCHAIN="$KEYCHAIN_PATH"
-
-    
+          VERSION_TAG=$(git describe --tags --abbrev=0)
+          VERSION_MAJOR=$(echo $VERSION_TAG | cut -d'.' -f1)
+          VERSION_MINOR=$(echo $VERSION_TAG | cut -d'.' -f2)
+          VERSION_PATCH=$(echo $VERSION_TAG | cut -d'.' -f3)
+          NEW_VERSION_PATCH=$((VERSION_PATCH + 1))
+          NEW_VERSION="${VERSION_MAJOR}.${VERSION_MINOR}.${NEW_VERSION_PATCH}"
+          git tag $NEW_VERSION
+          git push origin $NEW_VERSION
