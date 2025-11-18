@@ -178,17 +178,31 @@ jobs:
         Write-Host "📁 Dist directory contents:"
         if (Test-Path "dist") { Get-ChildItem dist/ } else { Write-Host "No dist directory" }
     
-    - name: Debug - List ALL files recursively
+    - name: Debug - List ALL files recursively (Linux/Mac)
+      if: matrix.os != 'windows-latest'
       run: |
         echo "=== FULL DIRECTORY STRUCTURE ==="
-        find . -type f -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -o -name "*.blockmap" -o -name "*.yml" | grep -v node_modules | sort
+        find . -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -o -name "*.blockmap" -o -name "*.yml" \) | grep -v node_modules | sort
         echo ""
         echo "=== BUILD DIRECTORY ==="
         ls -la build/ 2>/dev/null || echo "No build directory"
         echo ""
         echo "=== DIST DIRECTORY ==="
         ls -la dist/ 2>/dev/null || echo "No dist directory"
-        
+
+    - name: Debug - List ALL files recursively (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        Write-Host "=== FULL DIRECTORY STRUCTURE ==="
+        Get-ChildItem -Recurse -Include "*.exe", "*.dmg", "*.AppImage", "*.zip", "*.blockmap", "*.yml" -Path . | Where-Object { $_.FullName -notmatch "node_modules" } | ForEach-Object { Write-Host $_.FullName }
+        Write-Host ""
+        Write-Host "=== BUILD DIRECTORY ==="
+        if (Test-Path "build") { Get-ChildItem build/ -Recurse } else { Write-Host "No build directory" }
+        Write-Host ""
+        Write-Host "=== DIST DIRECTORY ==="
+        if (Test-Path "dist") { Get-ChildItem dist/ -Recurse } else { Write-Host "No dist directory" }
+
     - name: Upload ALL build artifacts
       uses: actions/upload-artifact@v4
       with:
