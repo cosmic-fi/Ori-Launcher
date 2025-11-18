@@ -71,6 +71,7 @@ const buildApp = async () => {
                 copyright: `Copyright © ${new Date().getFullYear()} Cosmic-fi (Cosmic Boucher)`,
                 forceCodeSigning: false,
                 afterSign: null,
+                publish: null,
                 artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
                 extraMetadata: {
                     main: 'appsrc/electron/main.js'
