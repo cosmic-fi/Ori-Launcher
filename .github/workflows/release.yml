@@ -179,11 +179,6 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     
     steps:
-    - name: Checkout code (for GitHub CLI)
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        
     - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
@@ -193,74 +188,63 @@ jobs:
       run: |
         echo "📦 Downloaded artifacts:"
         find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" | sort
-        echo ""
-        echo "📊 File sizes:"
-        find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -exec ls -lh {} \;
-    
-    - name: Install GitHub CLI
-      run: |
-        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-        sudo apt update && sudo apt install gh -y
-    
-    - name: Configure Git for GitHub CLI
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-    
-    - name: Delete existing release (if any)
-      run: |
-        # Silently delete if exists, ignore if doesn't
-        gh release delete "${{ github.ref_name }}" --yes 2>/dev/null || true
-        echo "✅ Cleaned up any existing release"
+        
+    - name: Nuclear option - Delete release via API
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-    - name: Create GitHub Release
       run: |
-        # Create the release first
-        gh release create "${{ github.ref_name }}" \
-          --title "Ori Launcher ${{ github.ref_name }}" \
-          --notes-file <(echo "Automated release of Ori Launcher ${{ github.ref_name }}") \
-          --generate-notes
+        # Get the release ID first
+        response=$(curl -s \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}")
         
-        echo "✅ Release created successfully"
+        release_id=$(echo "$response" | jq -r '.id // empty')
+        
+        if [ -n "$release_id" ] && [ "$release_id" != "null" ]; then
+          echo "🗑️ Deleting release ID: $release_id"
+          curl -X DELETE \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/$release_id"
+          echo "✅ Release deleted"
+          sleep 5
+        else
+          echo "✅ No release found to delete"
+        fi
+        
+    - name: Create release via API
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-    - name: Upload release assets
       run: |
-        # Upload each main installer file individually
-        echo "📤 Uploading release assets..."
+        # Create release first
+        release_response=$(curl -s -X POST \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -d "{\"tag_name\": \"${{ github.ref_name }}\", \"name\": \"Ori Launcher ${{ github.ref_name }}\", \"generate_release_notes\": true}" \
+          "https://api.github.com/repos/${{ github.repository }}/releases")
         
-        # Windows installer
-        WINDOWS_EXE=$(find ./artifacts -name "*.exe" -not -path "*/win-unpacked/*" | head -1)
-        if [ -f "$WINDOWS_EXE" ]; then
-          echo "⬆️ Uploading Windows installer..."
-          gh release upload "${{ github.ref_name }}" "$WINDOWS_EXE" --clobber
+        upload_url=$(echo "$release_response" | jq -r '.upload_url // empty' | sed 's/{.*}//')
+        
+        if [ -z "$upload_url" ]; then
+          echo "❌ Failed to create release"
+          exit 1
         fi
         
-        # macOS .dmg
-        MAC_DMG=$(find ./artifacts -name "*.dmg" | head -1)
-        if [ -f "$MAC_DMG" ]; then
-          echo "⬆️ Uploading macOS .dmg..."
-          gh release upload "${{ github.ref_name }}" "$MAC_DMG" --clobber
-        fi
+        echo "✅ Release created, upload URL: $upload_url"
         
-        # macOS .zip (optional - skip if problematic)
-        MAC_ZIP=$(find ./artifacts -name "*.zip" | head -1)
-        if [ -f "$MAC_ZIP" ]; then
-          echo "⬆️ Uploading macOS .zip..."
-          gh release upload "${{ github.ref_name }}" "$MAC_ZIP" --clobber || echo "⚠️ Skipped .zip upload"
-        fi
+        # Upload assets
+        for file in $(find ./artifacts -name "*.exe" -not -path "*/win-unpacked/*" -o -name "*.dmg" -o -name "*.AppImage"); do
+          if [ -f "$file" ]; then
+            filename=$(basename "$file")
+            echo "⬆️ Uploading: $filename"
+            
+            curl -s -X POST \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Content-Type: application/octet-stream" \
+              --data-binary @"$file" \
+              "$upload_url?name=$filename" || echo "⚠️ Failed to upload $filename"
+          fi
+        done
         
-        # Linux AppImage
-        LINUX_APPIMAGE=$(find ./artifacts -name "*.AppImage" | head -1)
-        if [ -f "$LINUX_APPIMAGE" ]; then
-          echo "⬆️ Uploading Linux AppImage..."
-          gh release upload "${{ github.ref_name }}" "$LINUX_APPIMAGE" --clobber
-        fi
-        
-        echo "✅ All assets uploaded successfully!"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        echo "✅ Release process completed"
