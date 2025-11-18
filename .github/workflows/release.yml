@@ -150,21 +150,19 @@ jobs:
           exit 1
         }
     
-    - name: Collect release files
+    - name: Collect release files from build directory
       run: |
-        echo "🔍 Searching for distributable files..."
-        # Create release-files directory
+        echo "🔍 Collecting files from build directory..."
         mkdir -p release-files
         
-        # Copy all distributable files (installers)
-        find . -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -o -name "*.blockmap" \) \
-          -not -path "*/node_modules/*" \
+        # Copy everything from build directory except unpacked folders
+        find build/ -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -o -name "*.blockmap" -o -name "*.yml" \) \
           -not -path "*/win-unpacked/*" \
           -not -path "*/linux-unpacked/*" \
           -not -path "*/mac-universal/*" \
           -exec cp {} release-files/ \;
         
-        # Create zip files for unpacked directories
+        # Also create zipped versions of unpacked directories
         if [ -d "build/win-unpacked" ]; then
           echo "📦 Zipping Windows unpacked directory..."
           cd build && zip -r ../release-files/ori-launcher-win-unpacked.zip win-unpacked/ && cd ..
@@ -180,21 +178,19 @@ jobs:
           cd build && zip -r ../release-files/ori-launcher-mac-unpacked.zip mac-universal/ && cd ..
         fi
         
-        echo "📦 All release files collected:"
+        echo "📦 Release files collected:"
         ls -la release-files/
-    
-    - name: Collect release files (Windows)
+
+    - name: Collect release files from build directory (Windows)
       if: matrix.os == 'windows-latest'
       shell: pwsh
       run: |
-        Write-Host "🔍 Searching for distributable files..."
-        # Create release-files directory
+        Write-Host "🔍 Collecting files from build directory..."
         New-Item -ItemType Directory -Force -Path "release-files"
         
-        # Copy all distributable files (installers)
-        Get-ChildItem -Recurse -Include "*.exe", "*.dmg", "*.AppImage", "*.zip", "*.blockmap" -Path . | 
+        # Copy everything from build directory except unpacked folders
+        Get-ChildItem -Recurse -Include "*.exe", "*.dmg", "*.AppImage", "*.zip", "*.blockmap", "*.yml" -Path "build" | 
           Where-Object { 
-            $_.FullName -notmatch "node_modules" -and 
             $_.FullName -notmatch "win-unpacked" -and 
             $_.FullName -notmatch "linux-unpacked" -and 
             $_.FullName -notmatch "mac-universal" 
@@ -204,7 +200,7 @@ jobs:
             Write-Host "Copied: $($_.Name)"
           }
         
-        # Create zip files for unpacked directories
+        # Also create zipped versions of unpacked directories
         if (Test-Path "build\win-unpacked") {
           Write-Host "📦 Zipping Windows unpacked directory..."
           Compress-Archive -Path "build\win-unpacked\*" -DestinationPath "release-files\ori-launcher-win-unpacked.zip" -Force
@@ -220,7 +216,7 @@ jobs:
           Compress-Archive -Path "build\mac-universal\*" -DestinationPath "release-files\ori-launcher-mac-unpacked.zip" -Force
         }
         
-        Write-Host "📦 All release files collected:"
+        Write-Host "📦 Release files collected:"
         Get-ChildItem release-files/
 
     - name: List final artifacts (Linux/Mac)
