@@ -160,23 +160,51 @@ jobs:
         echo "📊 File sizes:"
         find ./artifacts -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -exec ls -lh {} \;
     
-    - name: Delete existing release to avoid 422 error
+    - name: Check if release exists and delete it
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # Delete release if it exists to prevent "immutable release" error
-        curl -X DELETE \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+        # Check if release exists for this tag
+        response=$(curl -s -o /dev/null -w "%{http_code}" \
+          -H "Authorization: token $GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
-          "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}" \
-          || echo "No existing release to delete (this is ok)"
+          "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}")
+        
+        echo "Release check HTTP status: $response"
+        
+        # If release exists (200), delete it
+        if [ "$response" = "200" ]; then
+          echo "🗑️ Deleting existing release..."
+          curl -X DELETE \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}"
+          echo "✅ Release deleted"
+        else
+          echo "✅ No existing release found (status: $response)"
+        fi
+        
+        # Small delay to ensure deletion propagates
+        sleep 5
+    
+    - name: Prepare clean artifact paths
+      run: |
+        # Create a clean directory with only the main distributables
+        mkdir -p release-files
+        
+        # Copy only the main installer files, not unpacked contents
+        find ./artifacts -name "*.exe" -not -path "*/win-unpacked/*" -exec cp {} release-files/ \;
+        find ./artifacts -name "*.dmg" -exec cp {} release-files/ \;
+        find ./artifacts -name "*.AppImage" -exec cp {} release-files/ \;
+        find ./artifacts -name "*.zip" -exec cp {} release-files/ \;
+        
+        echo "🎯 Release files prepared:"
+        ls -la release-files/
     
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-          ./artifacts/**/*.exe
-          ./artifacts/**/*.dmg
-          ./artifacts/**/*.AppImage
-          ./artifacts/**/*.zip
+        files: release-files/*
         generate_release_notes: true
         draft: false
         prerelease: false
