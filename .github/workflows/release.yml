@@ -150,6 +150,79 @@ jobs:
           exit 1
         }
     
+    - name: Collect release files
+      run: |
+        echo "🔍 Searching for distributable files..."
+        # Create release-files directory
+        mkdir -p release-files
+        
+        # Copy all distributable files (installers)
+        find . -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -o -name "*.blockmap" \) \
+          -not -path "*/node_modules/*" \
+          -not -path "*/win-unpacked/*" \
+          -not -path "*/linux-unpacked/*" \
+          -not -path "*/mac-universal/*" \
+          -exec cp {} release-files/ \;
+        
+        # Create zip files for unpacked directories
+        if [ -d "build/win-unpacked" ]; then
+          echo "📦 Zipping Windows unpacked directory..."
+          cd build && zip -r ../release-files/ori-launcher-win-unpacked.zip win-unpacked/ && cd ..
+        fi
+        
+        if [ -d "build/linux-unpacked" ]; then
+          echo "📦 Zipping Linux unpacked directory..."
+          cd build && zip -r ../release-files/ori-launcher-linux-unpacked.zip linux-unpacked/ && cd ..
+        fi
+        
+        if [ -d "build/mac-universal" ]; then
+          echo "📦 Zipping macOS unpacked directory..."
+          cd build && zip -r ../release-files/ori-launcher-mac-unpacked.zip mac-universal/ && cd ..
+        fi
+        
+        echo "📦 All release files collected:"
+        ls -la release-files/
+    
+    - name: Collect release files (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        Write-Host "🔍 Searching for distributable files..."
+        # Create release-files directory
+        New-Item -ItemType Directory -Force -Path "release-files"
+        
+        # Copy all distributable files (installers)
+        Get-ChildItem -Recurse -Include "*.exe", "*.dmg", "*.AppImage", "*.zip", "*.blockmap" -Path . | 
+          Where-Object { 
+            $_.FullName -notmatch "node_modules" -and 
+            $_.FullName -notmatch "win-unpacked" -and 
+            $_.FullName -notmatch "linux-unpacked" -and 
+            $_.FullName -notmatch "mac-universal" 
+          } |
+          ForEach-Object { 
+            Copy-Item $_.FullName -Destination "release-files\" 
+            Write-Host "Copied: $($_.Name)"
+          }
+        
+        # Create zip files for unpacked directories
+        if (Test-Path "build\win-unpacked") {
+          Write-Host "📦 Zipping Windows unpacked directory..."
+          Compress-Archive -Path "build\win-unpacked\*" -DestinationPath "release-files\ori-launcher-win-unpacked.zip" -Force
+        }
+        
+        if (Test-Path "build\linux-unpacked") {
+          Write-Host "📦 Zipping Linux unpacked directory..."
+          Compress-Archive -Path "build\linux-unpacked\*" -DestinationPath "release-files\ori-launcher-linux-unpacked.zip" -Force
+        }
+        
+        if (Test-Path "build\mac-universal") {
+          Write-Host "📦 Zipping macOS unpacked directory..."
+          Compress-Archive -Path "build\mac-universal\*" -DestinationPath "release-files\ori-launcher-mac-unpacked.zip" -Force
+        }
+        
+        Write-Host "📦 All release files collected:"
+        Get-ChildItem release-files/
+
     - name: List final artifacts (Linux/Mac)
       if: matrix.os != 'windows-latest'
       run: |
