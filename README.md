@@ -38,9 +38,9 @@ Unzip / install → log in → press “Play”. That’s it.
 | Ask on Discord | [![Discord](https://img.shields.io/discord/1027310563702874254?color=7289da&label=chat)](https://discord.com/invite/2sPdCcuwm5) |
 
 ## Love the launcher?
-&lt;a href="https://buymeacoffee.com/cosmic_fi" target="_blank"&gt;
-  &lt;img src="https://cdn.buymeacoffee.com/buttons/v2/arial-orange.png" width="120" alt="Buy Me A Coffee"/&gt;
-&lt;/a&gt;
+<a href="https://buymeacoffee.com/cosmic_fi" target="_blank">
+  <img src="https://cdn.buymeacoffee.com/buttons/v2/arial-orange.png" width="120" alt="Buy Me A Coffee"/>
+</a>
 
 ## License
 Code is open-source under [MIT](./LICENSE).  
