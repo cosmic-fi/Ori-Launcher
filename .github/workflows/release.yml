@@ -1,0 +1,67 @@
+name: Build & Release
+
+on:
+  release:
+    types: [published]          # <- runs when you hit “Publish release” (draft→public)
+  push:
+    tags: ['v*']                # <- also runs if you push a version tag manually
+
+env:
+  NODE_VERSION: 20
+
+jobs:
+  build-ui:
+    name: Build renderer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:ui
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  package:
+    name: Package  ${{ matrix.os }}
+    needs: build-ui
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest   # builds NSIS x64
+          - os: macos-latest     # builds DMG + ZIP universal
+          - os: ubuntu-latest    # builds AppImage x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+
+      # download the ready-made dist folder
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      # Linux needs extra tools for AppImage
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y fuse libfuse2
+
+      # do the actual packaging
+      - run: node build.js --build=platform
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # electron-builder needs this to upload
+
+      # upload artifacts to the job summary (optional)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-artifacts
+          path: build/*.*
