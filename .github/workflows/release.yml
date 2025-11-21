@@ -58,7 +58,7 @@ jobs:
       # do the actual packaging
       - run: node build.js --build=platform
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # electron-builder needs this to upload
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
       # upload artifacts to the job summary (optional)
       - uses: actions/upload-artifact@v4
