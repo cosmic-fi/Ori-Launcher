@@ -3,7 +3,7 @@
 # Ori Launcher  
 *The fast, modern way to start Minecraft.*
 
->English | [Español](./locale/es.json) | [Français](./locale/fr.json) | [Bahasa](./locale/id.json) | [Türkçe](./locale/tr.json)
+>English | [Español](./locale/es.json) | [Français](./locale/fr.json) | [Türkçe](./locale/tr.json)
 
 ---
 
