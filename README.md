@@ -1,4 +1,4 @@
-![Ori Launcher Hero](https://github.com/user-attachments/assets/40d0224a-7a02-4bbb-b213-93311dfef334)
+<img width="1024" height="512" alt="home" src="https://github.com/user-attachments/assets/5471c343-d0f1-4086-8e37-8f2d682ed160" />
 
 # Ori Launcher  
 *The fast, modern way to start Minecraft.*
