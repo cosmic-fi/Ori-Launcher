@@ -1,7 +1,7 @@
 // @ts-nocheck
 /**
  * @author Cosmic-f
- * @description Main entry point for the Ori Launcher application.
+ * @description Main entry point for the OriLauncher application.
 */
 
 import{ app, ipcMain, dialog, Notification, shell } from "electron";
@@ -276,7 +276,7 @@ const setupIpcHandlers = () => {
             
             const sessionStart = `
             ******************************************************\n
-            |   ORI LAUNCHER v${app.getVersion()}\n - by Cosmic-fi
+            |   ORILAUNCHER v${app.getVersion()}\n - by Cosmic-fi
             ******************************************************\n
             === LOG SESSION STARTED: ${new Date().toISOString()} ===\n`;
             await fs.writeFile(sessionFile, sessionStart, 'utf8');

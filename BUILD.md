@@ -1,6 +1,6 @@
-# Ori Launcher — Local Build Guide (No Distribution)
+# OriLauncher — Local Build Guide (No Distribution)
 
-This guide explains how to build Ori Launcher locally for personal testing and development.
+This guide explains how to build OriLauncher locally for personal testing and development.
 Distribution or publishing of binaries or modified sources is not permitted without explicit written permission from the maintainers.
 
 ## Policy

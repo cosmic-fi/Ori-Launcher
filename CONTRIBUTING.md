@@ -1,8 +1,8 @@
-# Contributing to Ori Launcher
+# Contributing to OriLauncher
 
 Thanks for your interest in contributing! This guide explains how to set up your environment, propose changes, and open pull requests effectively.
 
-Ori Launcher is a source-available project. We welcome code and documentation contributions, but redistribution or publishing of binaries or modified sources is not permitted. Please read the License & Usage section in `README.md` and the `LICENSE` file.
+OriLauncher is a source-available project. We welcome code and documentation contributions, but redistribution or publishing of binaries or modified sources is not permitted. Please read the License & Usage section in `README.md` and the `LICENSE` file.
 
 ## Overview
 - Tech: Electron (Main/Preload), Svelte (Renderer), Vite, Electron Builder

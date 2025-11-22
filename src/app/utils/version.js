@@ -1,7 +1,7 @@
 // @ts-nocheck
 /**
  * @author Cosmic-fi
- * @description Version utility for the Ori Launcher Front-End application.
+ * @description Version utility for the OriLauncher Front-End application.
  */
 
 import { writable } from 'svelte/store';

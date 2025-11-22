@@ -1,7 +1,7 @@
 // @ts-nocheck
 /**
  * @author Cosmic-fi
- * @description Main entry point for the Ori Launcher Front-End application.
+ * @description Main entry point for the OriLauncher Front-End application.
 */
 
 import { mount } from 'svelte'

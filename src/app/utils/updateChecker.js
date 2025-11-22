@@ -1,7 +1,7 @@
 // @ts-nocheck
 /**
  * @author Cosmic-fi
- * @description Update checker utility for the Ori Launcher Front-End application.
+ * @description Update checker utility for the OriLauncher Front-End application.
  */
 
 import { t } from '../stores/i18n.js';

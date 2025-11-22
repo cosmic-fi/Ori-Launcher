@@ -1,6 +1,6 @@
 /**
  * @author Cosmic-fi
- * @description Preload script for the Ori Launcher application.
+ * @description Preload script for the OriLauncher application.
 */
 
 const { contextBridge, shell, ipcRenderer } = require('electron');

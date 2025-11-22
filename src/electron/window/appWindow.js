@@ -1,6 +1,6 @@
 /**
  * @author Cosmic-fi
- * @description Handles the main application window for Ori Launcher.
+ * @description Handles the main application window for OriLauncher.
  */
 
 import * as remoteMain from '@electron/remote/main/index.js';
@@ -24,7 +24,7 @@ const iconPath = `./public/${os.platform() === "win32" ? "icon.ico" : "icon.png"
  */
 const setAppWindow = () => {
     window = new BrowserWindow({
-        title: "Ori Launcher",
+        title: "OriLauncher",
         width: 1024,
         height: 600,
         minHeight: 600,

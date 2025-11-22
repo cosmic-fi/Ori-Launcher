@@ -67,11 +67,10 @@ const buildApp = async () => {
         await build({
             config: {
                 appId: 'dev.cosmicfi.orilauncher',
-                productName: 'Ori Launcher',
+                productName: 'OriLauncher',
                 copyright: `Copyright © ${new Date().getFullYear()} Cosmic-fi (Cosmic Boucher)`,
                 forceCodeSigning: false,
                 afterSign: null,
-                publish: null,
                 artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
                 extraMetadata: {
                     main: 'appsrc/electron/main.js'
@@ -148,14 +147,14 @@ const buildApp = async () => {
                     ],
                     icon: 'public/icon.png',
                     category: 'Game',
-                    synopsis: 'Ori Launcher - Custom Minecraft Launcher',
-                    description: 'A modern custom Minecraft launcher'
+                    synopsis: 'OriLauncher - Custom Minecraft Launcher',
+                    description: 'A modern custom Minecraft Launcher'
                 },
                 publish: [
                     {
                         provider: 'github',
                         owner: 'cosmic-fi',
-                        repo: 'Ori-Launcher',
+                        repo: 'OriLauncher',
                         releaseType: 'draft'
                     }
                 ]

@@ -1,7 +1,7 @@
 // @ts-nocheck
 /**
  * @author Cosmic-fi
- * @description Helper utility for the Ori Launcher Front-End application.
+ * @description Helper utility for the OriLauncher Front-End application.
 */
 
 export const rssURL = 'https://orilauncher.cosmicfi.dev/';

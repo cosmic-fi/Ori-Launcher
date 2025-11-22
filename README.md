@@ -1,22 +1,22 @@
 <img width="1024" height="512" alt="home" src="https://github.com/user-attachments/assets/5471c343-d0f1-4086-8e37-8f2d682ed160" />
 
-# Ori Launcher  
+# OriLauncher  
 *The fast, modern way to start Minecraft.*
 
 >English | [Español](./locale/es.json) | [Français](./locale/fr.json) | [Türkçe](./locale/tr.json)
 
 ---
 
-## What is Ori Launcher?
-Ori Launcher is a free, open-source Minecraft launcher that gets you in-game quicker.  
+## What is OriLauncher?
+OriLauncher is a free, open-source Minecraft game launcher that gets you in-game quicker.  
 One click swaps between Vanilla, Forge or Fabric; accounts (Microsoft or offline) are remembered; RAM & Java settings are tuned from a clean, native window that feels at home on Windows, macOS and Linux.
 
 ## Download & Play
 | Platform | Download | Size | Status |
 |----------|----------|------|--------|
-| Windows 10/11 | [Ori-Launcher-Setup.exe](https://github.com/cosmic-fi/Ori-Launcher/releases/latest/download/Ori-Launcher-Setup.exe) | ~90 MB | ✅ Tested on 22H2/23H2 |
-| macOS 12+ (Intel / Apple Silicon) | [Ori-Launcher.dmg](https://github.com/cosmic-fi/Ori-Launcher/releases/latest/download/Ori-Launcher.dmg) | ~95 MB | ❌ Not Tested  |
-| Linux (AppImage) | [Ori-Launcher.AppImage](https://github.com/cosmic-fi/Ori-Launcher/releases/latest/download/Ori-Launcher.AppImage) | ~90 MB | ❌ Not Tested |
+| Windows 10/11 | [OriLauncher-Setup.exe](https://github.com/cosmic-fi/OriLauncher/releases/latest) | ~90 MB | ✅ Tested on 22H2/23H2 |
+| macOS 12+ (Intel / Apple Silicon) | [OriLauncher.dmg](https://github.com/cosmic-fi/OriLauncher/releases/latest) | ~95 MB | ❌ Not Tested  |
+| Linux (AppImage) | [OriLauncher.AppImage](https://github.com/cosmic-fi/OriLauncher/releases/latest) | ~90 MB | ❌ Not Tested |
 
 > No admin rights required.  
 Unzip / install → log in → press “Play”. That’s it.
@@ -33,8 +33,8 @@ Unzip / install → log in → press “Play”. That’s it.
 ## Need help?
 | Where | Link |
 |-------|------|
-| Quick FAQ | [wiki/FAQ](https://github.com/cosmic-fi/Ori-Launcher/wiki/FAQ) |
-| Report a bug | [Issues](https://github.com/cosmic-fi/Ori-Launcher/issues/new/choose) |
+| Quick FAQ | [wiki/FAQ](https://github.com/cosmic-fi/OriLauncher/wiki/FAQ) |
+| Report a bug | [Issues](https://github.com/cosmic-fi/OriLauncher/issues/new/choose) |
 | Ask on Discord | [![Discord](https://img.shields.io/discord/1027310563702874254?color=7289da&label=chat)](https://discord.com/invite/2sPdCcuwm5) |
 
 ## Love the launcher?
@@ -49,4 +49,4 @@ Binaries are free to use, **do not** mirror or re-upload them—link to this pag
 ---
 Made with 💜 by *Cosmicfi* & *Olly*
 
-[![Downloads](https://img.shields.io/github/downloads/cosmic-fi/Ori-Launcher/total)](https://orilauncher.cosmicfi.dev/download)
+[![Downloads](https://img.shields.io/github/downloads/cosmic-fi/OriLauncher/total)](https://orilauncher.cosmicfi.dev/download)

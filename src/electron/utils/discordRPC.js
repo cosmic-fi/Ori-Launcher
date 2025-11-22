@@ -1,6 +1,6 @@
 /**
  * @author Cosmic-fi
- * @description Discord RPC service for the Ori Launcher application.
+ * @description Discord RPC service for the OriLauncher application.
 */
 
 import DiscordRPC from 'discord-rpc';
@@ -103,12 +103,12 @@ class DiscordRPCService {
             state: 'Browsing',
             startTimestamp: this.startTime,
             largeImageKey: 'ori_launcher_logo',
-            largeImageText: `Ori Launcher v${app.getVersion()}`,
+            largeImageText: `OriLauncher v${app.getVersion()}`,
             smallImageText: 'Idle',
             instance: false,
             buttons: [
                 {
-                    label: 'Download Ori Launcher',
+                    label: 'Download OriLauncher',
                     url: gitUrl
                 }
             ]
@@ -125,13 +125,13 @@ class DiscordRPCService {
             state: `${variant} Version`,
             startTimestamp: Date.now(),
             largeImageKey: 'ori_launcher_logo',
-            largeImageText: `Ori Launcher v${app.getVersion()}`,
+            largeImageText: `OriLauncher v${app.getVersion()}`,
             smallImageKey: 'orilauncher_minecraft',
             smallImageText: 'Minecraft',
             instance: false,
             buttons: [
                 {
-                    label: 'Download Ori Launcher',
+                    label: 'Download OriLauncher',
                     url: gitUrl
                 }
             ]
@@ -150,11 +150,11 @@ class DiscordRPCService {
             largeImageKey: 'orilauncher_minecraft',
             largeImageText: `Minecraft ${version}`,
             smallImageKey: 'orilauncher_logo',
-            smallImageText: `Ori Launcher v${app.getVersion()}`,
+            smallImageText: `OriLauncher v${app.getVersion()}`,
             instance: false,
             buttons: [
                 {
-                    label: 'Download Ori Launcher',
+                    label: 'Download OriLauncher',
                     url: gitUrl
                 }
             ]
@@ -171,7 +171,7 @@ class DiscordRPCService {
             state: `${Math.round(progress)}% complete`,
             startTimestamp: this.startTime,
             largeImageKey: 'orilauncher_logo',
-            largeImageText: `Ori Launcher v${app.getVersion()}`,
+            largeImageText: `OriLauncher v${app.getVersion()}`,
             smallImageKey: 'orilauncher_download',
             smallImageText: 'Downloading',
             instance: false,
