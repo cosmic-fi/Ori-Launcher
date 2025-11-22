@@ -1,4 +1,4 @@
-<img width="1024" height="512" alt="home" src="https://github.com/user-attachments/assets/5471c343-d0f1-4086-8e37-8f2d682ed160" />
+<img width="1048" height="524" alt="Frame 108" src="https://github.com/user-attachments/assets/bff5ffa0-2951-4ebc-b9e2-e1ecae092665" />
 
 # OriLauncher  
 *The fast, modern way to start Minecraft.*
