@@ -69,14 +69,12 @@ async function validateAccountsStep() {
     bootStatus.set({ step: 4, message: translate('logs.validatingAccounts'), progress: 60 });
     
     const accounts = getAccounts();
-    console.log(accounts);
     const onlineAccounts = accounts.filter(account => account.type === 'online');
     
     if (onlineAccounts.length === 0) {
         await new Promise(res => setTimeout(res, 200));
         return;
     }
-    console.log(onlineAccounts);
     bootStatus.set({ step: 4, message: translate('logs.refreshingAccounts'), progress: 65 });
     
     let refreshedCount = 0;
@@ -87,8 +85,6 @@ async function validateAccountsStep() {
             await window.electron.invoke('refresh-account', account)
             .then(async (result) => {
               if(result.success){
-                console.log(result);
-
                 let _mAccount = {
                     ...account,
                     access_token: result.mc.access_token,
@@ -163,7 +159,6 @@ async function checkApiStatusStep() {
 
   async function tryPing() {
     const result = await window.electron.pingApi();
-    console.log(result);
     return result;
   }
 

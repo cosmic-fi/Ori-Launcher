@@ -7,7 +7,6 @@
     import { uiState } from "../stores/ui";
     
     const { toggleModel } = uiState;
-    console.log("home");
 </script>
 
 <div class="main">

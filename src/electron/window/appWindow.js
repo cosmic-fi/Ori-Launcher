@@ -25,10 +25,12 @@ const iconPath = `./public/${os.platform() === "win32" ? "icon.ico" : "icon.png"
 const setAppWindow = () => {
     window = new BrowserWindow({
         title: "OriLauncher",
-        width: 1024,
+        width: 1030,
         height: 600,
         minHeight: 600,
-        minWidth: 1030,
+        minWidth: 1024,
+        maxHeight: 600,
+        maxWidth: 1024,
         resizable: true,
         closable: true,
         maximizable: true,
@@ -37,7 +39,7 @@ const setAppWindow = () => {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: true,
-            devTools: false,
+            devTools: true,
             webSecurity: true,
             preload: path.join(__dirname, '../preload.js')
         },

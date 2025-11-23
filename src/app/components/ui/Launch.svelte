@@ -107,7 +107,6 @@
             launchActions.setError(error.message || 'Launch failed');
             showToast('Something went wrong while launching the game. Please try again later.', 'error');
             launchActions.reset();
-            console.log(error);
         }
         
         // Reset Discord RPC to idle on error
@@ -254,7 +253,7 @@
             }
 
             .version-summery {
-                font-size: var(--font-size-fluid-base);
+                font-size: 18px;
                 color: var(--text-color-muted);
                 height: 80px;
             }

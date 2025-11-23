@@ -31,14 +31,10 @@ export async function addAccount(account) {
         return false;
     }
 
-    console.log(`Adding ${account.type} account: ${account.name}`);
-    
     // Fetch skin data
     try {
         account.skinData = await skinService.getSkinData(account.name);
-        console.log(`Successfully loaded skin data for ${account.name}`);
     } catch (error) {
-        console.warn(`Failed to load skin data for ${account.name}, using Steve fallback`);
         account.skinData = skinService.getSteveSkinData();
     }
 

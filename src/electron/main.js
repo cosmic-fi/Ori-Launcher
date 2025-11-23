@@ -34,7 +34,6 @@ const setupIpcHandlers = () => {
         const launcher = new Launch();
         let isCancelled = false;
         
-        console.log(options);
         // Set up cancel listener WITHIN this handler
         const cancelHandler = ipcMain.handle('cancel-launch', async (cancelEvent, _) => {
             try {
@@ -45,7 +44,7 @@ const setupIpcHandlers = () => {
                     try {
                         await launcher.cancel();
                         isCancelled = true;
-                        console.log('Launcher cancelled successfully', launcher);
+                        console.log('[ Launcher cancelled successfully ]');
                     } catch (cancelError) {
                         console.error('Error cancelling launcher:', cancelError);
                     }
@@ -58,7 +57,6 @@ const setupIpcHandlers = () => {
         });
     
         try {
-            console.log(options);
             console.log("======= Starting game launch =======");
             
             launcher.on('progress', (progress, size, element) => {
@@ -113,18 +111,16 @@ const setupIpcHandlers = () => {
             
             launcher.on('cancelled', message => {
                 event.sender.send('launch-cancelled', message);
-                console.log('huh---cancelling? Aw man!!!!!@@')
                 ipcMain.removeHandler('cancel-launch');
             });
             
             await launcher.Launch(options);
-            console.log(options);
             console.log('Launch initiated successfully');
             return { success: true };
         } catch (error) {
             console.error('Launch failed:', error);
             event.sender.send('launch-error', error);
-            console.log(error);
+
             // Clean up the cancel handler on error
             ipcMain.removeHandler('cancel-launch');
             return { success: false, error: error.message };
@@ -147,8 +143,6 @@ const setupIpcHandlers = () => {
             })
             const mc = await result.getMinecraft();
 
-            console.log(mc.mclc());
-
             return JSON.stringify({
                 success: true,
                 mc: mc.mclc(),
@@ -164,7 +158,6 @@ const setupIpcHandlers = () => {
     });
     ipcMain.handle('refresh-account', async (event, profile) => {
         try {
-            console.log(profile);
             if(!profile){
                 return {
                     success: false,

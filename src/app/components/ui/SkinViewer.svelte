@@ -51,7 +51,6 @@
 
     // Initialize or update viewer when canvas and skinUrl are available
     $: if (canvas && !view2D) {
-        console.log(skinUrl);
         if (!viewer) {
             // create viewer once
             viewer = new skin3d.View({
