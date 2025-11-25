@@ -1,72 +1,57 @@
-name: Build Application
+name: Create Public Release
 on:
-  push:
-    tags: ['v*']
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build Application"]  # Must match the private repo workflow name exactly
+    types:
+      - completed
+    branches: [main]  # Optional: only trigger from main branch
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+  release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
     
     steps:
-    - name: Checkout code
+    - name: Checkout public repo
       uses: actions/checkout@v4
+    
+    - name: Download artifacts from private repo
+      uses: actions/download-artifact@v4
       with:
-        fetch-depth: 0
+        github-token: ${{ secrets.PRIVATE_REPO_PAT }}
+        run-id: ${{ github.event.workflow_run.id }}
+        repository: cosmic-fi/Ori-Launcher-Prologue  # Your private repo
+        path: downloaded-artifacts/
     
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Build application
-      run: node build.js --build=platform
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-${{ matrix.os }}
-        path: |
-          build/*.exe
-          build/*.dmg
-          build/*.AppImage
-          build/*.zip
-          build/*.blockmap
-        retention-days: 1
-    
-    - name: Extract release notes
-      id: extract-notes
+    - name: Get tag name from private workflow
       run: |
-        # Get the tag message or commit message for release notes
-        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-          NOTES="Manual release triggered via workflow dispatch"
-        else
-          NOTES=$(git log -1 --pretty=%B)
-        fi
-        echo "notes<<EOF" >> $GITHUB_OUTPUT
-        echo "$NOTES" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
+        # Extract the tag from the workflow run name or use a fallback
+        echo "TAG_NAME=${{ github.event.workflow_run.head_branch || github.event.workflow_run.display_title }}" >> $GITHUB_ENV
     
-    - name: Trigger Public Release
-      uses: peter-evans/repository-dispatch@v2
+    - name: Organize artifacts
+      run: |
+        mkdir -p release-assets
+        find downloaded-artifacts/ -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.zip" -o -name "*.blockmap" \) -exec cp {} release-assets/ \;
+        echo "Artifacts found:"
+        ls -la release-assets/
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
       with:
-        token: ${{ secrets.PUBLIC_REPO_PAT }}
-        repository: ${{ secrets.PUBLIC_REPO_NAME }}
-        event-type: create-release
-        client-payload: |
-          {
-            "tag": "${{ github.ref_name }}",
-            "run_id": ${{ github.run_id }},
-            "private_repo": "${{ github.repository }}",
-            "release_notes": "${{ steps.extract-notes.outputs.notes }}",
-            "triggered_by": "${{ github.actor }}"
-          }
+        tag_name: ${{ env.TAG_NAME }}
+        name: Release ${{ env.TAG_NAME }}
+        body: |
+          Automated release built from private repository.
+          
+          **Build Details:**
+          - Source: Private repository (cosmic-fi/Ori-Launcher-Prologue)
+          - Workflow Run: ${{ github.event.workflow_run.html_url }}
+          - Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+        files: release-assets/*
+        draft: false
+        prerelease: ${{ contains(env.TAG_NAME, 'alpha') || contains(env.TAG_NAME, 'beta') }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
